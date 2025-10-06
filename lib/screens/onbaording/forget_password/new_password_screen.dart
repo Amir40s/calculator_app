@@ -5,12 +5,12 @@ import 'package:smart_construction_calculator/config/enum/style_type.dart';
 import 'package:smart_construction_calculator/config/res/app_color.dart';
 import 'package:smart_construction_calculator/config/res/app_icons.dart';
 import 'package:smart_construction_calculator/core/component/app_button_widget.dart';
+import 'package:smart_construction_calculator/core/component/app_text_field.dart';
 import 'package:smart_construction_calculator/core/component/app_text_widget.dart';
 import 'package:smart_construction_calculator/core/controller/auth_controller.dart';
 import '../../../config/utility/validators.dart';
 import '../../../core/component/custom_rich_text.dart';
 import '../../../core/component/logo_text_widget.dart';
-import '../../../core/component/title_with_field.dart';
 
 class NewPasswordScreen extends StatelessWidget {
   const NewPasswordScreen({super.key});
@@ -67,6 +67,21 @@ class NewPasswordScreen extends StatelessWidget {
       //               controller: controller.passwordController,
       //               validator: Validators.strongPassword,
       //               onTap: controller.togglePasswordVisibility,
+                /// Email field
+                Obx(() {
+                  return AppTextField(
+                    heading: "Password",
+                    hintText: '******',
+                    obscureText: !controller.isPasswordVisible.value,
+                    suffix: controller.isPasswordVisible.value
+                        ? AppIcons.viewOn
+                        : AppIcons.viewOff,
+                    prefix: AppIcons.lockSvg,
+                    controller: controller.passwordController,
+                    validator: Validators.strongPassword,
+                    onChanged: (val) {
+                  controller.togglePasswordVisibility();
+                    },
 
       //             );
       //           }
@@ -86,6 +101,19 @@ class NewPasswordScreen extends StatelessWidget {
       //               controller: controller.confirmPasswordController,
       //               validator: Validators.strongPassword,
       //               onTap: controller.toggleConfirmPasswordVisibility,
+                /// Password field
+                Obx(() {
+                  return AppTextField(
+                    heading: "Confirm Password",
+                    hintText: '******',
+                    obscureText: !controller.isConfirmPasswordVisible.value,
+                    suffix: controller.isConfirmPasswordVisible.value
+                        ? AppIcons.viewOn
+                        : AppIcons.viewOff,
+                    prefix: AppIcons.lockSvg,
+                    controller: controller.confirmPasswordController,
+                    validator: Validators.strongPassword,
+                    onSuffixTap: controller.toggleConfirmPasswordVisibility,
 
       //             );
       //           }

@@ -11,6 +11,6 @@ abstract class BaseApiServices{
     Map<String, dynamic>? headers,
     required Function(int sent, int total) onSendProgress,
   });
-  Future<dynamic> patchApi({required String url, required var data}); // ✅ PATCH method added
+  Future<dynamic> patchApi({required String url, required var data});
 
 }

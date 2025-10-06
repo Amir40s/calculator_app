@@ -1,0 +1,128 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:smart_construction_calculator/config/enum/style_type.dart';
+import 'package:smart_construction_calculator/config/utility/app_utils.dart';
+import 'package:smart_construction_calculator/core/component/app_button_widget.dart';
+import 'package:smart_construction_calculator/core/component/app_text_field.dart';
+import 'package:smart_construction_calculator/core/component/app_text_widget.dart';
+import 'package:smart_construction_calculator/core/component/dynamic_table_widget.dart';
+import 'package:smart_construction_calculator/core/controller/base_calculator_controller.dart';
+
+/// Base reusable conversion screen
+class BaseConversionScreen<T extends BaseCalculatorController> extends StatelessWidget {
+  final String itemName;
+  final T controller;
+  final String inputLabel;
+  final String buttonLabel;
+  final String resultLabel;
+  final RxString selectedUnit;
+  final List<String> availableUnits;
+  final Function(String) onValueChanged;
+  final Function(String) onUnitChanged;
+  final VoidCallback onConvert;
+
+  const BaseConversionScreen({
+    super.key,
+    required this.itemName,
+    required this.controller,
+    required this.inputLabel,
+    required this.buttonLabel,
+    required this.resultLabel,
+    required this.selectedUnit,
+    required this.availableUnits,
+    required this.onValueChanged,
+    required this.onUnitChanged,
+    required this.onConvert,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: IntrinsicHeight(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 4.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AppTextField(
+                        heading: inputLabel,
+                        hintText: 'Enter value',
+                        onChanged: onValueChanged,
+                      ),
+                      SizedBox(height: 2.h),
+                      Obx(() => DropdownButtonFormField<String>(
+                        value: selectedUnit.value.isEmpty
+                            ? null
+                            : selectedUnit.value,
+                        decoration: const InputDecoration(
+                          hintText: 'Select Unit',
+                          border: OutlineInputBorder(),
+                        ),
+                        items: availableUnits
+                            .map((unit) => DropdownMenuItem(
+                          value: unit,
+                          child: Text(AppUtils().formatUnit(unit)),
+                        ))
+                            .toList(),
+                        onChanged: (value) {
+                          if (value != null) onUnitChanged(value);
+                        },
+                      )),
+                      SizedBox(height: 2.h),
+                      AppButtonWidget(
+                        text: buttonLabel,
+                        height: 5.h,
+                        width: 100.w,
+                        onPressed: onConvert,
+                      ),
+                      SizedBox(height: 2.h),
+                      AppTextWidget(
+                        text: resultLabel,
+                        styleType: StyleType.dialogHeading,
+                      ),
+                      SizedBox(height: 2.h),
+                      Obx(() {
+                        if (controller.isLoading.value) {
+                          return const Center(child: CircularProgressIndicator());
+                        }
+
+                        final data = controller.data.value;
+                        if (data == null ||
+                            (data.conversions?.isEmpty ?? true)) {
+                          return const Center(
+                            child: Text('Enter a value to see conversions.'),
+                          );
+                        }
+
+                        final List<List<String>> rows =
+                        data.conversions.entries
+                            .map<List<String>>(
+                                (e) => [e.key.toString(), e.value.toString()])
+                            .toList();
+
+                        return Padding(
+                          padding: EdgeInsets.only(bottom: 4.h),
+                          child: DynamicTable(
+                            headers: const ['Unit', 'Value'],
+                            rows: rows,
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+
+}

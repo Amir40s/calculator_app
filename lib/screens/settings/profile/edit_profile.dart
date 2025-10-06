@@ -4,8 +4,8 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smart_construction_calculator/config/res/app_assets.dart';
 import 'package:smart_construction_calculator/config/res/app_icons.dart';
 import 'package:smart_construction_calculator/core/component/app_button_widget.dart';
+import 'package:smart_construction_calculator/core/component/app_text_field.dart';
 import 'package:smart_construction_calculator/core/component/appbar_widget.dart';
-import 'package:smart_construction_calculator/core/component/title_with_field.dart';
 
 import '../../../config/res/app_color.dart';
 import '../../../core/component/Camera_widget.dart';
@@ -32,14 +32,14 @@ class EditProfileScreen extends StatelessWidget {
                     alignment: Alignment.center,
                     child: EditableProfilePicture(imageUrl: AppAssets.logo),
                   ),
-                  TitleWithField(
-                    title: 'First name',
-                    hint: 'name',
+                  AppTextField(
+                    heading: 'First name',
+                    hintText: 'name',
                     suffix: AppIcons.userTwo,
                   ),
-                  TitleWithField(
-                    title: 'Email',
-                    hint: 'email',
+                  AppTextField(
+                    heading: 'Email',
+                    hintText: 'email',
                     suffix: AppIcons.mail,
                   ),
                   SizedBox(height: 6.h),

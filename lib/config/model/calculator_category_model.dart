@@ -20,3 +20,28 @@ class CalculatorItem {
 
   CalculatorItem({required this.name, required this.icon});
 }
+
+class CategoryItemModel {
+  final String name;       // name of subcategory
+  final String? routeKey;  // optional, if you want to navigate later
+
+  CategoryItemModel({
+    required this.name,
+    this.routeKey,
+  });
+
+  factory CategoryItemModel.fromJson(Map<String, dynamic> json) {
+    return CategoryItemModel(
+      name: json['name'] ?? '',
+      routeKey: json['routeKey'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'routeKey': routeKey,
+    };
+  }
+}
+

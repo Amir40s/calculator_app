@@ -8,7 +8,6 @@ import 'package:smart_construction_calculator/config/utility/validators.dart';
 import 'package:smart_construction_calculator/core/component/app_button_widget.dart';
 import 'package:smart_construction_calculator/core/component/app_text_widget.dart';
 import 'package:smart_construction_calculator/core/component/logo_text_widget.dart';
-import 'package:smart_construction_calculator/core/component/title_with_field.dart';
 import 'package:smart_construction_calculator/core/controller/auth_controller.dart';
 import 'package:smart_construction_calculator/core/controller/loader_controller.dart';
 

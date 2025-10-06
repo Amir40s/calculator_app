@@ -1,6 +1,7 @@
 
 import 'dart:developer';
 import 'dart:io';
+import 'dart:math';
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -117,5 +118,17 @@ static Future<void> uploadNotificationToFirebase({
 static Color withOpacity({required Color color, required double opacity}) {
   return color.withOpacity(opacity);
 }
+  final random = Random();
+  Color randomColor() =>
+      Color((random.nextDouble() * 0xFFFFFF).toInt()).withOpacity(0.4);
+
+  String formatUnit(String unit) {
+    // Replace digits with superscript versions
+    return unit
+        .replaceAll('2', '²')
+        .replaceAll('3', '³')
+        .replaceAll('1', '¹');
+  }
+
 
 }
