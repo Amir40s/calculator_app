@@ -73,18 +73,18 @@ class SignUpScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
-                        child: TitleWithField(
-                          title: "First Name",
-                          hint: 'First Name',
+                        child: AppTextField(
+                          heading: "First Name",
+                          hintText: 'First Name',
                           prefix: AppIcons.userTwo,
                           controller: authC.signUpFirstNameC,
                           validator: Validators.required,
                         ),
                       ),
                       Expanded(
-                        child: TitleWithField(
-                          title: "Last Name",
-                          hint: 'Last Name',
+                        child: AppTextField(
+                          heading: "Last Name",
+                          hintText: 'Last Name',
                           controller: authC.signUpLastNameC,
                           validator: Validators.required,
                           prefix: AppIcons.userTwo,
@@ -93,17 +93,17 @@ class SignUpScreen extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 10),
-                  TitleWithField(
-                    title: "Email",
-                    hint: 'Enter your email',
+                  AppTextField(
+                    heading: "Email",
+                    hintText: 'Enter your email',
                     prefix: AppIcons.outMail,
                     controller: authC.signUpEmailC,
                     validator: Validators.email,
                   ),
                   const SizedBox(height: 16),
-                  TitleWithField(
-                    title: "Password",
-                    hint: '******',
+                  AppTextField(
+                    heading: "Password",
+                    hintText: '******',
                     obscureText: true,
                     prefix: AppIcons.lockSvg,
                     controller: authC.signUpPasswordC,

@@ -6,6 +6,7 @@ import 'package:smart_construction_calculator/config/res/app_color.dart';
 import 'package:smart_construction_calculator/config/res/app_icons.dart';
 import 'package:smart_construction_calculator/config/utility/validators.dart';
 import 'package:smart_construction_calculator/core/component/app_button_widget.dart';
+import 'package:smart_construction_calculator/core/component/app_text_field.dart';
 import 'package:smart_construction_calculator/core/component/app_text_widget.dart';
 import 'package:smart_construction_calculator/core/component/logo_text_widget.dart';
 import 'package:smart_construction_calculator/core/controller/auth_controller.dart';
@@ -46,9 +47,9 @@ class ForgetPasswordScreen extends StatelessWidget {
                   SizedBox(height: 2.h),
       
                   /// Email field
-                  TitleWithField(
-                    title: 'Email',
-                    hint: 'Enter your email',
+                  AppTextField(
+                    heading: 'Email',
+                    hintText: 'Enter your email',
                     prefix: AppIcons.outMail,
                     controller: controller.loginEmailC, 
                     validator: Validators.email,

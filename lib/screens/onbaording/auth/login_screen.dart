@@ -9,13 +9,13 @@ import 'package:smart_construction_calculator/config/res/app_constants.dart';
 import 'package:smart_construction_calculator/config/res/app_icons.dart';
 import 'package:smart_construction_calculator/config/routes/routes_name.dart';
 import 'package:smart_construction_calculator/core/component/app_button_widget.dart';
+import 'package:smart_construction_calculator/core/component/app_text_field.dart';
 import 'package:smart_construction_calculator/core/component/app_text_widget.dart';
 import 'package:smart_construction_calculator/core/component/smooth_container_widget.dart';
 import 'package:smart_construction_calculator/core/controller/auth_controller.dart';
 import 'package:smart_construction_calculator/core/controller/loader_controller.dart';
 
 import '../../../config/utility/validators.dart';
-import '../../../core/component/title_with_field.dart';
 import '../../../core/component/logo_text_widget.dart';
 import '../../../core/component/custom_rich_text.dart';
 
@@ -79,18 +79,18 @@ class LoginScreen extends StatelessWidget {
 
                   const SizedBox(height: 20),
 
-                  TitleWithField(
-                    title: "Email",
-                    hint: 'Enter your email',
+                  AppTextField(
+                    heading: "Email",
+                    hintText: 'Enter your email',
                     prefix: AppIcons.outMail,
                     controller: controller.loginEmailC,
                     validator: Validators.email,
                   ),
                   const SizedBox(height: 16),
 
-                  TitleWithField(
-                    title: "Password",
-                    hint: '******',
+                  AppTextField(
+                    heading: "Password",
+                    hintText: '******',
                     obscureText: true,
                     prefix: AppIcons.lockSvg,
                     controller: controller.loginPasswordC,
