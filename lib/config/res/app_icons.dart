@@ -57,6 +57,7 @@ class AppIcons{
   static const chat =   "assets/icons/chat.svg";
   static const contactMail =   "assets/icons/contact_mail.svg";
   static const noNotifications =   "assets/icons/no_notifications.svg";
+  static const successTick =   "assets/icons/success_tick.svg";
 
 
 

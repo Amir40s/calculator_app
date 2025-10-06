@@ -17,7 +17,6 @@ import '../../../core/component/app_text_field.dart';
 import '../../../core/component/custom_rich_text.dart';
 import '../../../core/component/input_field_widget.dart';
 import '../../../core/component/logo_text_widget.dart';
-import '../../../core/component/title_with_field.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -79,9 +78,9 @@ class LoginScreen extends StatelessWidget {
                 const SizedBox(height: 20),
 
                 /// Email field
-                TitleWithField(
-                  title: "Email",
-                  hint: 'Enter your email',
+                AppTextField(
+                  heading: "Email",
+                  hintText: 'Enter your email',
                   prefix: AppIcons.outMail,
                   controller: controller.emailController,
                   validator: Validators.email,
@@ -90,9 +89,9 @@ class LoginScreen extends StatelessWidget {
 
                 /// Password field
                 Obx(() {
-                    return TitleWithField(
-                      title: "Password",
-                      hint: '******',
+                    return AppTextField(
+                      heading: "Password",
+                      hintText: '******',
                       obscureText: !controller.isPasswordVisible.value,
                       suffix: controller.isPasswordVisible.value
                           ? AppIcons.viewOn
@@ -100,7 +99,7 @@ class LoginScreen extends StatelessWidget {
                       prefix: AppIcons.lockSvg,
                       controller: controller.passwordController,
                       validator: Validators.strongPassword,
-                      onTap: controller.togglePasswordVisibility,
+                      onSuffixTap: controller.togglePasswordVisibility,
 
                     );
                   }

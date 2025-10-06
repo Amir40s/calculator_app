@@ -5,12 +5,12 @@ import 'package:smart_construction_calculator/config/enum/style_type.dart';
 import 'package:smart_construction_calculator/config/res/app_color.dart';
 import 'package:smart_construction_calculator/config/res/app_icons.dart';
 import 'package:smart_construction_calculator/core/component/app_button_widget.dart';
+import 'package:smart_construction_calculator/core/component/app_text_field.dart';
 import 'package:smart_construction_calculator/core/component/app_text_widget.dart';
 import 'package:smart_construction_calculator/core/controller/auth_controller.dart';
 import '../../../config/utility/validators.dart';
 import '../../../core/component/custom_rich_text.dart';
 import '../../../core/component/logo_text_widget.dart';
-import '../../../core/component/title_with_field.dart';
 
 class NewPasswordScreen extends StatelessWidget {
   const NewPasswordScreen({super.key});
@@ -56,9 +56,9 @@ class NewPasswordScreen extends StatelessWidget {
 
                 /// Email field
                 Obx(() {
-                  return TitleWithField(
-                    title: "Password",
-                    hint: '******',
+                  return AppTextField(
+                    heading: "Password",
+                    hintText: '******',
                     obscureText: !controller.isPasswordVisible.value,
                     suffix: controller.isPasswordVisible.value
                         ? AppIcons.viewOn
@@ -66,7 +66,9 @@ class NewPasswordScreen extends StatelessWidget {
                     prefix: AppIcons.lockSvg,
                     controller: controller.passwordController,
                     validator: Validators.strongPassword,
-                    onTap: controller.togglePasswordVisibility,
+                    onChanged: (val) {
+                  controller.togglePasswordVisibility();
+                    },
 
                   );
                 }
@@ -75,9 +77,9 @@ class NewPasswordScreen extends StatelessWidget {
 
                 /// Password field
                 Obx(() {
-                  return TitleWithField(
-                    title: "Confirm Password",
-                    hint: '******',
+                  return AppTextField(
+                    heading: "Confirm Password",
+                    hintText: '******',
                     obscureText: !controller.isConfirmPasswordVisible.value,
                     suffix: controller.isConfirmPasswordVisible.value
                         ? AppIcons.viewOn
@@ -85,7 +87,7 @@ class NewPasswordScreen extends StatelessWidget {
                     prefix: AppIcons.lockSvg,
                     controller: controller.confirmPasswordController,
                     validator: Validators.strongPassword,
-                    onTap: controller.toggleConfirmPasswordVisibility,
+                    onSuffixTap: controller.toggleConfirmPasswordVisibility,
 
                   );
                 }

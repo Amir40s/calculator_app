@@ -110,7 +110,7 @@ class AppTextField extends StatelessWidget {
               contentPadding:
               const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
               hintText: hintText,
-              hintStyle: AppTextStyle().bodyText(context: context,color: Theme.of(context).primaryColorDark.withOpacity(0.4)),
+              hintStyle: AppTextStyle().bodyText(context: context,color: AppColors.greyColor),
               prefixIcon: prefix != null ?
               SizedBox(
                 height: 20,

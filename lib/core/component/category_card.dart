@@ -8,15 +8,15 @@ import 'app_text_widget.dart';
 /// Category Card
 class CategoryCard extends StatelessWidget {
   final String title;
-  final Color? color, innerColor;
-  final String icon;
+  final Color? color;
+  final Widget  icon;
   final VoidCallback onTap;
   const CategoryCard({
     super.key,
     required this.title,
      this.color,
     required this.icon,
-     this.innerColor, required this.onTap,
+      required this.onTap,
   });
 
   @override
@@ -32,7 +32,7 @@ class CategoryCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SvgPicture.asset(icon,height: 55.px,width: 55.px,),
+            icon,
             SizedBox(height: 1.h,),
             Flexible(child: AppTextWidget(text: title,overflow: TextOverflow.ellipsis,maxLine: 2,textAlign: TextAlign.center,)),
           ],
@@ -40,4 +40,5 @@ class CategoryCard extends StatelessWidget {
       ),
     );
   }
+
 }

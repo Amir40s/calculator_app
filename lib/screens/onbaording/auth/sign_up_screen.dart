@@ -16,7 +16,6 @@ import '../../../core/component/app_text_field.dart';
 import '../../../core/component/custom_rich_text.dart';
 import '../../../core/component/input_field_widget.dart';
 import '../../../core/component/logo_text_widget.dart';
-import '../../../core/component/title_with_field.dart';
 import '../../../core/controller/auth_controller.dart';
 
 class SignUpScreen extends StatelessWidget {
@@ -77,18 +76,18 @@ class SignUpScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                      child: TitleWithField(
-                        title: "First Name",
-                        hint: 'First Name',
+                      child: AppTextField(
+                        heading: "First Name",
+                        hintText: 'First Name',
                         prefix: AppIcons.userTwo,
                         controller: controller.firstNameController,
                         validator: Validators.required,
                       ),
                     ),
                     Expanded(
-                      child: TitleWithField(
-                        title: "Last Name",
-                        hint: 'Last Name',
+                      child: AppTextField(
+                        heading: "Last Name",
+                        hintText: 'Last Name',
                         controller: controller.lastNameController,
                         validator: Validators.required,
                         prefix: AppIcons.userTwo,
@@ -99,9 +98,9 @@ class SignUpScreen extends StatelessWidget {
                 const SizedBox(height: 10),
 
                 /// Email field
-                TitleWithField(
-                  title: "Email",
-                  hint: 'Enter your email',
+                AppTextField(
+                  heading: "Email",
+                  hintText: 'Enter your email',
                   prefix: AppIcons.outMail,
                   controller: controller.emailController,
                   validator: Validators.email,
@@ -110,9 +109,9 @@ class SignUpScreen extends StatelessWidget {
 
                 /// Password field
                 Obx(() {
-                  return TitleWithField(
-                    title: "Password",
-                    hint: '******',
+                  return AppTextField(
+                    heading: "Password",
+                    hintText: '******',
                     obscureText: !controller.isPasswordVisible.value,
                     suffix: controller.isPasswordVisible.value
                         ? AppIcons.viewOn
@@ -120,7 +119,7 @@ class SignUpScreen extends StatelessWidget {
                     prefix: AppIcons.lockSvg,
                     controller: controller.passwordController,
                     validator: Validators.strongPassword,
-                    onTap: controller.togglePasswordVisibility,
+                    onSuffixTap: controller.togglePasswordVisibility,
 
                   );
                 }

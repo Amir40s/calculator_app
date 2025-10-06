@@ -1,27 +1,33 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smart_construction_calculator/config/enum/style_type.dart';
 import 'package:smart_construction_calculator/config/res/app_color.dart';
 import 'package:smart_construction_calculator/config/res/app_icons.dart';
+import 'package:smart_construction_calculator/config/utility/app_utils.dart';
 import 'package:smart_construction_calculator/core/component/app_text_widget.dart';
 import 'package:smart_construction_calculator/core/component/icon_box_widget.dart';
-import 'package:smart_construction_calculator/core/component/smooth_container_widget.dart';
-import 'package:smart_construction_calculator/screens/home/category_details/category_detail_screen.dart';
-
+import 'package:smart_construction_calculator/core/component/success_dialog.dart';
+import 'package:smart_construction_calculator/core/controller/calculators/all_calculators.dart';
+import 'package:smart_construction_calculator/screens/home/widgets/length_distance.dart';
+import 'package:smart_construction_calculator/screens/home/widgets/showAllCalculators.dart';
+import '../../config/base/base_url.dart';
 import '../../core/component/category_card.dart';
 import '../../core/component/history_tile.dart';
 import '../../core/component/top_usage_card.dart';
 import '../../core/controller/category_calulator_controller.dart';
 import '../notification/notification_screen.dart';
+import 'category_details/category_detail_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(CategoryCalculatorController());
+    final controllerOf = Get.put(CalculatorController());
+    controllerOf.fetchCalculators();
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -55,6 +61,9 @@ class HomeScreen extends StatelessWidget {
                           color: AppColors.blueColor,
                           borderRadius: BorderRadius.circular(10.w),
                         ),
+                        onTap: () {
+                          SuccessDialog.show(context, message: "Added Successfully");
+                        },
                       ),
                       SizedBox(width: 3.w),
                       IconBoxWidget(
@@ -81,32 +90,51 @@ class HomeScreen extends StatelessWidget {
                     text: "All Categories",
                     styleType: StyleType.dialogHeading,
                   ),
-                  AppTextWidget(
-                    text: "See all",
-                    styleType: StyleType.dialogHeading,
+                  GestureDetector(
+                    onTap: () {
+                      Get.to(() => ShowAllCalculatorsScreen(calculators: controllerOf.data.value ?? []));
+
+                    },
+                    child: AppTextWidget(
+                      text: "See all",
+                      styleType: StyleType.dialogHeading,
+                    ),
                   ),
                 ],
               ),
               const SizedBox(height: 12),
-              SizedBox(
+              Container(
+                color: Colors.white,
                 height: 16.h,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: controller.categories.length,
-                  itemBuilder: (context, index) {
-                    final category = controller.categories[index];
+                child: Obx(() {
+                  if (controllerOf.isLoading.value) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
 
-                    return CategoryCard(
-                      title: category.title,
-                      color: category.color,
-                      innerColor: Color(0xffFAC7C7),
-                      icon: category.icon,
-                      onTap: () {
-                        Get.to(CategoryDetailScreen(category: category));
+                  final calculators = controllerOf.data.value ?? [];
+                    return ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: calculators.length,
+                      itemBuilder: (context, index) {
+                        final calc = calculators[index];
+                        log('calculators length ${calc.title}');
+
+                        return CategoryCard(
+                          title: calc.title,
+                          color: AppUtils().randomColor(),
+                          icon: calc.iconWidget,
+                          onTap: () {
+                            Get.to(CategoryDetailScreen(
+                              title: calc.title,
+                                category: calc.routeKey));
+                            // // Get.to(LengthConversionScreen());
+                            // ScreenMapper.navigateToScreen(calc.routeKey);
+
+                          },
+                        );
                       },
                     );
-                  },
+                  }
                 ),
               ),
               const SizedBox(height: 20),

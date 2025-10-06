@@ -1,98 +1,77 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:smart_construction_calculator/core/component/category_card.dart';
-import 'package:smart_construction_calculator/core/component/smooth_container_widget.dart';
-import 'package:smart_construction_calculator/screens/home/category_details/item_details/item_details_screen.dart';
-
-import '../../../config/model/calculator_category_model.dart';
-import '../../../config/res/app_color.dart';
+import '../../../config/base/base_url.dart';
+import '../../../core/component/all_calculator/sub_categories_calculator.dart';
 import '../../../core/component/app_text_widget.dart';
 import '../../../core/component/appbar_widget.dart';
-import '../../../core/component/custom_appbar.dart';
+import '../../../config/res/app_color.dart';
 
 class CategoryDetailScreen extends StatelessWidget {
-  final CalculatorCategory category;
-  const CategoryDetailScreen({super.key, required this.category});
+  final String category;
+  final String title;
+
+  const CategoryDetailScreen({
+    super.key,
+    required this.category,
+    required this.title,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final subCategories = SubCategoryData.subCategories[category] ?? [];
+
     return Scaffold(
-      // appBar: CustomAppbar(text: 'Conversion Calculator'),
       body: Column(
         children: [
-          AppBarWidget(
-            text: category.title,
-            centre: false,
-            showDivider: true,
-          ),
+          AppBarWidget(text: title,  showDivider: true),
           Expanded(
-            child: GridView.builder(
-
+            child: ListView.builder(
               padding: EdgeInsets.symmetric(horizontal: 5.w,),
               shrinkWrap: true,
-              itemCount: category.items.length,
-              gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                mainAxisSpacing: 3.h,
-                crossAxisSpacing: 4.w,
-                childAspectRatio: 0.9,
-              ),
+              itemCount: subCategories.length,
               itemBuilder: (context, index) {
-                final item = category.items[index];
-                log('icons are ${item.icon}');
-
-              return GestureDetector(
-                onTap: () {
-                  Get.to(ItemDetailsScreen(item: item,));
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: AppColors.whiteColor,
-                    borderRadius: BorderRadius.circular(2.w),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.greyColor,
-                        blurRadius: 1,
-                        offset: Offset(0, 1),
-                      )
-                    ]
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(1.5.w),
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(1.w)
+                final item = subCategories[index];
+                return GestureDetector(
+                  onTap: () {
+                    // TODO: Navigate to inner calculator later
+                    ScreenMapper.navigateToScreen( item.name);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 1.w,vertical: 1.h),
+                    margin: EdgeInsets.symmetric(vertical: 1.h),
+                    alignment: Alignment.centerLeft,
+                    decoration: BoxDecoration(
+                      color: AppColors.premiumColor.withOpacity(0.7),
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.shade300,
+                          blurRadius: 3,
+                          offset: const Offset(0, 2),
                         ),
-                        child: SvgPicture.asset(item.icon,height: 30.px,
-                          placeholderBuilder: (context) => const Icon(Icons.image_not_supported),
-
-                        ),
+                      ],
+                    ),
+                    child: Padding(
+                      padding:  EdgeInsets.symmetric(horizontal: 2.w,vertical: 0.8.h),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          AppTextWidget(
+                            text: item.name,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            maxLine: 2,
+                          ),
+                          Icon(Icons.arrow_forward_ios,size: 16.px,),
+                        ],
                       ),
-                      SizedBox(height: 1.5.h),
-                      Padding(
-                        padding:  EdgeInsets.symmetric(horizontal:  2.w),
-                        child: AppTextWidget(
-                          text: item.name,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w600,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          maxLine: 2,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-              );
-            },),
-          )
+                );
+              },
+            ),
+          ),
         ],
       ),
     );
