@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:smart_construction_calculator/config/res/app_icons.dart';
 
 import '../../config/enum/style_type.dart';
 import '../../config/res/app_color.dart';
@@ -7,14 +8,14 @@ import '../../config/res/app_text_style.dart';
 import '../../config/res/statics.dart';
 import 'app_text_widget.dart';
 
-class AppTextField extends StatelessWidget {
+class AppTextField extends StatefulWidget {
   final String? heading;
   final String hintText;
   final String? prefix;
   final String? suffix;
   final TextEditingController? controller;
   final bool obscureText;
-  final int? maxlines,maxLength;
+  final int? maxlines, maxLength;
 
   final double borderRadius;
   final Color borderColor;
@@ -48,6 +49,19 @@ class AppTextField extends StatelessWidget {
     this.autovalidateMode = AutovalidateMode.onUserInteraction,
   });
 
+  @override
+  State<AppTextField> createState() => _AppTextFieldState();
+}
+
+class _AppTextFieldState extends State<AppTextField> {
+  late bool _isObscured;
+
+  @override
+  void initState() {
+    super.initState();
+    _isObscured = widget.obscureText;
+  }
+
   Widget? _buildIcon(dynamic input) {
     if (input == null) return null;
 
@@ -62,7 +76,7 @@ class AppTextField extends StatelessWidget {
         (input.endsWith('.png') || input.endsWith('.jpg'))) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12.0),
-        child: Image.asset(input, height: 20, width: 2),
+        child: Image.asset(input, height: 20, width: 20),
       );
     }
 
@@ -71,7 +85,7 @@ class AppTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final shadow = boxShadow ??
+    final shadow = widget.boxShadow ??
         [
           const BoxShadow(
             color: Colors.black12,
@@ -83,68 +97,86 @@ class AppTextField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (heading != null) ...[
+        if (widget.heading != null) ...[
           AppTextWidget(
-            text:  heading!,
+            text: widget.heading!,
             styleType: StyleType.subHeading,
           ),
           const SizedBox(height: 8),
         ],
         Container(
           decoration: BoxDecoration(
-            color: fillColor,
-            borderRadius: BorderRadius.circular(borderRadius),
+            color: widget.fillColor ?? AppColors.baseColor,
+            borderRadius: BorderRadius.circular(widget.borderRadius),
             boxShadow: shadow,
           ),
           child: TextFormField(
-            controller: controller,
-            maxLines: maxlines,
-            maxLength: maxLength,
-            obscureText: obscureText,
-            validator: validator,
-            keyboardType: keyboardType,
-            autovalidateMode: autovalidateMode,
-            onChanged: onChanged,
+            controller: widget.controller,
+            maxLines: widget.maxlines,
+            maxLength: widget.maxLength,
+            obscureText: _isObscured,
+            validator: widget.validator,
+            keyboardType: widget.keyboardType,
+            autovalidateMode: widget.autovalidateMode,
+            onChanged: widget.onChanged,
             style: AppTextStyle().bodyText(context: context),
             decoration: InputDecoration(
               contentPadding:
-              const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-              hintText: hintText,
-              hintStyle: AppTextStyle().bodyText(context: context,color: Theme.of(context).primaryColorDark.withOpacity(0.4)),
-              prefixIcon: prefix != null ?
-              SizedBox(
-                height: 20,
-                width: 20,
-                child: Center(child: _buildIcon(prefix)),
-              ):null,
-              suffixIcon: Container(
-                width: Statics().iconMediumLargeSize,
-                height: Statics().iconMediumLargeSize,
-                child: suffix != null
-                    ? InkWell(
-                  onTap: onSuffixTap,
-                  child: SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: Center(child: _buildIcon(suffix)),
-                  ),
-                )
-                    : null,
+                  const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+              hintText: widget.hintText,
+              hintStyle: AppTextStyle().bodyText(
+                context: context,
+                color: Theme.of(context).primaryColorDark.withOpacity(0.4),
               ),
+              prefixIcon: widget.prefix != null
+                  ? SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: Center(child: _buildIcon(widget.prefix)),
+                    )
+                  : null,
+              suffixIcon: widget.suffix != null
+                  ? InkWell(
+                      onTap: widget.onSuffixTap ??
+                          () {
+                            setState(() {
+                              _isObscured = !_isObscured;
+                            });
+                          },
+                      child: SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: Center(child: _buildIcon(widget.suffix)),
+                      ),
+                    )
+                  : widget.obscureText
+                      ? IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _isObscured = !_isObscured;
+                            });
+                          },
+                          icon: SvgPicture.asset(
+                            _isObscured ? AppIcons.viewOff : AppIcons.viewOn,
+                            height: 20,
+                            width: 20,
+                          ),
+                        )
+                      : null,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(borderRadius),
-                borderSide: BorderSide(color: borderColor),
+                borderRadius: BorderRadius.circular(widget.borderRadius),
+                borderSide: BorderSide(color: widget.borderColor),
               ),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(borderRadius),
-                borderSide: BorderSide(color: borderColor),
+                borderRadius: BorderRadius.circular(widget.borderRadius),
+                borderSide: BorderSide(color: widget.borderColor),
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(borderRadius),
-                borderSide: BorderSide(color: borderColor, width: 1.5),
+                borderRadius: BorderRadius.circular(widget.borderRadius),
+                borderSide: BorderSide(color: widget.borderColor, width: 1.5),
               ),
               filled: true,
-              fillColor: fillColor ?? AppColors.baseColor,
+              fillColor: widget.fillColor ?? AppColors.baseColor,
             ),
           ),
         ),

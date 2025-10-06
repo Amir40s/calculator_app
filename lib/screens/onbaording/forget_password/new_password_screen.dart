@@ -21,95 +21,95 @@ class NewPasswordScreen extends StatelessWidget {
 
     return Scaffold(
 
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          child: Form(
-            key: controller.newPasswordFormKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(height: 40),
-                /// Logo
-                LogoTextWidget(),
+      // body: SafeArea(
+      //   child: SingleChildScrollView(
+      //     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      //     child: Form(
+      //       key: controller.newPasswordFormKey,
+      //       child: Column(
+      //         crossAxisAlignment: CrossAxisAlignment.center,
+      //         children: [
+      //           const SizedBox(height: 40),
+      //           /// Logo
+      //           LogoTextWidget(),
 
-                SizedBox(height: 4.h),
+      //           SizedBox(height: 4.h),
 
-                /// Title & subtitle
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: AppTextWidget(
-                    text: "New Password",
-                    styleType: StyleType.heading,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: AppTextWidget(
-                    text: "Enter the Password and Continue",
-                    color: Color(0xff61677D),
-                  ),
-                ),
+      //           /// Title & subtitle
+      //           Align(
+      //             alignment: Alignment.centerLeft,
+      //             child: AppTextWidget(
+      //               text: "New Password",
+      //               styleType: StyleType.heading,
+      //             ),
+      //           ),
+      //           const SizedBox(height: 4),
+      //           Align(
+      //             alignment: Alignment.centerLeft,
+      //             child: AppTextWidget(
+      //               text: "Enter the Password and Continue",
+      //               color: Color(0xff61677D),
+      //             ),
+      //           ),
 
-                const SizedBox(height: 20),
+      //           const SizedBox(height: 20),
 
-                /// Email field
-                Obx(() {
-                  return TitleWithField(
-                    title: "Password",
-                    hint: '******',
-                    obscureText: !controller.isPasswordVisible.value,
-                    suffix: controller.isPasswordVisible.value
-                        ? AppIcons.viewOn
-                        : AppIcons.viewOff,
-                    prefix: AppIcons.lockSvg,
-                    controller: controller.passwordController,
-                    validator: Validators.strongPassword,
-                    onTap: controller.togglePasswordVisibility,
+      //           /// Email field
+      //           Obx(() {
+      //             return TitleWithField(
+      //               title: "Password",
+      //               hint: '******',
+      //               obscureText: !controller.isPasswordVisible.value,
+      //               suffix: controller.isPasswordVisible.value
+      //                   ? AppIcons.viewOn
+      //                   : AppIcons.viewOff,
+      //               prefix: AppIcons.lockSvg,
+      //               controller: controller.passwordController,
+      //               validator: Validators.strongPassword,
+      //               onTap: controller.togglePasswordVisibility,
 
-                  );
-                }
-                ),
-                const SizedBox(height: 16),
+      //             );
+      //           }
+      //           ),
+      //           const SizedBox(height: 16),
 
-                /// Password field
-                Obx(() {
-                  return TitleWithField(
-                    title: "Confirm Password",
-                    hint: '******',
-                    obscureText: !controller.isConfirmPasswordVisible.value,
-                    suffix: controller.isConfirmPasswordVisible.value
-                        ? AppIcons.viewOn
-                        : AppIcons.viewOff,
-                    prefix: AppIcons.lockSvg,
-                    controller: controller.confirmPasswordController,
-                    validator: Validators.strongPassword,
-                    onTap: controller.toggleConfirmPasswordVisibility,
+      //           /// Password field
+      //           Obx(() {
+      //             return TitleWithField(
+      //               title: "Confirm Password",
+      //               hint: '******',
+      //               obscureText: !controller.isConfirmPasswordVisible.value,
+      //               suffix: controller.isConfirmPasswordVisible.value
+      //                   ? AppIcons.viewOn
+      //                   : AppIcons.viewOff,
+      //               prefix: AppIcons.lockSvg,
+      //               controller: controller.confirmPasswordController,
+      //               validator: Validators.strongPassword,
+      //               onTap: controller.toggleConfirmPasswordVisibility,
 
-                  );
-                }
-                ),
+      //             );
+      //           }
+      //           ),
 
-                SizedBox(height: 3.h),
+      //           SizedBox(height: 3.h),
 
-                /// Log In Button
-                AppButtonWidget(
-                  text: 'Save Password',
-                  height: 5.h,
-                  width: 100.w,
-                  buttonColor: AppColors.blueColor,
-                  onPressed: () {
-                    controller.changePassword();
-                  },
-                ),
+      //           /// Log In Button
+      //           AppButtonWidget(
+      //             text: 'Save Password',
+      //             height: 5.h,
+      //             width: 100.w,
+      //             buttonColor: AppColors.blueColor,
+      //             onPressed: () {
+      //               controller.changePassword();
+      //             },
+      //           ),
 
-                const SizedBox(height: 16),
-              ],
-            ),
-          ),
-        ),
-      ),
+      //           const SizedBox(height: 16),
+      //         ],
+      //       ),
+      //     ),
+      //   ),
+      // ),
     );
   }
 }

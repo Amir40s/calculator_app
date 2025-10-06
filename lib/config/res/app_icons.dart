@@ -29,6 +29,7 @@ class AppIcons{
 
   ///new
   static const google =   "assets/icons/google.svg";
+  static const apple =   "assets/icons/apple.svg";
   static const mail =   "assets/icons/mail.svg";
   static const viewOff =   "assets/icons/view_off.svg";
   static const viewOn =   "assets/icons/view_on.svg";
