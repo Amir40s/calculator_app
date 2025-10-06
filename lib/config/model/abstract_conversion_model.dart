@@ -1,4 +1,5 @@
-abstract class BaseConversionModel {
+// base_conversion_model.dart
+class BaseConversionModel {
   final InputData input;
   final Map<String, double> conversions;
   final List<String> availableUnits;
@@ -9,7 +10,7 @@ abstract class BaseConversionModel {
     required this.availableUnits,
   });
 
-  /// 🔹 Shared helper to safely convert all numeric values to double
+  /// Shared helper to safely convert all numeric values to double
   static Map<String, double> normalizeConversions(Map<String, dynamic> jsonMap) {
     return Map<String, double>.fromEntries(
       jsonMap.entries.map(
@@ -22,6 +23,20 @@ abstract class BaseConversionModel {
       ),
     );
   }
+
+  factory BaseConversionModel.fromJson(Map<String, dynamic> json) {
+    return BaseConversionModel(
+      input: InputData.fromJson(json['input']),
+      conversions: normalizeConversions(json['conversions']),
+      availableUnits: List<String>.from(json['availableUnits']),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'input': input.toJson(),
+    'conversions': conversions,
+    'availableUnits': availableUnits,
+  };
 }
 
 class InputData {

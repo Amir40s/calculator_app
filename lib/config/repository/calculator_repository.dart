@@ -7,32 +7,34 @@ class CalculatorRepository {
   //get all calculators
   Future<dynamic> getAllCalculators() async {
     final url = BaseUrl.allCalculators;
-    return await _apiService.getApi( url: url);
+    return await _apiService.getApi(url: url);
   }
 
-
-
   // 🔹 Length & Distance Converter
-  Future<dynamic> convertLength({
+  Future<dynamic> convert({
+    required String endpoint,
     required double value,
     required String fromUnit,
   }) async {
     final url = Endpoint.lengthDistanceConverter;
-    final body = {
-      "value": value,
-      "fromUnit": fromUnit,
-    };
+    final body = {"value": value, "fromUnit": fromUnit};
     return await _apiService.postApi(url: url, data: body);
-  }  // 🔹Area Converter
+  } // 🔹Area Converter
+ Future<dynamic> convertLength({
+    required double value,
+    required String fromUnit,
+  }) async {
+    final url = Endpoint.lengthDistanceConverter;
+    final body = {"value": value, "fromUnit": fromUnit};
+    return await _apiService.postApi(url: url, data: body);
+  } // 🔹Area Converter
+
   Future<dynamic> convertArea({
     required double value,
     required String fromUnit,
   }) async {
     final url = Endpoint.areaConverter;
-    final body = {
-      "value": value,
-      "fromUnit": fromUnit,
-    };
+    final body = {"value": value, "fromUnit": fromUnit};
     return await _apiService.postApi(url: url, data: body);
   }
 
@@ -42,53 +44,42 @@ class CalculatorRepository {
     required String fromUnit,
   }) async {
     final url = Endpoint.volumeConverter;
-    final body = {
-      "value": value,
-      "fromUnit": fromUnit,
-    };
+    final body = {"value": value, "fromUnit": fromUnit};
     return await _apiService.postApi(url: url, data: body);
-  }  // 🔹 Temperature Converter
+  } // 🔹 Temperature Converter
+
   Future<dynamic> convertTemperature({
     required double value,
     required String fromUnit,
   }) async {
-    final url = Endpoint.volumeConverter;
-    final body = {
-      "value": value,
-      "fromUnit": fromUnit,
-    };
+    final url = Endpoint.temperatureConverter;
+    final body = {"value": value, "fromUnit": fromUnit};
     return await _apiService.postApi(url: url, data: body);
   }
 
-  Future<dynamic> calculateConcrete({
-    required double volume,
-    required String mixRatio,
-    required String unit,
+  Future<dynamic> convertForce({
+    required double value,
+    required String fromUnit,
   }) async {
-    return await _apiService.postApi(
-      url: '${BaseUrl.baseUrl}concrete-mix/calculate',
-      data: {
-        "volume": volume,
-        "mixRatio": mixRatio,
-        "unit": unit,
-      },
-    );
+    final url = Endpoint.forceConverter;
+    final body = {"value": value, "fromUnit": fromUnit};
+    return await _apiService.postApi(url: url, data: body);
   }
 
-  Future<dynamic> calculateGreyStructure({
-    required double area,
-    required int floors,
-    required String materialType,
-    required String location,
+  Future<dynamic> convertAngle({
+    required double value,
+    required String fromUnit,
   }) async {
-    return await _apiService.postApi(
-      url: '${BaseUrl.baseUrl}grey-structure/calculate',
-      data: {
-        "area": area,
-        "floors": floors,
-        "materialType": materialType,
-        "location": location,
-      },
-    );
+    final url = Endpoint.angleConverter;
+    final body = {"value": value, "fromUnit": fromUnit};
+    return await _apiService.postApi(url: url, data: body);
+  } Future<dynamic> convertDensity({
+    required double value,
+    required String fromUnit,
+  }) async {
+    final url = Endpoint.densityConverter;
+    final body = {"value": value, "fromUnit": fromUnit};
+    return await _apiService.postApi(url: url, data: body);
   }
+
 }

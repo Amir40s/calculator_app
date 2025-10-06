@@ -1,32 +1,36 @@
-import 'dart:convert';
 import 'dart:developer';
+
 import 'package:get/get.dart';
-import '../../../../config/model/abstract_conversion_model.dart';
-import '../../../../config/model/conversion_calculator/length_conversion_model.dart';
+import 'package:smart_construction_calculator/config/model/conversion_calculator/temperature_conversion_model.dart';
+
+import '../../../../config/model/conversion_calculator/angle_conversion_model.dart';
 import '../../../../config/repository/calculator_repository.dart';
 import '../../base_calculator_controller.dart';
 
-
-class ConversionController extends BaseCalculatorController<LengthConversionModel> {
+class AngleConversionController extends BaseCalculatorController<AngleConversionModel> {
   final  _repo = CalculatorRepository();
 
-// for length/distance
-  final RxString selectedUnit = 'ft'.obs;
+
+  final RxString selectedUnit = 'deg'.obs;
   final RxString inputValue = ''.obs;
 
-  /// Default units (can also be replaced dynamically from API)
-  final RxList<String> availableUnits = <String>[
-    'mm', 'cm', 'm', 'km', 'in', 'ft', 'yd', 'mi'
+  final List<String> availableUnits = [
+    "deg",
+    "rad",
+    "grad",
+    "arcmin",
+    "arcsec"
   ].obs;
-  Future<void> convertLength() async {
+
+  Future<void> convert() async {
     setLoading(true);
     try {
-      final response = await _repo.convertLength(
+      final response = await _repo.convertAngle(
         value: double.tryParse(inputValue.value) ?? 0.0,
         fromUnit: selectedUnit.value,
       );
       // Parse JSON into model
-      setData(LengthConversionModel.fromJson(response));
+      setData(AngleConversionModel.fromJson(response));
     } catch (e) {
       log("Error in convertLength: $e");
       Get.snackbar('Error', e.toString());
@@ -39,5 +43,3 @@ class ConversionController extends BaseCalculatorController<LengthConversionMode
   void setUnit(String value) => selectedUnit.value = value;
 
 }
-
-

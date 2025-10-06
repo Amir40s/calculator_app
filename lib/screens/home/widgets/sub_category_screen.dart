@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:smart_construction_calculator/core/component/appbar_widget.dart';
+import 'package:smart_construction_calculator/screens/home/widgets/density_conversion_screen.dart';
+import 'package:smart_construction_calculator/screens/home/widgets/force_conversion.dart';
 import 'package:smart_construction_calculator/screens/home/widgets/length_distance.dart';
+import 'package:smart_construction_calculator/screens/home/widgets/temperature_conversion.dart';
 import 'package:smart_construction_calculator/screens/home/widgets/volume_conversion_screen.dart';
 import '../../../config/routes/routes_name.dart';
+import 'angle_conversion_screen.dart';
 import 'area_conversion.dart';
 
 class SubCategoryScreen extends StatelessWidget {
@@ -18,10 +22,7 @@ class SubCategoryScreen extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          AppBarWidget(
-            text: itemName,
-            showDivider: true,
-          ),
+          AppBarWidget(text: itemName, showDivider: true),
           Expanded(
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),
@@ -43,8 +44,14 @@ class SubCategoryScreen extends StatelessWidget {
 
       case SubCategoryNames.areaUnit:
         return AreaConversionScreen(itemName: itemName);
-case SubCategoryNames.temperature:
-        return AreaConversionScreen(itemName: itemName);
+      case SubCategoryNames.temperature:
+        return TemperatureConversionScreen(itemName: itemName);
+case SubCategoryNames.force:
+        return ForceConversionScreen(itemName: itemName);
+case SubCategoryNames.angle:
+        return AngleConversionScreen(itemName: itemName);
+case SubCategoryNames.density:
+        return DensityConversionScreen(itemName: itemName);
 
       default:
         return Center(
