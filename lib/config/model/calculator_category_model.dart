@@ -22,8 +22,8 @@ class CalculatorItem {
 }
 
 class CategoryItemModel {
-  final String name;       // name of subcategory
-  final String? routeKey;  // optional, if you want to navigate later
+  final String name;
+  final String? routeKey;
 
   CategoryItemModel({
     required this.name,

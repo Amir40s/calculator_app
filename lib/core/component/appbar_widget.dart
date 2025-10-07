@@ -43,14 +43,20 @@ class AppBarWidget extends StatelessWidget {
                     padding: EdgeInsets.only(right: 3.w),
                     child: const AppBackButton(),
                   ),
-                AppTextWidget(
-                  text: text,
-                  styleType: StyleType.dialogHeading,
+                Expanded(
+                  child: AppTextWidget(
+                    text: text,
+                    styleType: StyleType.dialogHeading,
+                    overflow: TextOverflow.ellipsis,
+                    maxLine: 2,
+                    textAlign: centre ? TextAlign.center : TextAlign.start,
+                  ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(left: 3.w),
-                  child: trailing ?? const SizedBox.shrink(),
-                )
+                if (trailing != null)
+                  Padding(
+                    padding: EdgeInsets.only(left: 2.w),
+                    child: trailing!,
+                  ),
               ],
             ),
           ),

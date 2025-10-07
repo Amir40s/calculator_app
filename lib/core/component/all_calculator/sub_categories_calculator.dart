@@ -15,6 +15,11 @@ class SubCategoryData {
       CategoryItemModel(name: SubCategoryNames.concreteMixVolume),
       CategoryItemModel(name: SubCategoryNames.powerEnergy),
     ],
+    'construction-cost-estimation-and-budgetings': [
+      CategoryItemModel(name: SubCategoryNames.greyStructure),
+      CategoryItemModel(name: SubCategoryNames.finishingCost),
+      CategoryItemModel(name: SubCategoryNames.projectCost),
+    ],
     'geo-tech-calculator': [
       CategoryItemModel(name: SubCategoryNames.soilBearing),
       CategoryItemModel(name: SubCategoryNames.slopeStability),
@@ -24,5 +29,6 @@ class SubCategoryData {
       CategoryItemModel(name: SubCategoryNames.cutFill),
       CategoryItemModel(name: SubCategoryNames.excavationVolume),
     ],
+
   };
 }

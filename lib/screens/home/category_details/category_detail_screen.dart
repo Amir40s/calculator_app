@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -20,7 +22,6 @@ class CategoryDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final subCategories = SubCategoryData.subCategories[category] ?? [];
-
     return Scaffold(
       body: Column(
         children: [
@@ -34,7 +35,6 @@ class CategoryDetailScreen extends StatelessWidget {
                 final item = subCategories[index];
                 return GestureDetector(
                   onTap: () {
-                    // TODO: Navigate to inner calculator later
                     ScreenMapper.navigateToScreen( item.name);
                   },
                   child: Container(

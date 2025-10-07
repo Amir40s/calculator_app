@@ -17,7 +17,6 @@ class CalculatorController extends BaseCalculatorController<List<CalculatorModel
           .map((item) => CalculatorModel.fromMap(item))
           .toList();
 
-      // ✅ Set data in BaseCalculatorController
       setData(calculators);
       log("Fetched ${calculators.length} calculators");
     } catch (e) {

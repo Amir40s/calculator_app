@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:smart_construction_calculator/core/component/appbar_widget.dart';
+import 'package:smart_construction_calculator/screens/home/widgets/concrete_mix_screen.dart';
 import 'package:smart_construction_calculator/screens/home/widgets/density_conversion_screen.dart';
 import 'package:smart_construction_calculator/screens/home/widgets/force_conversion.dart';
+import 'package:smart_construction_calculator/screens/home/widgets/grey_structure_screen.dart';
 import 'package:smart_construction_calculator/screens/home/widgets/length_distance.dart';
+import 'package:smart_construction_calculator/screens/home/widgets/powerNEnergy_screen.dart';
+import 'package:smart_construction_calculator/screens/home/widgets/reber_conversion_screen.dart';
 import 'package:smart_construction_calculator/screens/home/widgets/temperature_conversion.dart';
 import 'package:smart_construction_calculator/screens/home/widgets/volume_conversion_screen.dart';
 import '../../../config/routes/routes_name.dart';
@@ -52,6 +56,14 @@ case SubCategoryNames.angle:
         return AngleConversionScreen(itemName: itemName);
 case SubCategoryNames.density:
         return DensityConversionScreen(itemName: itemName);
+case SubCategoryNames.rebarSteel:
+        return RebarConversionScreen(itemName: itemName);
+case SubCategoryNames.concreteMixVolume:
+        return ConcreteMixConversionScreen(itemName: itemName);
+case SubCategoryNames.powerEnergy:
+        return PowerEnergyConversionScreen(itemName: itemName);
+case SubCategoryNames.greyStructure:
+        return GreyStructureConversionScreen(itemName: itemName);
 
       default:
         return Center(

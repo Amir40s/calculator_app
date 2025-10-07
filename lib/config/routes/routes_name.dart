@@ -26,6 +26,12 @@ class SubCategoryNames{
   static const String concreteMixVolume = 'Concrete Mix and Volume Conversions';
   static const String powerEnergy = 'Power / Energy Conversions';
 
+  // 🔹 grey structure Calculator Subcategories
+  static const String greyStructure = 'Grey Structure Cost Estimation';
+  static const String finishingCost = 'Finishing Cost Estimation';
+  static const String projectCost = 'Project Cost Estimation';
+
+
   // 🔹 Geo Tech Calculator Subcategories
   static const String soilBearing = 'Soil Bearing Capacity';
   static const String slopeStability = 'Slope Stability';
@@ -34,4 +40,7 @@ class SubCategoryNames{
   // 🔹 Earth Work Calculator Subcategories
   static const String cutFill = 'Cut & Fill Estimation';
   static const String excavationVolume = 'Excavation Volume Calculator';
+
+
+
 }

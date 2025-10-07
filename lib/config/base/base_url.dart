@@ -27,6 +27,12 @@ class Endpoint{
   static const  angleConverter = "${BaseUrl.baseUrl}/angle/convert";
   static const  densityConverter = "${BaseUrl.baseUrl}/density/convert";
   static const  rebarConverter = "${BaseUrl.baseUrl}/rebar/calculate";
+  static const  concreteMixConverter = "${BaseUrl.baseUrl}/concrete-mix/calculate";
+  static const  powerEnergy = "${BaseUrl.baseUrl}/power-energy/convert";
+  static const  greyStructure = "${BaseUrl.baseUrl}/grey-structure/calculate";
+  static const  woodVolume = "${BaseUrl.baseUrl}/wood-volume/calculate";
+  static const  doorVolume = "${BaseUrl.baseUrl}/door-volume/calculate";
+  static const  doorBeading = "${BaseUrl.baseUrl}/door-beading/calculate";
 }
 
 

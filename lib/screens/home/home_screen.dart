@@ -124,6 +124,10 @@ class HomeScreen extends StatelessWidget {
                           color: AppUtils().randomColor(),
                           icon: calc.iconWidget,
                           onTap: () {
+                            print("🚀 Going to detail screen with:");
+                            print("title: ${calc.title}");
+                            print("routeKey: ${calc.routeKey}");
+
                             Get.to(CategoryDetailScreen(
                               title: calc.title,
                                 category: calc.routeKey));
