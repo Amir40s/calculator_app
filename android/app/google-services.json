@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "480910440246",
+    "project_id": "uhconst-11438",
+    "storage_bucket": "uhconst-11438.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:480910440246:android:92214fae03cfa1e8b3a597",
+        "android_client_info": {
+          "package_name": "com.example.smart_construction_calculator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "480910440246-15buu1d67cvah5o03bvo9jp8te8bttqi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.smart_construction_calculator",
+            "certificate_hash": "df4700b457cd7d84fecbb0ce683b236bb03fe962"
+          }
+        },
+        {
+          "client_id": "480910440246-j2uibqcqujgg0e50bim7janvbehp20h2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHB86W8eofcsyRKcltpcJv8t18jqkS9JI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "480910440246-j2uibqcqujgg0e50bim7janvbehp20h2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "480910440246-0pnn2935bfcim5ls2fimrm9dsaae8b18.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.smartConstructionCalculator"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

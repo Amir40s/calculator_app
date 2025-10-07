@@ -1,106 +1,236 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../config/routes/routes_name.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:smart_construction_calculator/config/model/user_model.dart';
+import 'package:smart_construction_calculator/config/res/app_constants.dart';
+import 'package:smart_construction_calculator/config/routes/routes_name.dart';
+import 'package:smart_construction_calculator/config/utility/app_utils.dart';
+import 'package:smart_construction_calculator/core/controller/otp_controller.dart';
+import 'package:smart_construction_calculator/core/repository/auth_repository.dart';
 
 class AuthController extends GetxController {
-  // Form Key
-  final loginFormKey = GlobalKey<FormState>();
-  final signupFormKey = GlobalKey<FormState>();
-  final forgetPasswordFormKey = GlobalKey<FormState>();
-  final newPasswordFormKey = GlobalKey<FormState>();
-  // Text Controllers
-  final firstNameController = TextEditingController();
-  final lastNameController = TextEditingController();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
-  final forgetPasswordController = TextEditingController();
+  final _authRepository = AuthRepository.instance;
 
-  // Reactive password visibility
-  var isPasswordVisible = false.obs;
-  final isConfirmPasswordVisible = false.obs;
+  TextEditingController? _signUpEmailC;
+  TextEditingController? _signUpFirstNameC;
+  TextEditingController? _signUpLastNameC;
+  TextEditingController? _signUpPasswordC;
+  TextEditingController? _loginEmailC;
+  TextEditingController? _loginPasswordC;
 
-  // Toggle password visibility
-  void togglePasswordVisibility() => isPasswordVisible.toggle();
+  TextEditingController? get signUpFirstNameC => _signUpFirstNameC;
+  TextEditingController? get signUpLastNameC => _signUpLastNameC;
+  TextEditingController? get signUpEmailC => _signUpEmailC;
+  TextEditingController? get signUpPasswordC => _signUpPasswordC;
+  TextEditingController? get loginEmailC => _loginEmailC;
+  TextEditingController? get loginPasswordC => _loginPasswordC;
 
-  void toggleConfirmPasswordVisibility() => isConfirmPasswordVisible.toggle();
-
-  // Validate and Login
-  Future<void> login() async {
-    Get.toNamed(RoutesName.mainScreen);
-
-    // if (loginFormKey.currentState?.validate() ?? false) {
-    //   Get.snackbar("Success", "Login Successful");
-    //   Get.toNamed(RoutesName.mainScreen);
-    //   emailController.clear();
-    //   passwordController.clear();
-    // } else {
-    //   Get.snackbar("Error", "Please fix errors");
-    // }
+  @override
+  void onInit() {
+    _signUpEmailC = TextEditingController();
+    _signUpFirstNameC = TextEditingController();
+    _signUpLastNameC = TextEditingController();
+    _signUpPasswordC = TextEditingController();
+    _loginEmailC = TextEditingController();
+    _loginPasswordC = TextEditingController();
+    super.onInit();
   }
 
-  Future<void> signup() async {
-    if (signupFormKey.currentState?.validate() ?? false) {
-      // ✅ Valid form, perform login logic
-      Get.snackbar("Success", "Login Successful");
-      emailController.clear();
-      passwordController.clear();
-      firstNameController.clear();
-      lastNameController.clear();
-    } else {
-      Get.snackbar("Error", "Please fix errors");
+  String? _pendingUserId;
+
+  Future<void> continueWithGoogle({required BuildContext context}) async {
+    loaderC.showLoader();
+    await GoogleSignIn().signOut();
+
+    final response = await _authRepository.continueWithGoogle();
+
+    response.fold(
+      (error) {
+        AppUtils.showToast(text: error.message, bgColor: Colors.red);
+      },
+      (user) async {
+        await userC.loadCurrentUser();
+        AppUtils.showToast(text: 'Login Successful', bgColor: Colors.green);
+        Get.offAllNamed(RoutesName.mainScreen);
+      },
+    );
+
+    loaderC.hideLoader();
+  }
+
+  Future<void> sendPasswordResetEmail({required BuildContext context}) async {
+    if (_loginEmailC!.text.trim().isEmpty) {
+      AppUtils.showToast(text: 'Please enter your email', bgColor: Colors.red);
+      return;
+    }
+
+    loaderC.showLoader();
+    final response = await _authRepository.sendPasswordResetEmail(
+      email: _loginEmailC!.text.trim(),
+    );
+
+    response.fold(
+      (error) => AppUtils.showToast(text: error.message, bgColor: Colors.red),
+      (_) => AppUtils.showToast(
+          text: 'Password reset email sent', bgColor: Colors.green),
+    );
+
+    loaderC.hideLoader();
+  }
+
+  Future<void> signup({required BuildContext context}) async {
+    loaderC.showLoader();
+  await Future.delayed(Duration.zero); 
+    try {
+     final response = await _authRepository.signup(
+  user: UserModel(
+    firstName: _signUpFirstNameC!.text.trim(),
+    lastName: _signUpLastNameC!.text.trim(),
+    email: _signUpEmailC!.text.trim(),
+    password: _signUpPasswordC!.text.trim(),
+  ),
+);
+
+response.fold(
+  (error) {
+    AppUtils.showToast(text: error.message, bgColor: Colors.red);
+    loaderC.hideLoader();
+  },
+  (user) async {
+    _pendingUserId = user.id;
+
+    if (_pendingUserId == null) {
+      AppUtils.showToast(
+          text: 'Signup failed, please try again.', bgColor: Colors.red);
+      loaderC.hideLoader();
+      return;
+    }
+
+    final otpController = Get.find<OTPController>();
+    await otpController.sendOTP(context);
+    Get.toNamed(RoutesName.confirmOtp);
+  },
+);
+
+    } catch (error) {
+      AppUtils.showToast(text: error.toString(), bgColor: Colors.red);
+    } finally {
+      loaderC.hideLoader();
     }
   }
 
-  Future<void> sendCode() async {
-    if (forgetPasswordFormKey.currentState?.validate() ?? false) {
-      Get.toNamed(RoutesName.confirmOtp);
+  Future<void> checkEmailExist({required BuildContext context}) async {
+    loaderC.showLoader();
+    final response = await _authRepository.checkEmailExist(
+        email: _signUpEmailC?.text.trim() ?? '');
 
-      Get.snackbar(
-        "Success",
-        "Login Successful",
-        snackPosition: SnackPosition.BOTTOM,
-      );
-
-      forgetPasswordController.clear();
-    } else {
-      Get.snackbar(
-        "Error",
-        "Please fill in all required fields",
-        snackPosition: SnackPosition.BOTTOM,
-      );
-    }
+    response.fold(
+      (error) {
+        AppUtils.showToast(text: error.message, bgColor: Colors.red);
+        loaderC.hideLoader();
+      },
+      (isEmailExist) async {
+        if (isEmailExist) {
+          AppUtils.showToast(text: 'Email already exist', bgColor: Colors.red);
+        } else {
+          await otpC.sendOTP(context);
+          Get.toNamed(RoutesName.confirmOtp);
+        }
+        loaderC.hideLoader();
+      },
+    );
   }
 
-  Future<void> changePassword() async {
-    if (newPasswordFormKey.currentState?.validate() ?? false) {
-      // Check if both password fields match
-      if (passwordController.text.trim() ==
-          confirmPasswordController.text.trim()) {
-        Get.snackbar(
-          "Success",
-          "Password Changed Successfully",
-          snackPosition: SnackPosition.BOTTOM,
-        );
+ Future<void> verifyOTPAndSaveUser(BuildContext context) async {
+  print('🔍 VERIFY OTP CALLED');
 
-        passwordController.clear();
-        confirmPasswordController.clear();
+  if (_pendingUserId == null) {
+    AppUtils.showToast(
+      text: 'User ID missing. Please sign up again.',
+      bgColor: Colors.red,
+    );
+    return;
+  }
 
-        Get.offAllNamed(RoutesName.login);
-      } else {
-        Get.snackbar(
-          "Error",
-          "Passwords do not match",
-          snackPosition: SnackPosition.BOTTOM,
-        );
-      }
-    } else {
-      Get.snackbar(
-        "Error",
-        "Please fill in all required fields",
-        snackPosition: SnackPosition.BOTTOM,
-      );
-    }
+  loaderC.showLoader(); 
+
+  final user = UserModel(
+    id: _pendingUserId!,
+    firstName: _signUpFirstNameC?.text.trim() ?? '',
+    lastName: _signUpLastNameC?.text.trim() ?? '',
+    email: _signUpEmailC?.text.trim() ?? '',
+    password: _signUpPasswordC?.text.trim() ?? '',
+  );
+
+  try {
+    await _authRepository.saveUserToFirestore(user);
+
+    AppUtils.showToast(
+      text: 'Signup successful!',
+      bgColor: Colors.green,
+    );
+
+    Get.offAllNamed(RoutesName.mainScreen);
+  } catch (e, st) {
+    print('🔥 ERROR while saving user: $e\n$st');
+
+    AppUtils.showToast(
+      text: 'Failed to verify OTP. Please try again.',
+      bgColor: Colors.red,
+    );
+  } finally {
+    loaderC.hideLoader();
+  }
+}
+
+
+
+
+  Future<void> deleteUnverifiedUser() async {
+  final currentUser = FirebaseAuth.instance.currentUser;
+  if (currentUser != null) {
+    await currentUser.delete();
+  }
+}
+
+
+  Future<void> login({required BuildContext context}) async {
+    loaderC.showLoader();
+    final response = await _authRepository.login(
+      user: UserModel(
+        email: _loginEmailC!.text.trim(),
+        password: _loginPasswordC!.text.trim(),
+      ),
+    );
+
+    response.fold(
+      (error) => AppUtils.showToast(text: error.message, bgColor: Colors.red),
+      (user) async {
+        AppUtils.showToast(text: 'Login Successful', bgColor: Colors.green);
+        Get.offAllNamed(RoutesName.mainScreen);
+      },
+    );
+
+    loaderC.hideLoader();
+  }
+
+  Future<void> logout() async {
+    loaderC.showLoader();
+    await _authRepository.logout();
+    loaderC.hideLoader();
+    Get.offAllNamed(RoutesName.login);
+  }
+
+  @override
+  void dispose() {
+    _signUpEmailC?.dispose();
+    _signUpFirstNameC?.dispose();
+    _signUpLastNameC?.dispose();
+    _signUpPasswordC?.dispose();
+    _loginEmailC?.dispose();
+    _loginPasswordC?.dispose();
+    super.dispose();
   }
 }

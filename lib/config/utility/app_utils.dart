@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -91,6 +93,32 @@ class AppUtils{
       webShowClose: webShowClose ?? false,
     );
   }
+  
+    static Future<String?> uploadImageToFirebase(File file, String path) async {
+    try {
+      final ref = FirebaseStorage.instance.ref().child(path);
+      await ref.putFile(file);
+      return await ref.getDownloadURL();
+    } catch (e) {
+      showToast(text: 'Image upload failed: $e');
+      return null;
+    }
+  }
+  
+static Future<void> uploadNotificationToFirebase({
+  required String title,
+  required String body,
+  required String uid,
+}) async {
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  await firestore.collection('notifications').add({
+    'title': title,
+    'body': body,
+    'uid': uid,
+    'createdAt': DateTime.now().toIso8601String(),
+  });
+}
 
 
  static String cleanInput(String input) {
@@ -99,6 +127,9 @@ class AppUtils{
         .trim();                         // remove leading/trailing spaces
   }
 
+static Color withOpacity({required Color color, required double opacity}) {
+  return color.withOpacity(opacity);
+}
   final random = Random();
   Color randomColor() =>
       Color((random.nextDouble() * 0xFFFFFF).toInt()).withOpacity(0.4);
