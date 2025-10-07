@@ -5,13 +5,17 @@ import 'package:smart_construction_calculator/config/res/app_color.dart';
 import 'package:smart_construction_calculator/config/res/app_icons.dart';
 import 'package:smart_construction_calculator/core/component/app_button_widget.dart';
 import 'package:smart_construction_calculator/core/component/app_text_widget.dart';
+import 'package:smart_construction_calculator/core/controller/auth_controller.dart';
+import 'package:smart_construction_calculator/core/controller/user_controller.dart';
+import 'package:smart_construction_calculator/screens/settings/logout_dialog_box.dart';
 import 'package:smart_construction_calculator/screens/settings/profile/edit_profile.dart';
 import '../../core/component/custom_list_item_widget.dart';
 import 'contact_us/contact_us_screen.dart';
 
 class SettingScreen extends StatelessWidget {
-  const SettingScreen({super.key});
+  SettingScreen({super.key});
 
+  final UserController userC = Get.find<UserController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,32 +25,30 @@ class SettingScreen extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               spacing: 20.px,
-            
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _title('Accounts'),
                 CustomListTileWidget(
-                  title:  "Personal Information",
+                  title: "Personal Information",
                   subtitle: "Update your Personal Information",
                   prefix: AppIcons.privacy,
                   onTap: () {
                     Get.to(EditProfileScreen());
                   },
                 ),
-            
                 CustomListTileWidget(
-                  title:  "Notification",
+                  title: "Notification",
                   subtitle: "Manage Notification Preferences",
                   prefix: AppIcons.bell,
                 ),
                 CustomListTileWidget(
-                  title:  "Subscription",
+                  title: "Subscription",
                   subtitle: "View and Manage Subscription",
                   prefix: AppIcons.subscription,
                 ),
                 _title('Supports'),
                 CustomListTileWidget(
-                  title:  "Contact Us",
+                  title: "Contact Us",
                   subtitle: "Contact Us Team Support",
                   prefix: AppIcons.call,
                   onTap: () {
@@ -55,15 +57,38 @@ class SettingScreen extends StatelessWidget {
                 ),
                 _title('Legal'),
                 CustomListTileWidget(
-                  title:  "Terms and Services",
+                  title: "Terms and Services",
                   prefix: AppIcons.terms,
-                ), CustomListTileWidget(
-                  title:  "Privacy Policy",
+                ),
+                CustomListTileWidget(
+                  title: "Privacy Policy",
                   prefix: AppIcons.privacy,
                 ),
-                SizedBox(height: 2.h,),
-                AppButtonWidget(text: 'Log Out',height: 6.h,width: 100.w,buttonColor: AppColors.blueColor,),
-                SizedBox(height: 2.h,),
+                SizedBox(
+                  height: 2.h,
+                ),
+                AppButtonWidget(
+                  text: 'Log Out',
+                  height: 6.h,
+                  width: 100.w,
+                  buttonColor: AppColors.blueColor,
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (_) => LogoutDialogBox(
+                        title: 'Logout',
+                        description: 'Are you sure you want to logout?',
+                        onConfirm: () {
+                          Get.back();
+                          Get.put(AuthController()).logout();
+                        },
+                      ),
+                    );
+                  },
+                ),
+                SizedBox(
+                  height: 2.h,
+                ),
               ],
             ),
           ),
@@ -71,11 +96,12 @@ class SettingScreen extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _title(String title) {
     return AppTextWidget(
       text: title,
-      textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,letterSpacing: 1),
+      textStyle: TextStyle(
+          fontSize: 16, fontWeight: FontWeight.bold, letterSpacing: 1),
     );
   }
 }

@@ -10,13 +10,13 @@ import 'home_screen.dart';
 class MainScreen extends StatelessWidget {
   MainScreen({super.key});
 
-  final  controller = Get.find<NavController>();
+  final  controller = Get.put(NavController());
 
   final List<Widget> screens = [
     const HomeScreen(),
     HistoryScreen(),
      SavedCalculatorScreen(),
-    const SettingScreen(),
+     SettingScreen(),
   ];
 
   @override

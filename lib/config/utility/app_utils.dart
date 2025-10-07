@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -91,6 +92,17 @@ class AppUtils{
       fontSize: fontSize ?? 16.0,
       webShowClose: webShowClose ?? false,
     );
+  }
+  
+    static Future<String?> uploadImageToFirebase(File file, String path) async {
+    try {
+      final ref = FirebaseStorage.instance.ref().child(path);
+      await ref.putFile(file);
+      return await ref.getDownloadURL();
+    } catch (e) {
+      showToast(text: 'Image upload failed: $e');
+      return null;
+    }
   }
   
 static Future<void> uploadNotificationToFirebase({
