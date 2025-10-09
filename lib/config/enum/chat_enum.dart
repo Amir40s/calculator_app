@@ -3,3 +3,8 @@ enum MessageType {
   image,
   voice,
 }
+
+enum AppPolicy {
+  privacy,
+  termsandconditoins,
+}

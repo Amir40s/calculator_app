@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:smart_construction_calculator/config/enum/chat_enum.dart';
 import 'package:smart_construction_calculator/config/res/app_color.dart';
 import 'package:smart_construction_calculator/config/res/app_icons.dart';
 import 'package:smart_construction_calculator/core/component/app_button_widget.dart';
@@ -8,6 +9,7 @@ import 'package:smart_construction_calculator/core/component/app_text_widget.dar
 import 'package:smart_construction_calculator/core/controller/auth_controller.dart';
 import 'package:smart_construction_calculator/core/controller/user_controller.dart';
 import 'package:smart_construction_calculator/screens/settings/logout_dialog_box.dart';
+import 'package:smart_construction_calculator/screens/settings/profile/app_policies.dart';
 import 'package:smart_construction_calculator/screens/settings/profile/edit_profile.dart';
 import '../../core/component/custom_list_item_widget.dart';
 import 'contact_us/contact_us_screen.dart';
@@ -59,10 +61,18 @@ class SettingScreen extends StatelessWidget {
                 CustomListTileWidget(
                   title: "Terms and Services",
                   prefix: AppIcons.terms,
+                  onTap: () {
+                  Get.to(() => AppPolicies(policy: AppPolicy.termsandconditoins));
+
+                  },
                 ),
                 CustomListTileWidget(
                   title: "Privacy Policy",
                   prefix: AppIcons.privacy,
+                  onTap: () {
+                  Get.to(() => AppPolicies(policy: AppPolicy.privacy));
+
+                  },
                 ),
                 SizedBox(
                   height: 2.h,

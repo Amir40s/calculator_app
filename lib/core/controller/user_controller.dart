@@ -8,7 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:smart_construction_calculator/config/model/user_model.dart';
 import 'package:smart_construction_calculator/config/routes/routes_name.dart';
 import 'package:smart_construction_calculator/config/utility/app_utils.dart';
-import 'package:smart_construction_calculator/core/repository/user_repository.dart';
+import 'package:smart_construction_calculator/config/repository/user_repository.dart';
 
 class UserController extends GetxController {
   final _userRepository = UserRepository.instance;

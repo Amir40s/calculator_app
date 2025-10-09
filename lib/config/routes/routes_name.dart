@@ -11,6 +11,7 @@ class RoutesName{
   static const output = "/output";
   static const termsCondition = "/termsCondition";
   static const privacy = "/privacy";
+  static const appPolicies = "/appPolicies";
 
 }
 

@@ -8,7 +8,7 @@ import 'package:smart_construction_calculator/config/res/app_constants.dart';
 import 'package:smart_construction_calculator/config/routes/routes_name.dart';
 import 'package:smart_construction_calculator/config/utility/app_utils.dart';
 import 'package:smart_construction_calculator/core/controller/otp_controller.dart';
-import 'package:smart_construction_calculator/core/repository/auth_repository.dart';
+import 'package:smart_construction_calculator/config/repository/auth_repository.dart';
 
 class AuthController extends GetxController {
   final _authRepository = AuthRepository.instance;
