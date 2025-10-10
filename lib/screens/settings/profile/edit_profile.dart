@@ -38,7 +38,6 @@ class EditProfileScreen extends StatelessWidget {
                   children: [
                     AppBarWidget(text: 'Edit Profile', showDivider: true),
                     SizedBox(height: 3.h),
-
                     Center(child: EditableProfilePicture(radius: 8.h)),
                     SizedBox(height: 4.h),
 

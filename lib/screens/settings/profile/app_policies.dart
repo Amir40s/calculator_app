@@ -29,6 +29,7 @@ class AppPolicies extends StatelessWidget {
               text: policy == AppPolicy.privacy
                   ? 'Privacy Policy'
                   : 'Terms & Conditions',
+                  showDivider: true
             ),
             SizedBox(height: 2.h),
             Expanded(

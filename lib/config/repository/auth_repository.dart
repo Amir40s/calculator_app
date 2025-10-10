@@ -59,7 +59,7 @@ Future<Either<Failure, void>> saveUserToFirestore(UserModel user) async {
 
       await AppUtils.uploadNotificationToFirebase(
         title: 'Logged In',
-        body: 'Welcome back to Prayly',
+        body: 'Welcome back to UhConst',
         uid: FirebaseAuth.instance.currentUser!.uid,
       );
       await userC.loadCurrentUser();
@@ -127,14 +127,14 @@ Future<Either<Failure, void>> saveUserToFirestore(UserModel user) async {
         await _firestore.collection('users').doc(firebaseUser.uid).set(user.toFirestore());
         await AppUtils.uploadNotificationToFirebase(
           title: 'Account Created',
-          body: 'Welcome to Prayly',
+          body: 'Welcome to UhConst',
           uid: FirebaseAuth.instance.currentUser!.uid,
         );
       } else {
         user = UserModel.fromFirestore(userDoc);
         await AppUtils.uploadNotificationToFirebase(
           title: 'Logged In',
-          body: 'Welcome back to Prayly',
+          body: 'Welcome back to UhConst',
           uid: FirebaseAuth.instance.currentUser!.uid,
         );
       }
