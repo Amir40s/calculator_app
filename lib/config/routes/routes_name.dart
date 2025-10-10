@@ -33,15 +33,26 @@ class SubCategoryNames{
   static const String projectCost = 'Project Cost Estimation';
 
 
+  // 🔹 Block Masonry & Plaster Estimator
+  static const String blockMasonry = 'Block Masonry & Plaster';
+  static const String wallPlaster = 'Wall & Roof Plaster Estimator';
+  static const String costEstimation = 'Project Cost Estimation';
+
+
+
   // 🔹 Geo Tech Calculator Subcategories
   static const String soilBearing = 'Soil Bearing Capacity';
   static const String slopeStability = 'Slope Stability';
   static const String retainingWall = 'Retaining Wall Pressure';
 
   // 🔹 Earth Work Calculator Subcategories
-  static const String cutFill = 'Cut & Fill Estimation';
-  static const String excavationVolume = 'Excavation Volume Calculator';
+  static const String excavationCalculator = 'Excavation Calculator';
+  static const String backfillCalculator = 'Backfill Calculator';
+  static const String stoneSoilingCalculator = 'Stone Soiling Calculator';
+  static const String soilCompactionCalculator = 'Soil Compaction Calculator';
 
-
+// 🔹 Pump Selection Calculator Subcategories
+  static const String liftPumpCalculator = 'Lift Pump Selection Calculator';
+  static const String boosterPumpCalculator = 'Booster Pump Selection Calculator';
 
 }

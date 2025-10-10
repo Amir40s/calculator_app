@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:get/get.dart';
+import 'package:smart_construction_calculator/config/res/app_color.dart';
 import 'package:smart_construction_calculator/firebase_options.dart';
 
 import 'config/routes/routes.dart';
@@ -18,7 +19,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return ResponsiveSizer(
@@ -31,6 +31,9 @@ class MyApp extends StatelessWidget {
           // darkTheme: AppTheme.darkTheme,
           initialRoute: RoutesName.splash,
           initialBinding: AppBinding(),
+          theme: ThemeData(
+            scaffoldBackgroundColor: AppColors.scaffoldColor
+          ),
           getPages: Routes.routes,
         );
       },

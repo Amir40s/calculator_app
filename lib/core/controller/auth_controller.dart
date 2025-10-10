@@ -220,7 +220,7 @@ response.fold(
     loaderC.showLoader();
     await _authRepository.logout();
     loaderC.hideLoader();
-    Get.offAllNamed(RoutesName.login);
+    Get.offAllNamed(RoutesName.login,);
   }
 
   @override

@@ -34,7 +34,13 @@ class DynamicTable extends StatelessWidget {
       children: [
         /// 🔹 Header row
         Container(
-          color: AppColors.blueColor,
+         decoration: BoxDecoration(
+           color: AppColors.blueColor,
+           borderRadius: BorderRadius.only(
+             topRight: Radius.circular(2.w),
+             topLeft: Radius.circular(2.w)
+           )
+         ),
           padding:  EdgeInsets.symmetric(vertical: 1.h, horizontal: 4.w),
           width: 100.w,
           child: Row(

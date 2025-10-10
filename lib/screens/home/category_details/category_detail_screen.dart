@@ -21,6 +21,7 @@ class CategoryDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("Category Passed: $category");
     final subCategories = SubCategoryData.subCategories[category] ?? [];
     return Scaffold(
       body: Column(
@@ -36,6 +37,8 @@ class CategoryDetailScreen extends StatelessWidget {
                 return GestureDetector(
                   onTap: () {
                     ScreenMapper.navigateToScreen( item.name);
+                    print("item Passed: ${item.name}");
+
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 1.w,vertical: 1.h),

@@ -40,22 +40,20 @@ class BaseConversionScreen<T extends BaseCalculatorController> extends Stateless
   @override
   Widget build(BuildContext context) {
     log("in base conversion screen itemname is $itemName");
-    return SafeArea(
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          return SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: constraints.maxHeight),
-              child: IntrinsicHeight(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 4.w),
-                  child: _buildContent(),
-                ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: IntrinsicHeight(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 4.w),
+                child: _buildContent(),
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 

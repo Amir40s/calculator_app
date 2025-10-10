@@ -11,6 +11,7 @@ import 'package:smart_construction_calculator/core/component/custom_appbar.dart'
 
 import '../../../../config/model/calculator_category_model.dart';
 import '../../../../core/component/appbar_widget.dart';
+import '../../../../core/component/buttons_row_widget.dart';
 import '../../../../core/component/calculator_table.dart';
 import '../../../../core/component/cost_estimation_widget.dart';
 
@@ -38,23 +39,19 @@ class ItemDetailsScreen extends StatelessWidget {
                 spacing: 4.h,
                 children: [
                   BuiltupAreaWidget(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      AppButtonWidget(text: 'Reset',width: 40.w,height: 5.h,
-                      buttonColor: Colors.transparent,
-                        borderColor: AppColors.blueColor,
-                        radius: 2.w,
-                        textColor: AppColors.blueColor,
-                      ),
-                      AppButtonWidget(text: 'Calculate',
-                        width: 40.w,height: 5.h,
-                        buttonColor: AppColors.blueColor,
-                        radius: 2.w,
-                        textColor: AppColors.whiteColor,
-        
-                      )
-                    ],
+                  ReusableButtonRow(
+                    firstButtonText: 'Reset',
+                    secondButtonText: 'Calculate',
+                    firstButtonAction: () {
+                      // Your Reset button action
+                    },
+                    secondButtonAction: () {
+                      // Your Calculate button action
+                    },
+                    firstButtonColor: Colors.transparent,
+                    secondButtonColor: AppColors.blueColor,
+                    firstButtonTextColor: AppColors.blueColor,
+                    secondButtonTextColor: AppColors.whiteColor,
                   ),
                   PricingTable(),
                 ],

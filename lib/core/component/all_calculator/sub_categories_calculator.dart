@@ -20,14 +20,24 @@ class SubCategoryData {
       CategoryItemModel(name: SubCategoryNames.finishingCost),
       CategoryItemModel(name: SubCategoryNames.projectCost),
     ],
+    'block-masonry-plaster': [
+      CategoryItemModel(name: SubCategoryNames.blockMasonry),
+      CategoryItemModel(name: SubCategoryNames.wallPlaster),
+    ],
     'geo-tech-calculator': [
       CategoryItemModel(name: SubCategoryNames.soilBearing),
       CategoryItemModel(name: SubCategoryNames.slopeStability),
       CategoryItemModel(name: SubCategoryNames.retainingWall),
     ],
     'earth-work-calculator': [
-      CategoryItemModel(name: SubCategoryNames.cutFill),
-      CategoryItemModel(name: SubCategoryNames.excavationVolume),
+      CategoryItemModel(name: SubCategoryNames.excavationCalculator),
+      CategoryItemModel(name: SubCategoryNames.backfillCalculator),
+      CategoryItemModel(name: SubCategoryNames.stoneSoilingCalculator),
+      CategoryItemModel(name: SubCategoryNames.soilCompactionCalculator),
+    ],
+    'water-pump-selection-calculator': [
+      CategoryItemModel(name: SubCategoryNames.liftPumpCalculator),
+      CategoryItemModel(name: SubCategoryNames.boosterPumpCalculator),
     ],
 
   };

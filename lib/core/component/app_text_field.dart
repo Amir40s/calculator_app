@@ -126,7 +126,7 @@ class _AppTextFieldState extends State<AppTextField> {
               hintText: widget.hintText,
               hintStyle: AppTextStyle().bodyText(
                 context: context,
-                color: Theme.of(context).primaryColorDark.withOpacity(0.4),
+                color: AppColors.greyColor,
               ),
               prefixIcon: widget.prefix != null
                   ? SizedBox(

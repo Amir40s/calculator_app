@@ -52,7 +52,7 @@ class AppTextStyle {
     Color? color,
     double? size,
     TextDecoration? textDecoration,
-    FontWeight fontWeight = FontWeight.w700,
+    FontWeight fontWeight = FontWeight.w500,
     String fontFamily = defaultFont,
   }) {
     return _getTextStyle(

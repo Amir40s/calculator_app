@@ -1,4 +1,6 @@
 
+import 'dart:developer';
+
 import 'package:get/get.dart';
 import 'package:smart_construction_calculator/screens/home/widgets/length_distance.dart';
 
@@ -33,11 +35,18 @@ class Endpoint{
   static const  woodVolume = "${BaseUrl.baseUrl}/wood-volume/calculate";
   static const  doorVolume = "${BaseUrl.baseUrl}/door-volume/calculate";
   static const  doorBeading = "${BaseUrl.baseUrl}/door-beading/calculate";
+  static const  blockMasonry = "${BaseUrl.baseUrl}/wall-block-mortar/calculate";
+  static const  wallRoof = "${BaseUrl.baseUrl}/plaster/calculate";
+  static const  excavation = "${BaseUrl.baseUrl}/excavation/calculate";
+  static const  backfill = "${BaseUrl.baseUrl}/backfill/calculate";
+  static const  compaction = "${BaseUrl.baseUrl}/compaction/calculate";
+  static const  liftPump = "${BaseUrl.baseUrl}/liftpump/calculate";
 }
 
 
 class ScreenMapper {
   static void navigateToScreen(String itemName) {
+    log("item name is ${itemName}");
     Get.to(() => SubCategoryScreen(itemName: itemName));
   }
 }

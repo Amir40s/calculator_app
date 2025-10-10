@@ -18,6 +18,7 @@ import '../../core/component/category_card.dart';
 import '../../core/component/history_tile.dart';
 import '../../core/component/top_usage_card.dart';
 import '../../core/controller/category_calulator_controller.dart';
+import '../history/games.dart';
 import '../notification/notification_screen.dart';
 import 'category_details/category_detail_screen.dart';
 

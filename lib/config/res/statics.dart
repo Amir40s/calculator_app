@@ -13,7 +13,7 @@ class Statics {
   }
 
   double get mainHeadingSize => _responsiveSpace(22.px, 24.px, 26.px, 28.px, 30.px);
-  double get subHeadingSize => _responsiveSpace(14.px, 16.px, 18.px, 20.px, 22.px);
+  double get subHeadingSize => _responsiveSpace(12.px, 14.px, 16.px, 18.px, 20.px);
 
   double get bodyTextSize => _responsiveSpace(14.px, 16.px, 18.px, 20.px, 22.px);
   double get subtitleTextSize => _responsiveSpace(10.px, 12.px, 14.px, 16.px, 18.px);
