@@ -40,7 +40,8 @@ class Endpoint{
   static const  excavation = "${BaseUrl.baseUrl}/excavation/calculate";
   static const  backfill = "${BaseUrl.baseUrl}/backfill/calculate";
   static const  compaction = "${BaseUrl.baseUrl}/compaction/calculate";
-  static const  liftPump = "${BaseUrl.baseUrl}/liftpump/calculate";
+  static const  liftPump = "${BaseUrl.baseUrl}/liftpumpv2/calculate";
+  static const  boosterPump = "${BaseUrl.baseUrl}/pumpv2/calculate";
 }
 
 

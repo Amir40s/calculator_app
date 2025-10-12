@@ -1,6 +1,6 @@
 class LiftPumpModel {
   final bool success;
-  final LiftPumpResult results;
+  final LiftPumpResults results;
 
   LiftPumpModel({
     required this.success,
@@ -10,122 +10,218 @@ class LiftPumpModel {
   factory LiftPumpModel.fromJson(Map<String, dynamic> json) {
     return LiftPumpModel(
       success: json['success'] ?? false,
-      results: LiftPumpResult.fromJson(json['results'] ?? {}),
+      results: LiftPumpResults.fromJson(json['results'] ?? {}),
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'success': success,
-      'results': results.toJson(),
-    };
-  }
+  Map<String, dynamic> toJson() => {
+    'success': success,
+    'results': results.toJson(),
+  };
 }
 
-class LiftPumpResult {
-  final String? type;
-  final double? tankVolume;
-  final double? peakDrawEst;
-  final double? peakDrawManual;
-  final double? drainTime;
-  final String? fillMode;
-  final double? refillRate;
-  final double? refillMin;
-  final double? flowLpm;
-  final double? hSuctionM;
-  final double? hFs;
-  final double? hMs;
-  final double? hDisM;
-  final double? hFd;
-  final double? hMd;
-  final double? totalHead;
-  final double? vs;
-  final double? vd;
-  final double? hydraulicPower;
-  final double? inputPower;
-  final double? hp;
-  final double? hpSf;
-  final double? safetyFactor;
+class LiftPumpResults {
+  final String type;
+  final TankVolumeDrainTime tankVolumeDrainTime;
+  final DesignFlow designFlow;
+  final Heads heads;
+  final Velocities velocities;
+  final Power power;
 
-  LiftPumpResult({
-    this.type,
-    this.tankVolume,
-    this.peakDrawEst,
-    this.peakDrawManual,
-    this.drainTime,
-    this.fillMode,
-    this.refillRate,
-    this.refillMin,
-    this.flowLpm,
-    this.hSuctionM,
-    this.hFs,
-    this.hMs,
-    this.hDisM,
-    this.hFd,
-    this.hMd,
-    this.totalHead,
-    this.vs,
-    this.vd,
-    this.hydraulicPower,
-    this.inputPower,
-    this.hp,
-    this.hpSf,
-    this.safetyFactor,
+  LiftPumpResults({
+    required this.type,
+    required this.tankVolumeDrainTime,
+    required this.designFlow,
+    required this.heads,
+    required this.velocities,
+    required this.power,
   });
 
-  factory LiftPumpResult.fromJson(Map<String, dynamic> json) {
-    return LiftPumpResult(
-      type: json['type'],
-      tankVolume: (json['tank_volume'] as num?)?.toDouble(),
-      peakDrawEst: (json['peak_draw_est'] as num?)?.toDouble(),
-      peakDrawManual: (json['peak_draw_manual'] as num?)?.toDouble(),
-      drainTime: (json['drain_time'] as num?)?.toDouble(),
-      fillMode: json['fill_mode'],
-      refillRate: (json['refill_rate'] as num?)?.toDouble(),
-      refillMin: (json['refill_min'] as num?)?.toDouble(),
-      flowLpm: (json['flow_lpm'] as num?)?.toDouble(),
-      hSuctionM: (json['h_suction_m'] as num?)?.toDouble(),
-      hFs: (json['h_fs'] as num?)?.toDouble(),
-      hMs: (json['h_ms'] as num?)?.toDouble(),
-      hDisM: (json['h_dis_m'] as num?)?.toDouble(),
-      hFd: (json['h_fd'] as num?)?.toDouble(),
-      hMd: (json['h_md'] as num?)?.toDouble(),
-      totalHead: (json['total_head'] as num?)?.toDouble(),
-      vs: (json['vs'] as num?)?.toDouble(),
-      vd: (json['vd'] as num?)?.toDouble(),
-      hydraulicPower: (json['hydraulic_power'] as num?)?.toDouble(),
-      inputPower: (json['input_power'] as num?)?.toDouble(),
-      hp: (json['hp'] as num?)?.toDouble(),
-      hpSf: (json['hp_sf'] as num?)?.toDouble(),
-      safetyFactor: (json['safety_factor'] as num?)?.toDouble(),
+  factory LiftPumpResults.fromJson(Map<String, dynamic> json) {
+    return LiftPumpResults(
+      type: json['type'] ?? '',
+      tankVolumeDrainTime:
+      TankVolumeDrainTime.fromJson(json['tank_volume_drain_time'] ?? {}),
+      designFlow: DesignFlow.fromJson(json['design_flow'] ?? {}),
+      heads: Heads.fromJson(json['heads'] ?? {}),
+      velocities: Velocities.fromJson(json['velocities'] ?? {}),
+      power: Power.fromJson(json['power'] ?? {}),
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'type': type,
-      'tank_volume': tankVolume,
-      'peak_draw_est': peakDrawEst,
-      'peak_draw_manual': peakDrawManual,
-      'drain_time': drainTime,
-      'fill_mode': fillMode,
-      'refill_rate': refillRate,
-      'refill_min': refillMin,
-      'flow_lpm': flowLpm,
-      'h_suction_m': hSuctionM,
-      'h_fs': hFs,
-      'h_ms': hMs,
-      'h_dis_m': hDisM,
-      'h_fd': hFd,
-      'h_md': hMd,
-      'total_head': totalHead,
-      'vs': vs,
-      'vd': vd,
-      'hydraulic_power': hydraulicPower,
-      'input_power': inputPower,
-      'hp': hp,
-      'hp_sf': hpSf,
-      'safety_factor': safetyFactor,
-    };
+  Map<String, dynamic> toJson() => {
+    'type': type,
+    'tank_volume_drain_time': tankVolumeDrainTime.toJson(),
+    'design_flow': designFlow.toJson(),
+    'heads': heads.toJson(),
+    'velocities': velocities.toJson(),
+    'power': power.toJson(),
+  };
+}
+
+class TankVolumeDrainTime {
+  final double tankVolumeL;
+  final double peakDrawEstimateLMin;
+  final double? manualPeakOverrideLMin;
+  final double drainTimeAtPeakMin;
+
+  TankVolumeDrainTime({
+    required this.tankVolumeL,
+    required this.peakDrawEstimateLMin,
+    this.manualPeakOverrideLMin,
+    required this.drainTimeAtPeakMin,
+  });
+
+  factory TankVolumeDrainTime.fromJson(Map<String, dynamic> json) {
+    return TankVolumeDrainTime(
+      tankVolumeL: (json['tank_volume_L'] ?? 0).toDouble(),
+      peakDrawEstimateLMin: (json['peak_draw_estimate_L_min'] ?? 0).toDouble(),
+      manualPeakOverrideLMin:
+      json['manual_peak_override_L_min'] != null ? (json['manual_peak_override_L_min']).toDouble() : null,
+      drainTimeAtPeakMin: (json['drain_time_at_peak_min'] ?? 0).toDouble(),
+    );
   }
+
+  Map<String, dynamic> toJson() => {
+    'tank_volume_L': tankVolumeL,
+    'peak_draw_estimate_L_min': peakDrawEstimateLMin,
+    'manual_peak_override_L_min': manualPeakOverrideLMin,
+    'drain_time_at_peak_min': drainTimeAtPeakMin,
+  };
+}
+
+class DesignFlow {
+  final String strategy;
+  final double refillOnlyRateLMin;
+  final double refillTargetMin;
+  final double chosenDesignFlowLMin;
+
+  DesignFlow({
+    required this.strategy,
+    required this.refillOnlyRateLMin,
+    required this.refillTargetMin,
+    required this.chosenDesignFlowLMin,
+  });
+
+  factory DesignFlow.fromJson(Map<String, dynamic> json) {
+    return DesignFlow(
+      strategy: json['strategy'] ?? '',
+      refillOnlyRateLMin: (json['refill_only_rate_L_min'] ?? 0).toDouble(),
+      refillTargetMin: (json['refill_target_min'] ?? 0).toDouble(),
+      chosenDesignFlowLMin: (json['chosen_design_flow_L_min'] ?? 0).toDouble(),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'strategy': strategy,
+    'refill_only_rate_L_min': refillOnlyRateLMin,
+    'refill_target_min': refillTargetMin,
+    'chosen_design_flow_L_min': chosenDesignFlowLMin,
+  };
+}
+
+class Heads {
+  final double staticSuctionHeadM;
+  final double suctionFrictionM;
+  final double suctionMinorLossM;
+  final double dischargeElevationM;
+  final double dischargeFrictionM;
+  final double dischargeMinorLossM;
+  final double totalDynamicHeadM;
+
+  Heads({
+    required this.staticSuctionHeadM,
+    required this.suctionFrictionM,
+    required this.suctionMinorLossM,
+    required this.dischargeElevationM,
+    required this.dischargeFrictionM,
+    required this.dischargeMinorLossM,
+    required this.totalDynamicHeadM,
+  });
+
+  factory Heads.fromJson(Map<String, dynamic> json) {
+    return Heads(
+      staticSuctionHeadM: (json['static_suction_head_m'] ?? 0).toDouble(),
+      suctionFrictionM: (json['suction_friction_m'] ?? 0).toDouble(),
+      suctionMinorLossM: (json['suction_minor_loss_m'] ?? 0).toDouble(),
+      dischargeElevationM: (json['discharge_elevation_m'] ?? 0).toDouble(),
+      dischargeFrictionM: (json['discharge_friction_m'] ?? 0).toDouble(),
+      dischargeMinorLossM: (json['discharge_minor_loss_m'] ?? 0).toDouble(),
+      totalDynamicHeadM: (json['total_dynamic_head_m'] ?? 0).toDouble(),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'static_suction_head_m': staticSuctionHeadM,
+    'suction_friction_m': suctionFrictionM,
+    'suction_minor_loss_m': suctionMinorLossM,
+    'discharge_elevation_m': dischargeElevationM,
+    'discharge_friction_m': dischargeFrictionM,
+    'discharge_minor_loss_m': dischargeMinorLossM,
+    'total_dynamic_head_m': totalDynamicHeadM,
+  };
+}
+
+class Velocities {
+  final double suctionVelocityMS;
+  final String suctionVelocityAim;
+  final double dischargeVelocityMS;
+  final String dischargeVelocityAim;
+
+  Velocities({
+    required this.suctionVelocityMS,
+    required this.suctionVelocityAim,
+    required this.dischargeVelocityMS,
+    required this.dischargeVelocityAim,
+  });
+
+  factory Velocities.fromJson(Map<String, dynamic> json) {
+    return Velocities(
+      suctionVelocityMS: (json['suction_velocity_m_s'] ?? 0).toDouble(),
+      suctionVelocityAim: json['suction_velocity_aim'] ?? '',
+      dischargeVelocityMS: (json['discharge_velocity_m_s'] ?? 0).toDouble(),
+      dischargeVelocityAim: json['discharge_velocity_aim'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'suction_velocity_m_s': suctionVelocityMS,
+    'suction_velocity_aim': suctionVelocityAim,
+    'discharge_velocity_m_s': dischargeVelocityMS,
+    'discharge_velocity_aim': dischargeVelocityAim,
+  };
+}
+
+class Power {
+  final double hydraulicPowerKW;
+  final double motorInputPowerKW;
+  final double motorInputPowerHP;
+  final double withSafetyFactorX;
+  final double finalPowerHP;
+
+  Power({
+    required this.hydraulicPowerKW,
+    required this.motorInputPowerKW,
+    required this.motorInputPowerHP,
+    required this.withSafetyFactorX,
+    required this.finalPowerHP,
+  });
+
+  factory Power.fromJson(Map<String, dynamic> json) {
+    return Power(
+      hydraulicPowerKW: (json['hydraulic_power_kW'] ?? 0).toDouble(),
+      motorInputPowerKW: (json['motor_input_power_kW'] ?? 0).toDouble(),
+      motorInputPowerHP: (json['motor_input_power_HP'] ?? 0).toDouble(),
+      withSafetyFactorX: (json['with_safety_factor_x'] ?? 0).toDouble(),
+      finalPowerHP: (json['final_power_HP'] ?? 0).toDouble(),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'hydraulic_power_kW': hydraulicPowerKW,
+    'motor_input_power_kW': motorInputPowerKW,
+    'motor_input_power_HP': motorInputPowerHP,
+    'with_safety_factor_x': withSafetyFactorX,
+    'final_power_HP': finalPowerHP,
+  };
 }

@@ -38,6 +38,13 @@ class SubCategoryData {
     'water-pump-selection-calculator': [
       CategoryItemModel(name: SubCategoryNames.liftPumpCalculator),
       CategoryItemModel(name: SubCategoryNames.boosterPumpCalculator),
+    ],  'doors-windows-material-calculator': [
+      CategoryItemModel(name: SubCategoryNames.woodDoorEstimate),
+      CategoryItemModel(name: SubCategoryNames.doorShutterEstimate),
+      CategoryItemModel(name: SubCategoryNames.doorBeadingEstimate),
+      CategoryItemModel(name: SubCategoryNames.doorBOQEstimate),
+      CategoryItemModel(name: SubCategoryNames.woodMoistureEstimate),
+      CategoryItemModel(name: SubCategoryNames.aluminiumBoqGenerator),
     ],
 
   };

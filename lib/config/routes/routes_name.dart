@@ -55,4 +55,12 @@ class SubCategoryNames{
   static const String liftPumpCalculator = 'Lift Pump Selection Calculator';
   static const String boosterPumpCalculator = 'Booster Pump Selection Calculator';
 
+// 🔹 Doors & Windows Material Calculator Subcategories
+  static const String woodDoorEstimate = 'Wood Door Frame Estimator';
+  static const String doorShutterEstimate = 'Door Shutter Wood Estimator';
+  static const String doorBeadingEstimate = 'Door Beading Wood Estimator';
+  static const String doorBOQEstimate = 'Door BOQ Generator';
+  static const String woodMoistureEstimate = 'Wood Moisture Content Calculator';
+  static const String aluminiumBoqGenerator = 'Aluminium Window BOQ Generator';
+
 }

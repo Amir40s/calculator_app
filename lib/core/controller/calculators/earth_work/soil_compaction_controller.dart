@@ -1,19 +1,24 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:smart_construction_calculator/config/repository/calculator_repository.dart';
 
 class SoilCompactionController extends GetxController {
-  // 🔹 Text controllers
+  final _repo = CalculatorRepository();
+
+  final RxBool isLoading = false.obs;
+
+  // Text Controllers
   final TextEditingController lengthController = TextEditingController();
   final TextEditingController widthController = TextEditingController();
   final TextEditingController depthController = TextEditingController();
 
-  // 🔹 Dropdowns
+  // Dropdown Observables
   final RxString selectedMaterial = ''.obs;
   final RxString selectedCompaction = ''.obs;
   final RxString selectedUnit = 'ft'.obs;
 
-  // 🔹 Dropdown data
+  // Dropdown Data
   final Map<String, List<double>> materialCompactionRanges = {
     'Sand': [1.10, 1.15],
     'Gravel': [1.10, 1.25],
@@ -22,49 +27,79 @@ class SoilCompactionController extends GetxController {
     'Common Fill': [1.20, 1.35],
   };
 
-  RxList<String> compactionOptions = <String>[].obs;
+  final RxList<String> compactionOptions = <String>[].obs;
 
-  // 🔹 Result values
+  // Results
   final RxDouble compactedVolume = 0.0.obs;
   final RxDouble looseVolume = 0.0.obs;
   final RxString resultUnit = ''.obs;
 
+  /// 🔹 Generate compaction options dynamically based on material
   void updateCompactionOptions(String material) {
     final range = materialCompactionRanges[material];
     if (range != null) {
       double start = range[0];
       double end = range[1];
-      double step = material == 'Sand' ? 0.01 : 0.05;
+      double step = (end - start) <= 0.1 ? 0.01 : 0.05;
 
-      List<String> values = [];
-      for (double i = start;
-      i <= end + 0.0001; // to handle floating precision
-      i += step) {
+      final values = <String>[];
+      for (double i = start; i <= end + 0.0001; i += step) {
         values.add(i.toStringAsFixed(2));
       }
-
-      compactionOptions.value = values;
+      compactionOptions.assignAll(values);
+    } else {
+      compactionOptions.clear();
     }
   }
 
-  void calculate() {
+  /// 🔹 Perform the soil compaction calculation
+  Future<void> calculate() async {
+    if (lengthController.text.isEmpty ||
+        widthController.text.isEmpty ||
+        depthController.text.isEmpty ||
+        selectedMaterial.value.isEmpty ||
+        selectedCompaction.value.isEmpty) {
+      Get.snackbar('Error', 'Please fill all fields correctly');
+      return;
+    }
+
     try {
-      final double length = double.parse(lengthController.text);
-      final double width = double.parse(widthController.text);
-      final double depth = double.parse(depthController.text);
-      final double compaction = double.parse(selectedCompaction.value);
+      isLoading.value = true;
 
-      final double compacted = length * width * depth;
-      final double loose = compacted * compaction;
+      double length = double.tryParse(lengthController.text) ?? 0;
+      double width = double.tryParse(widthController.text) ?? 0;
+      double depth = double.tryParse(depthController.text) ?? 0;
+      double compactionFactor = double.tryParse(selectedCompaction.value) ?? 0;
 
-      compactedVolume.value = compacted;
-      looseVolume.value = loose;
-      resultUnit.value = selectedUnit.value == 'ft' ? 'ft³' : 'm³';
+      if (length <= 0 || width <= 0 || depth <= 0 || compactionFactor <= 0) {
+        Get.snackbar('Error', 'Invalid numeric values');
+        return;
+      }
 
-      log("✅ compactedVolume: $compactedVolume, looseVolume: $looseVolume");
+      final response = await _repo.calculateSoilCompaction(
+        length: length.toString(),
+        width: width.toString(),
+        depth: depth.toString(),
+        material: selectedMaterial.value.toLowerCase(),
+        compactionFactor: compactionFactor.toString(),
+        unit: selectedUnit.value,
+      );
+      if (response['success'] == true) {
+        final results = response['results'];
+
+        // ✅ Update observables properly
+        compactedVolume.value = results['compactedVolume'] ?? 0.0;
+        looseVolume.value = results['looseVolume'] ?? 0.0;
+        resultUnit.value = results['unit'] ?? '';
+
+        print('✅ Updated compactedVolume: ${compactedVolume.value}');
+        print('✅ Updated looseVolume: ${looseVolume.value}');
+      }
     } catch (e) {
-      log("❌ Error in calculate: $e");
-      Get.snackbar('Error', 'Please enter valid inputs');
+      log("❌ Error: $e");
+      Get.snackbar('Error', 'Something went wrong during calculation');
+    } finally {
+      isLoading.value = false;
     }
   }
 

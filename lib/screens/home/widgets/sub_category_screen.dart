@@ -8,11 +8,13 @@ import 'package:smart_construction_calculator/screens/home/widgets/earth_work_ca
 import 'package:smart_construction_calculator/screens/home/widgets/force_conversion.dart';
 import 'package:smart_construction_calculator/screens/home/widgets/length_distance.dart';
 import 'package:smart_construction_calculator/screens/home/widgets/powerNEnergy_screen.dart';
+import 'package:smart_construction_calculator/screens/home/widgets/pump_selection_calculator/booster_pump_calculator.dart';
 import 'package:smart_construction_calculator/screens/home/widgets/pump_selection_calculator/lift_pump_calculator.dart';
 import 'package:smart_construction_calculator/screens/home/widgets/reber_conversion_screen.dart';
 import 'package:smart_construction_calculator/screens/home/widgets/temperature_conversion.dart';
 import 'package:smart_construction_calculator/screens/home/widgets/volume_conversion_screen.dart';
 import '../../../config/routes/routes_name.dart';
+import 'door_n_windows_calculator/wood_door_estimate_screen.dart';
 import 'earth_work_calculator/soil_compaction_screen.dart';
 import 'angle_conversion_screen.dart';
 import 'area_conversion.dart';
@@ -90,6 +92,10 @@ case SubCategoryNames.soilCompactionCalculator:
         return SoilCompactionScreen(itemName: itemName);
 case SubCategoryNames.liftPumpCalculator:
         return LiftPumpCalculatorScreen(itemName: itemName);
+        case SubCategoryNames.boosterPumpCalculator:
+        return BoosterPumpCalculatorScreen(itemName: itemName);
+case SubCategoryNames.woodDoorEstimate:
+        return WoodDoorEstimateScreen(itemName: itemName);
 
       default:
         return Center(

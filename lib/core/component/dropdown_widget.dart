@@ -51,7 +51,7 @@ class ReusableDropdown extends StatelessWidget {
 class ReactiveDropdown extends StatelessWidget {
   final RxString selectedValue;
   final List<String> itemsList;
-  final String hintText,heading;
+  final String hintText, heading;
   final Function(String) onChangedCallback;
 
   const ReactiveDropdown({
@@ -65,35 +65,43 @@ class ReactiveDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AppTextWidget(text: heading,styleType: StyleType.subHeading,),
-          SizedBox(height: 1.h,),
-          DropdownButtonFormField<String>(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        AppTextWidget(
+          text: heading,
+          styleType: StyleType.subHeading,
+        ),
+        SizedBox(height: 1.h),
+        // ✅ Only this part rebuilds on change
+        Obx(() {
+          return DropdownButtonFormField<String>(
             value: selectedValue.value.isEmpty ? null : selectedValue.value,
-            items: itemsList
-                .map((item) => DropdownMenuItem<String>(
-              value: item,
-              child: AppTextWidget(text: item),
-            ))
-                .toList(),
+            items: itemsList.map((item) {
+              return DropdownMenuItem<String>(
+                value: item,
+                child: AppTextWidget(text: item),
+              );
+            }).toList(),
             decoration: InputDecoration(
               hintText: hintText,
-              border: const OutlineInputBorder(borderSide: BorderSide(
-                  color: AppColors.blueColor,
-              )),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              border: const OutlineInputBorder(
+                borderSide: BorderSide(color: AppColors.blueColor),
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 10,
+              ),
             ),
-            onChanged: (value) {
-              if (value != null) {
-                onChangedCallback(value);
+            onChanged: (newValue) {
+              if (newValue != null) {
+                selectedValue.value = newValue;
+                onChangedCallback(newValue);
               }
             },
-          ),
-        ],
-      );
-    });
+          );
+        }),
+      ],
+    );
   }
 }

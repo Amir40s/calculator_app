@@ -3,40 +3,48 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 
 import '../../config/base/base_api_services.dart';
 import '../base/base_url.dart';
 import '../exception/app_exception.dart';
 
 class ApiService extends BaseApiServices {
-  final Dio _dio = Dio();
+  late final Dio _dio;
+  late final CacheOptions _cacheOptions;
 
   ApiService() {
-    _dio.options.baseUrl = BaseUrl.baseUrl;
-    _dio.options.connectTimeout = const Duration(seconds: 20);
-    _dio.options.receiveTimeout = const Duration(seconds: 20);
-    _dio.options.headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    };
-  }
+    // Configure cache options
+    _cacheOptions = CacheOptions(
+      store: MemCacheStore(),
+      policy: CachePolicy.request,
+      maxStale: const Duration(days: 7),
+      priority: CachePriority.normal,
+      keyBuilder: CacheOptions.defaultCacheKeyBuilder,
+    );
 
+    // Setup Dio instance
+    _dio = Dio(BaseOptions(
+      baseUrl: BaseUrl.baseUrl,
+      connectTimeout: const Duration(seconds: 20),
+      receiveTimeout: const Duration(seconds: 20),
+    ))
+      ..interceptors.add(DioCacheInterceptor(options: _cacheOptions));
+  }
   // ------------------------ GET ------------------------
   @override
   Future<dynamic> getApi({
     required String url,
-    dynamic data,
-    Map<String, dynamic>? headers,
+    var data,
   }) async {
     try {
-      log("🔵 GET URL: ${_dio.options.baseUrl}$url");
-      if (headers != null) _dio.options.headers.addAll(headers);
-
-      final response = await _dio.get(url, queryParameters: data);
-      log("✅ GET Status: ${response.statusCode}");
+      final response = await _dio.get(
+        url,
+        queryParameters: data,
+        options: _cacheOptions.toOptions(),
+      );
 
       if (response.statusCode == 200) {
-        log("📩 GET Response: ${response.data}");
         return response.data;
       } else {
         return _handleError(response);
@@ -46,8 +54,8 @@ class ApiService extends BaseApiServices {
     } on TimeoutException {
       throw RequestTimeOutException("Request timeout");
     } on DioException catch (e) {
-      throw _handleDioException(e);
-    }
+      log("❌ Dio POST error: ${e.response?.statusCode} - ${e.message}");
+      throw _handleDioException(e);    }
   }
 
   // ------------------------ POST ------------------------
