@@ -160,7 +160,7 @@ class CalculatorRepository {
       "blockLength": blockLength,
       "blockHeight": blockHeight,
       "blockWidth": blockWidth,
-      "joint": blockWidth,
+      "joint": joint,
       "mortarRatio": mortarRatio,
       "waterCementRatio": waterCementRatio
     };
@@ -245,10 +245,152 @@ class CalculatorRepository {
       url: url,
       data: body,
     );
-  } Future<dynamic> calculateBoosterPump({
+  }
+  Future<dynamic> calculateBoosterPump({
     required Map<String, dynamic> body,
   }) async {
     final url = Endpoint.boosterPump;
+
+    return await _apiService.postApi(
+      url: url,
+      data: body,
+    );
+  }
+  Future<dynamic> calculateWoodDoor({
+    required Map<String, dynamic> body,
+  }) async {
+    final url = Endpoint.woodVolume;
+
+    return await _apiService.postApi(
+      url: url,
+      data: body,
+    );
+  } Future<dynamic> calculateDoorShutterWood({
+    required Map<String, dynamic> body,
+  }) async {
+    final url = Endpoint.doorVolume;
+
+    return await _apiService.postApi(
+      url: url,
+      data: body,
+    );
+  } Future<dynamic> calculateDoorBeadingWood({
+    required Map<String, dynamic> body,
+  }) async {
+    final url = Endpoint.doorBeading;
+
+    return await _apiService.postApi(
+      url: url,
+      data: body,
+    );
+  } Future<dynamic> calculateDoorBoq({
+    required Map<String, dynamic> body,
+  }) async {
+    final url = Endpoint.doorBoq;
+
+    return await _apiService.postApi(
+      url: url,
+      data: body,
+    );
+  }
+  Future<dynamic> calculateWoodMoisture({
+    required Map<String, dynamic> body,
+  }) async {
+    final url = Endpoint.woodMoisture;
+
+    return await _apiService.postApi(
+      url: url,
+      data: body,
+    );
+  }
+  Future<dynamic> calculatePaintQuantity({
+    required Map<String, dynamic> body,
+  }) async {
+    final url = Endpoint.paintQuantity;
+
+    return await _apiService.postApi(
+      url: url,
+      data: body,
+    );
+  } Future<dynamic> calculatePlotConcrete({
+    required Map<String, dynamic> body,
+  }) async {
+    final url = Endpoint.plotLeanConcrete;
+
+    return await _apiService.postApi(
+      url: url,
+      data: body,
+    );
+  }Future<dynamic> calculateConcreteCostEstimatorQuantity({
+    required Map<String, dynamic> body,
+  }) async {
+    final url = Endpoint.concreteCostEstimatorQuantity;
+
+    return await _apiService.postApi(
+      url: url,
+      data: body,
+    );
+  }
+  Future<dynamic> calculateSlabCostEstimatorQuantity({
+    required Map<String, dynamic> body,
+  }) async {
+    final url = Endpoint.slabCostEstimatorQuantity;
+
+    return await _apiService.postApi(
+      url: url,
+      data: body,
+    );
+  }
+  Future<dynamic> calculateLShapedStair({
+    required Map<String, dynamic> body,
+  }) async {
+    final url = Endpoint.lShapedStair;
+
+    return await _apiService.postApi(
+      url: url,
+      data: body,
+    );
+  }
+  Future<dynamic> calculateUShapedStair({
+    required Map<String, dynamic> body,
+  }) async {
+    final url = Endpoint.uShapedStair;
+
+    return await _apiService.postApi(
+      url: url,
+      data: body,
+    );
+  } Future<dynamic> calculatePlinthBeamLean({
+    required Map<String, dynamic> body,
+  }) async {
+    final url = Endpoint.plinthBeamLean;
+
+    return await _apiService.postApi(
+      url: url,
+      data: body,
+    );
+  } Future<dynamic> calculatePlinthBeam({
+    required Map<String, dynamic> body,
+  }) async {
+    final url = Endpoint.plinthBeam;
+
+    return await _apiService.postApi(
+      url: url,
+      data: body,
+    );
+  }Future<dynamic> calculateUndergroundWaterTank({
+    required Map<String, dynamic> body,
+  }) async {
+    final url = Endpoint.rccWaterTank;
+
+    return await _apiService.postApi(
+      url: url,
+      data: body,
+    );
+  }Future<dynamic> calculateRingwallFormworkConcrete({
+    required Map<String, dynamic> body,
+  }) async {
+    final url = Endpoint.ringWallFormwork;
 
     return await _apiService.postApi(
       url: url,

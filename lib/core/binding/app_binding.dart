@@ -17,7 +17,7 @@ class AppBinding extends Bindings {
     Get.put(UserController());
     Get.lazyPut<ThemeController>(() => ThemeController());
     Get.lazyPut<NavController>(() => NavController());
-    Get.lazyPut<CommonController>(() => CommonController());
+    Get.lazyPut<CommonController>(() => CommonController(),);
     Get.lazyPut<CategoryCalculatorController>(
         () => CategoryCalculatorController());
   }

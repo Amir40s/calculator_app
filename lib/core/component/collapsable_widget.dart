@@ -8,7 +8,7 @@ import 'package:smart_construction_calculator/core/controller/common_controller.
 class CollapsibleHistoryWidget extends StatelessWidget {
   final int index;
   final RxList<FaqItem> list;
-  final CommonController controller = Get.find<CommonController>();
+  final CommonController controller = Get.put(CommonController());
 
   CollapsibleHistoryWidget({super.key, required this.index, required this.list});
   @override

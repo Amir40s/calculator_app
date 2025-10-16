@@ -9,7 +9,7 @@ import '../../core/component/history_card.dart';
 
 
 class HistoryScreen extends StatelessWidget {
-  final  controller = Get.find<CommonController>();
+  final  controller = Get.put(CommonController(),);
 
   final List<String> filters = ["Today", "Last 7 Days", "Last Month"];
 

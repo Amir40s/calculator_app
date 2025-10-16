@@ -105,7 +105,7 @@ class OnboardingScreen extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 40.0),
           child: AppTextWidget(
-            text: '#1 Most Downloaded\nUHCONST Calculator App',
+            text: 'Smart Construction Calculators',
             textAlign: TextAlign.center,
             color: AppColors.whiteColor,
             styleType: StyleType.heading,

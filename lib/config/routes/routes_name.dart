@@ -62,5 +62,26 @@ class SubCategoryNames{
   static const String doorBOQEstimate = 'Door BOQ Generator';
   static const String woodMoistureEstimate = 'Wood Moisture Content Calculator';
   static const String aluminiumBoqGenerator = 'Aluminium Window BOQ Generator';
+// 🔹 finishing-and-interior-estimator
+  static const String paintQuantity = 'Paint Quantity Calculator';
+
+
+// 🔹 Concrete & Formwork Quantity Calculator
+  static const String plotClean = 'Plot Lean Concrete Calculator';
+  static const String concreteCost = 'Concrete Cost Estimator';
+  static const String slabConcrete = 'Slab Concrete Calculator';
+  static const String lShapedStairConcreteVolume = 'L-Shaped Stair Concrete Volume Calculator';
+  static const String uShapedStairConcreteVolume = 'U-Shaped Stair Concrete Volume Calculator';
+  static const String plinthBeamLeanConcrete = 'Plinth Beam Lean Concrete Calculator';
+  static const String plinthBeamConcrete = 'Plinth Beam Concrete Calculator';
+  static const String undergroundWaterTankConcrete = 'Underground Water Tank Concrete Calculator';
+  static const String ringwallFormworkConcrete = 'Ringwall Formwork & Concrete Calculator';
+  static const String overheadWaterTankFormworkConcrete = 'Overhead Water Tank Formwork & Concrete Calculator';
+  static const String substructureColumnFormworkConcrete = 'Substructure Column Formwork & Concrete Calculator';
+  static const String superStructureColumnFormworkConcrete = 'SuperStructure Column Formwork & Concrete Calculator';
+  static const String foundationFormworkConcrete = 'Foundation Formwork & Concrete Calculator';
+  static const String substructureBeamFormworkConcrete = 'Substructure Beam Formwork & Concrete Calculator';
+  static const String concreteCuringWater = 'Concrete Curing Water Estimation Calculator';
+
 
 }

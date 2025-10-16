@@ -29,7 +29,7 @@ class CategoryDetailScreen extends StatelessWidget {
           AppBarWidget(text: title,  showDivider: true),
           Expanded(
             child: ListView.builder(
-              padding: EdgeInsets.symmetric(horizontal: 5.w,),
+              padding: EdgeInsets.only(left: 5.w,right: 5.w,bottom: 2.h),
               shrinkWrap: true,
               itemCount: subCategories.length,
               itemBuilder: (context, index) {
@@ -60,12 +60,19 @@ class CategoryDetailScreen extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          AppTextWidget(
-                            text: item.name,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            maxLine: 2,
+                          Expanded(
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: AppTextWidget(
+                                text: item.name,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                maxLine: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
                           ),
+                          SizedBox(width: 1.w,),
                           Icon(Icons.arrow_forward_ios,size: 16.px,),
                         ],
                       ),

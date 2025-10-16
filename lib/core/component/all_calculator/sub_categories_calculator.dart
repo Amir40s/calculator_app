@@ -38,7 +38,8 @@ class SubCategoryData {
     'water-pump-selection-calculator': [
       CategoryItemModel(name: SubCategoryNames.liftPumpCalculator),
       CategoryItemModel(name: SubCategoryNames.boosterPumpCalculator),
-    ],  'doors-windows-material-calculator': [
+    ],
+    'doors-windows-material-calculator': [
       CategoryItemModel(name: SubCategoryNames.woodDoorEstimate),
       CategoryItemModel(name: SubCategoryNames.doorShutterEstimate),
       CategoryItemModel(name: SubCategoryNames.doorBeadingEstimate),
@@ -46,6 +47,27 @@ class SubCategoryData {
       CategoryItemModel(name: SubCategoryNames.woodMoistureEstimate),
       CategoryItemModel(name: SubCategoryNames.aluminiumBoqGenerator),
     ],
+    'finishing-and-interior-estimator': [
+      CategoryItemModel(name: SubCategoryNames.paintQuantity),
 
+    ],
+    'concrete-formwork-quantity-calculator': [
+      CategoryItemModel(name: SubCategoryNames.plotClean),
+      CategoryItemModel(name: SubCategoryNames.concreteCost),
+      CategoryItemModel(name: SubCategoryNames.slabConcrete),
+      CategoryItemModel(name: SubCategoryNames.lShapedStairConcreteVolume),
+      CategoryItemModel(name: SubCategoryNames.uShapedStairConcreteVolume),
+      CategoryItemModel(name: SubCategoryNames.plinthBeamLeanConcrete),
+      CategoryItemModel(name: SubCategoryNames.plinthBeamConcrete),
+      CategoryItemModel(name: SubCategoryNames.undergroundWaterTankConcrete),
+      CategoryItemModel(name: SubCategoryNames.ringwallFormworkConcrete),
+      CategoryItemModel(name: SubCategoryNames.overheadWaterTankFormworkConcrete),
+      CategoryItemModel(name: SubCategoryNames.substructureColumnFormworkConcrete),
+      CategoryItemModel(name: SubCategoryNames.superStructureColumnFormworkConcrete),
+      CategoryItemModel(name: SubCategoryNames.foundationFormworkConcrete),
+      CategoryItemModel(name: SubCategoryNames.substructureBeamFormworkConcrete),
+      CategoryItemModel(name: SubCategoryNames.concreteCuringWater),
+
+    ],
   };
 }

@@ -14,7 +14,21 @@ import 'package:smart_construction_calculator/screens/home/widgets/reber_convers
 import 'package:smart_construction_calculator/screens/home/widgets/temperature_conversion.dart';
 import 'package:smart_construction_calculator/screens/home/widgets/volume_conversion_screen.dart';
 import '../../../config/routes/routes_name.dart';
+import 'concrete_formwork_quality/over_head_watertank_formwork.dart';
+import 'concrete_formwork_quality/ringwall_formwork_concrete.dart';
+import 'concrete_formwork_quality/underground_water_tank.dart';
+import 'concrete_formwork_quality/concrete_cost_estimator.dart';
+import 'concrete_formwork_quality/l_shaped_stair.dart';
+import 'concrete_formwork_quality/plinth_beam_concrete.dart';
+import 'concrete_formwork_quality/plinth_beam_lean.dart';
+import 'concrete_formwork_quality/plot_clean_screen.dart';
+import 'concrete_formwork_quality/slab_concrete.dart';
+import 'concrete_formwork_quality/u_shaped_stair.dart';
+import 'door_n_windows_calculator/door_beeding.dart';
+import 'door_n_windows_calculator/door_boq_screen.dart';
+import 'door_n_windows_calculator/door_shutter_wood_screen.dart';
 import 'door_n_windows_calculator/wood_door_estimate_screen.dart';
+import 'door_n_windows_calculator/wood_moisture_content.dart';
 import 'earth_work_calculator/soil_compaction_screen.dart';
 import 'angle_conversion_screen.dart';
 import 'area_conversion.dart';
@@ -22,6 +36,7 @@ import 'block_masonry_plaster/wall_block_masonry_plaster_screen.dart';
 import 'cost_estimation/finishing_cost_screen.dart';
 import 'cost_estimation/grey_structure_screen.dart';
 import 'earth_work_calculator/back_fill_calculator.dart';
+import 'finshing_interior_estimator/paint_quantity_calculator.dart';
 
 class SubCategoryScreen extends StatelessWidget {
   final String itemName;
@@ -96,6 +111,36 @@ case SubCategoryNames.liftPumpCalculator:
         return BoosterPumpCalculatorScreen(itemName: itemName);
 case SubCategoryNames.woodDoorEstimate:
         return WoodDoorEstimateScreen(itemName: itemName);
+case SubCategoryNames.doorShutterEstimate:
+        return DoorShutterWoodScreen(itemName: itemName);
+case SubCategoryNames.doorBeadingEstimate:
+        return DoorBeadingScreen(itemName: itemName);
+case SubCategoryNames.doorBOQEstimate:
+        return DoorBoqScreen(itemName: itemName);
+case SubCategoryNames.woodMoistureEstimate:
+        return WoodMoistureContentScreen(itemName: itemName);
+case SubCategoryNames.paintQuantity:
+        return PaintQuantityCalculatorScreen(itemName: itemName);
+case SubCategoryNames.plotClean:
+        return PlotCleanScreen(itemName: itemName);
+case SubCategoryNames.concreteCost:
+        return ConcreteCostEstimatorScreen(itemName: itemName);
+case SubCategoryNames.slabConcrete:
+        return SlabConcreteScreen(itemName: itemName);
+case SubCategoryNames.lShapedStairConcreteVolume:
+        return LShapedStairScreen(itemName: itemName);
+case SubCategoryNames.uShapedStairConcreteVolume:
+        return UShapedStairScreen(itemName: itemName);
+case SubCategoryNames.plinthBeamLeanConcrete:
+        return PlinthBeamLeanScreen(itemName: itemName);
+case SubCategoryNames.plinthBeamConcrete:
+        return PlinthBeamConcreteScreen(itemName: itemName);
+case SubCategoryNames.undergroundWaterTankConcrete:
+        return UndergroundWaterTankScreen(itemName: itemName);
+case SubCategoryNames.ringwallFormworkConcrete:
+        return RingwallFormworkConcreteScreen(itemName: itemName);
+case SubCategoryNames.overheadWaterTankFormworkConcrete:
+        return OverheadWaterTankFormworkScreen(itemName: itemName);
 
       default:
         return Center(

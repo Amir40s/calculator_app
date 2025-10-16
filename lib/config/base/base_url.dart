@@ -35,6 +35,9 @@ class Endpoint{
   static const  woodVolume = "${BaseUrl.baseUrl}/wood-volume/calculate";
   static const  doorVolume = "${BaseUrl.baseUrl}/door-volume/calculate";
   static const  doorBeading = "${BaseUrl.baseUrl}/door-beading/calculate";
+  static const  doorBoq = "${BaseUrl.baseUrl}/door-boq/calculate";
+  static const  woodMoisture = "${BaseUrl.baseUrl}/moisture-content/calculate";
+  static const  paintQuantity = "${BaseUrl.baseUrl}/paint/calculate";
   static const  blockMasonry = "${BaseUrl.baseUrl}/wall-block-mortar/calculate";
   static const  wallRoof = "${BaseUrl.baseUrl}/plaster/calculate";
   static const  excavation = "${BaseUrl.baseUrl}/excavation/calculate";
@@ -42,6 +45,15 @@ class Endpoint{
   static const  compaction = "${BaseUrl.baseUrl}/compaction/calculate";
   static const  liftPump = "${BaseUrl.baseUrl}/liftpumpv2/calculate";
   static const  boosterPump = "${BaseUrl.baseUrl}/pumpv2/calculate";
+  static const  plotLeanConcrete = "${BaseUrl.baseUrl}/lean-concrete/calculate";
+  static const  concreteCostEstimatorQuantity = "${BaseUrl.baseUrl}/concrete/calculate";
+  static const  slabCostEstimatorQuantity = "${BaseUrl.baseUrl}/slab-concrete/calculate";
+  static const  lShapedStair = "${BaseUrl.baseUrl}/l-shaped-stair/calculate";
+  static const  uShapedStair = "${BaseUrl.baseUrl}/u-shaped-stair/calculate";
+  static const  plinthBeamLean = "${BaseUrl.baseUrl}/plinth-lean-beam/calculate";
+  static const  plinthBeam = "${BaseUrl.baseUrl}/plinth-beam/calculate";
+  static const  rccWaterTank = "${BaseUrl.baseUrl}/rcc-water-tank/calculate";
+  static const  ringWallFormwork = "${BaseUrl.baseUrl}/retaining-wall/calculate";
 }
 
 

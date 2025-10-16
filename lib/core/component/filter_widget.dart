@@ -6,7 +6,7 @@ import 'package:smart_construction_calculator/core/component/app_text_widget.dar
 import 'package:smart_construction_calculator/core/controller/common_controller.dart';
 
 class FilterWidget extends StatelessWidget {
-  final  controller = Get.find<CommonController>();
+  final  controller = Get.put(CommonController());
 
   final List<String> filters = ["Today", "Last 7 Days", "Last Month"];
 

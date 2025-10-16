@@ -5,45 +5,105 @@ import 'package:smart_construction_calculator/config/enum/style_type.dart';
 import 'package:smart_construction_calculator/config/res/app_color.dart';
 import 'package:smart_construction_calculator/core/component/app_text_widget.dart';
 
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../config/res/app_color.dart';
+import '../../config/res/app_text_style.dart';
+import '../../config/enum/style_type.dart';
+import '../../config/res/statics.dart';
+import 'app_text_widget.dart';
+
 class ReusableDropdown extends StatelessWidget {
-  final RxString selectedValue; // The currently selected value
-  final RxList<String> itemsList; // The list of available items
-  final String hintText; // The hint text for the dropdown
-  final void Function(String) onChangedCallback; // The callback function when a value is selected
+  final RxString selectedValue;
+  final RxList<String> itemsList;
+  final String hintText;
+  final void Function(String) onChangedCallback;
 
+  /// If this dropdown is next to a text field that has a heading, set this true.
+  final bool alignWithTextFieldHeading;
 
-  // Constructor for ReusableDropdown
   const ReusableDropdown({
     super.key,
     required this.selectedValue,
     required this.itemsList,
     required this.hintText,
     required this.onChangedCallback,
+    this.alignWithTextFieldHeading = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      return DropdownButtonFormField<String>(
-        value: selectedValue.value.isEmpty ? null : selectedValue.value,
-        decoration: InputDecoration(
-          hintText: hintText,
-          border: const OutlineInputBorder(borderSide: BorderSide(
-            color: AppColors.blueColor
-          )),
+      final dropdown = Container(
+        decoration: BoxDecoration(
+          color: AppColors.baseColor,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(width: 1.px,color: AppColors.greyColor.withOpacity(0.4)),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 0,
+              offset: Offset(0, 0),
+            ),
+          ],
         ),
-        items: itemsList
-            .map((unit) => DropdownMenuItem<String>(
-          value: unit,
-          child: AppTextWidget(text: unit.capitalizeFirst.toString(),styleType: StyleType.subHeading,),
-        ))
-            .toList(),
-        onChanged: (value) {
-          if (value != null) {
-            onChangedCallback(value);
-          }
-        },
+        child: DropdownButtonFormField<String>(
+          value: selectedValue.value.isEmpty ? null : selectedValue.value,
+          style: AppTextStyle().bodyText(context: context),
+          decoration: InputDecoration(
+            contentPadding:  EdgeInsets.symmetric(vertical: 14.px, horizontal: 6.px),
+            hintText: hintText,
+            hintStyle: AppTextStyle().bodyText(
+              context: context,
+              color: AppColors.greyColor,
+              fontWeight: FontWeight.w100,
+              size: 12.px
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.transparent),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.transparent),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide:  BorderSide(color: AppColors.blueColor.withOpacity(0.4), width: 0.5),
+            ),
+            filled: true,
+            fillColor: AppColors.baseColor,
+          ),
+          dropdownColor: AppColors.baseColor,
+          icon: const Icon(Icons.arrow_drop_down, color: AppColors.blueColor),
+          items: itemsList
+              .map(
+                (unit) => DropdownMenuItem<String>(
+              value: unit,
+              child: SizedBox(
+                width: Get.width * 0.15,
+                child: AppTextWidget(
+                  text: unit.capitalizeFirst.toString(),
+                  styleType: StyleType.subHeading,
+                  overflow: TextOverflow.ellipsis,
+                  maxLine: 1,
+                ),
+              ),
+            ),
+          )
+              .toList(),
+          onChanged: (value) {
+            if (value != null) {
+              onChangedCallback(value);
+            }
+          },
+        ),
       );
+
+      // Offset dropdown if needed
+      return alignWithTextFieldHeading
+          ? Padding(padding:  EdgeInsets.only(top: 30.px), child: dropdown)
+          : dropdown;
     });
   }
 }
