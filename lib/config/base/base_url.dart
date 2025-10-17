@@ -54,6 +54,8 @@ class Endpoint{
   static const  plinthBeam = "${BaseUrl.baseUrl}/plinth-beam/calculate";
   static const  rccWaterTank = "${BaseUrl.baseUrl}/rcc-water-tank/calculate";
   static const  ringWallFormwork = "${BaseUrl.baseUrl}/retaining-wall/calculate";
+  static const  overheadWaterTank = "${BaseUrl.baseUrl}/Underground-tank/calculate";
+  static const  substructureColumnFormwork = "${BaseUrl.baseUrl}/rcc-column/calculate";
 }
 
 

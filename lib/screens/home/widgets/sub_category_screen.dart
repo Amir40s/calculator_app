@@ -16,6 +16,7 @@ import 'package:smart_construction_calculator/screens/home/widgets/volume_conver
 import '../../../config/routes/routes_name.dart';
 import 'concrete_formwork_quality/over_head_watertank_formwork.dart';
 import 'concrete_formwork_quality/ringwall_formwork_concrete.dart';
+import 'concrete_formwork_quality/substructure_column_formwork.dart';
 import 'concrete_formwork_quality/underground_water_tank.dart';
 import 'concrete_formwork_quality/concrete_cost_estimator.dart';
 import 'concrete_formwork_quality/l_shaped_stair.dart';
@@ -141,6 +142,8 @@ case SubCategoryNames.ringwallFormworkConcrete:
         return RingwallFormworkConcreteScreen(itemName: itemName);
 case SubCategoryNames.overheadWaterTankFormworkConcrete:
         return OverheadWaterTankFormworkScreen(itemName: itemName);
+case SubCategoryNames.substructureColumnFormworkConcrete:
+        return SubstructureColumnFormwork(itemName: itemName);
 
       default:
         return Center(

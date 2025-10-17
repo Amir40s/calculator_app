@@ -387,10 +387,33 @@ class CalculatorRepository {
       url: url,
       data: body,
     );
-  }Future<dynamic> calculateRingwallFormworkConcrete({
+  }
+  Future<dynamic> calculateRingwallFormworkConcrete({
     required Map<String, dynamic> body,
   }) async {
     final url = Endpoint.ringWallFormwork;
+
+    return await _apiService.postApi(
+      url: url,
+      data: body,
+    );
+  }
+
+  Future<dynamic> calculateOverheadWaterTankFormwork({
+    required Map<String, dynamic> body,
+  }) async {
+    final url = Endpoint.overheadWaterTank;
+
+    return await _apiService.postApi(
+      url: url,
+      data: body,
+    );
+  }
+
+  Future<dynamic> calculateSubstructureColumnFormwork({
+    required Map<String, dynamic> body,
+  }) async {
+    final url = Endpoint.substructureColumnFormwork;
 
     return await _apiService.postApi(
       url: url,

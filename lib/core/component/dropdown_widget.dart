@@ -148,6 +148,12 @@ class ReactiveDropdown extends StatelessWidget {
               border: const OutlineInputBorder(
                 borderSide: BorderSide(color: AppColors.blueColor),
               ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide:  BorderSide(color: AppColors.blueColor.withOpacity(0.4), width: 0.5),
+              ),
+              fillColor: AppColors.baseColor,
+              filled: true,
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 12,
                 vertical: 10,

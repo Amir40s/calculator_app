@@ -35,7 +35,6 @@ class PlinthBeamConcreteController extends GetxController {
     if (beam.length > 1) beam.removeAt(index);
   }
 
-  /// ✅ Validate feet-inch format like `4'6"` or `8'0"`
   bool isValidFeetInchFormat(String input) {
     input = input.trim();
     if (!input.contains("'") || !input.contains('"')) return false;

@@ -1,0 +1,207 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:smart_construction_calculator/core/component/dropdown_widget.dart';
+import '../../../../config/enum/style_type.dart';
+import '../../../../config/res/app_color.dart';
+import '../../../../core/component/app_button_widget.dart';
+import '../../../../core/component/app_text_field.dart';
+import '../../../../core/component/app_text_widget.dart';
+import '../../../../core/component/dynamic_table_widget.dart';
+import '../../../../core/component/two_fields_widget.dart';
+import '../../../../core/controller/calculators/concrete_formwork_quantity_controller/substructure_column_formwork_controller.dart';
+import '../../../../core/controller/loader_controller.dart';
+
+class SubstructureColumnFormwork extends StatelessWidget {
+  final String itemName;
+  SubstructureColumnFormwork({super.key, required this.itemName});
+
+  final controller = Get.put(SubStructureColumnController());
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: 4.w),
+        child: Obx(() {
+          return Column(
+            spacing: 1.h,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AppTextWidget(
+                  text: "Concrete Input", styleType: StyleType.heading),
+              SizedBox(height: 1.h),
+              for (int i = 0; i < controller.columns.length; i++) ...[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    AppTextWidget(
+                      text: "Column ${i + 1}",
+                      styleType: StyleType.dialogHeading,
+                    ),
+                    if (controller.columns.length > 1)
+                      AppButtonWidget(
+                        text: "Delete",
+                        buttonColor: Colors.red,
+                        radius: 2.w,
+                        width: 20.w,
+                        height: 3.h,
+                        onPressed: () => controller.deleteColumn(i),
+                      ),
+                  ],
+                ),
+                TwoFieldsWidget(
+                  heading1: "Tag",
+                  heading2: "Width (ft'in\")",
+                  hint: "tag",
+                  hint2: "e.g., 8'0\"",
+                  controller1: controller.columns[i]['tag']!,
+                  controller2: controller.columns[i]['width']!,
+                ),
+                TwoFieldsWidget(
+                  heading1: "Thickness (ft'in\")",
+                  heading2: "Height (ft'in\")",
+                  hint: "e.g., 4'6\"",
+                  hint2: "e.g., 8'0\"",
+                  controller1: controller.columns[i]['thickness']!,
+                  controller2: controller.columns[i]['height']!,
+                ),
+                ReactiveDropdown(
+                  heading: "Type",
+                  selectedValue: controller.selectedTypes[i],
+                  itemsList: controller.columnTypes,
+                  hintText: "Select Type",
+                  onChangedCallback: (value) {
+                    controller.onTypeChange(i, value);
+                  },
+                ),
+
+                if (controller.selectedTypes[i].value == "L-Shaped" ||
+                    controller.selectedTypes[i].value == "U-Shaped") ...[
+                  SizedBox(height: 1.h),
+                  TwoFieldsWidget(
+                    heading1: "Base Width (ft'in\")",
+                    heading2: "Base Thickness (ft'in\")",
+                    controller1: controller.columns[i]['baseWidth']!,
+                    controller2: controller.columns[i]['baseThickness']!,
+                  ),
+                  TwoFieldsWidget(
+                    heading1: "Leg Width (ft'in\")",
+                    heading2: "Leg Thickness (ft'in\")",
+                    controller1: controller.columns[i]['legWidth']!,
+                    controller2: controller.columns[i]['legThickness']!,
+                  ),
+                ],
+
+                AppTextField(
+                  heading: "Quantity",
+                  hintText: "0",
+                  controller: controller.columns[i]['quantity']!,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: AppTextField(
+                        heading: "Cement",
+                        hintText: "0",
+                        controller: controller.columns[i]['cement']!,
+                      ),
+                    ),
+                    SizedBox(width: 1.w),
+                    Expanded(
+                      child: AppTextField(
+                        heading: "Sand",
+                        hintText: "0",
+                        controller: controller.columns[i]['sand']!,
+                      ),
+                    ),
+                    SizedBox(width: 1.w),
+                    Expanded(
+                      child: AppTextField(
+                        heading: "Crush",
+                        hintText: "0",
+                        controller: controller.columns[i]['crush']!,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 2.h),
+              ],
+              AppButtonWidget(
+                text: "+ Add Columns",
+                width: 100.w,
+                height: 5.h,
+                onPressed: controller.addNewColumn,
+              ),
+              SizedBox(height: 1.h),
+              AppButtonWidget(
+                text: "Calculate",
+                width: 100.w,
+                height: 5.h,
+                onPressed: controller.calculate,
+              ),
+              SizedBox(height: 2.h),
+              Obx((){
+                if(controller.isLoading.value){
+                  return const Center(child: Loader());
+                }
+                final res = controller.subStructureResult.value;
+
+                if(controller.subStructureResult.value == null){
+                  return AppTextWidget(
+                    color: AppColors.greyColor,
+                    text: "No results yet. Enter column details and click Calculate.",
+                  );
+
+                }
+                final entry = res?.entries ?? [];
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 1.h,
+                  children: [
+
+                    AppTextWidget(text: "Concrete Results", styleType: StyleType.heading),
+                    SizedBox(height: 1.h),
+                    for (int i = 0; i < entry.length; i++) ...[
+                      AppTextWidget(text: "Column ${i + 1}", styleType: StyleType.subHeading),
+                      SizedBox(height: 1.h),
+                      DynamicTable(
+                        headers: ['Item', 'Value'],
+                        rows: [
+                          ['Tag', entry[i].tag ?? 'N/A'],
+                          ['Type', entry[i].type ?? 'N/A'],
+                          ['Volume (ft³)', entry[i].volume.toStringAsFixed(2) ?? 'N/A'],
+                          ['Formwork (ft²)', entry[i].formwork.toStringAsFixed(2) ?? 'N/A'],
+                          ['Cement bags', entry[i].cementBags.toStringAsFixed(2) ?? 'N/A'],
+                          ['Sand volume (ft³)', entry[i].sandVolume.toStringAsFixed(2) ?? 'N/A'],
+                          ['Crush Volume (ft³)', entry[i].crushVolume.toStringAsFixed(2) ?? 'N/A'],
+                        ],
+                      ),
+                      SizedBox(height: 2.h),
+
+
+                    ],
+                    AppTextWidget(text: "Summary", styleType: StyleType.subHeading),
+                    SizedBox(height: 1.h),
+                    DynamicTable(
+                      headers: ['Item', 'Quantity'],
+                      rows: [
+                        ['Total Volume (ft³)	', res?.totalVolume.toStringAsFixed(0) ?? '0.00'],
+                        ['Total Formwork (ft²)', res?.totalFormwork.toStringAsFixed(0) ?? '0.00'],
+                        ['Cement (bags)', res?.cementBags.toStringAsFixed(0) ?? '0.00'],
+                        ['Sand (ft³)', res?.sandVolume.toStringAsFixed(0) ?? '0.00'],
+                        ['Crush (ft³)', res?.crushVolume.toStringAsFixed(0) ?? '0.00'],
+                        ['Water (liters)', res?.waterLiters.toStringAsFixed(0) ?? '0.00'],
+                      ],),
+                    SizedBox(height: 2.h),
+                  ],
+                );
+              })
+            ],
+          );
+        }),
+      ),
+    );
+  }
+}

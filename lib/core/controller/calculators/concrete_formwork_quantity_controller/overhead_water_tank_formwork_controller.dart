@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smart_construction_calculator/config/repository/calculator_repository.dart';
 import 'package:smart_construction_calculator/config/utility/app_utils.dart';
+
+import '../../../../config/model/concrete_form_quantity/oberheadWaterTankFormworkModel.dart';
 
 class OverheadWaterTankFormworkController extends GetxController {
   final _repo = CalculatorRepository();
@@ -22,50 +26,86 @@ class OverheadWaterTankFormworkController extends GetxController {
   final columnLengthController = TextEditingController();
   final columnWidthController = TextEditingController();
   final columnHeightController = TextEditingController();
-
+  RxList<Map<String, TextEditingController>> columnList =
+      <Map<String, TextEditingController>>[].obs;
   // 🔹 Material Ratios
   final cementController = TextEditingController();
   final sandController = TextEditingController();
   final crushController = TextEditingController();
 
   // 🔹 Pickup Column Type (Radio Selection)
-  var pickupColumnType = "Same Size".obs; // or "Different"
+  var pickupColumnType = "Same Size".obs;
 
   // 🔹 Results
   var tankResult = Rxn<OverheadWaterTankFormworkModel>();
   var isLoading = false.obs;
-
+  @override
+  void onInit() {
+    super.onInit();
+    for (int i = 0; i < 4; i++) {
+      columnList.add({
+        'length': TextEditingController(),
+        'width': TextEditingController(),
+        'height': TextEditingController(),
+      });
+    }
+  }
   // 🔹 Calculation Function
   Future<void> calculate() async {
     try {
       isLoading.value = true;
 
-      final body = {
-        "lengthInternal": lengthInternalController.text,
-        "widthInternal": widthInternalController.text,
-        "heightInternal": heightInternalController.text,
+      final dimensions = {
+        "length": lengthInternalController.text,
+        "width": widthInternalController.text,
+        "height": heightInternalController.text,
         "wallThickness": wallThicknessController.text,
         "bottomThickness": bottomThicknessController.text,
         "roofThickness": roofThicknessController.text,
         "manholeLength": manholeLengthController.text,
         "manholeWidth": manholeWidthController.text,
-        "columnLength": columnLengthController.text,
-        "columnWidth": columnWidthController.text,
-        "columnHeight": columnHeightController.text,
-        "pickupColumnType": pickupColumnType.value, // 👈 Radio Button value
-        "cementRatio": cementController.text,
-        "sandRatio": sandController.text,
-        "crushRatio": crushController.text,
-        "mixRatio":
-        "${cementController.text}:${sandController.text}:${crushController.text}",
+      };
+      List<Map<String, dynamic>> columns = [];
+
+      // Build the "columns" list
+      if (pickupColumnType.value == "Same Size") {
+        final singleCol = {
+          "length": columnLengthController.text,
+          "width": columnWidthController.text,
+          "height": columnHeightController.text,
+        };
+        columns = List.generate(4, (_) => singleCol);
+      } else {
+        // “Different” → 4 unique columns
+        columns = columnList.map((col) {
+          return {
+            "length": col['length']?.text ?? "",
+            "width": col['width']?.text ?? "",
+            "height": col['height']?.text ?? "",
+          };
+        }).toList();
+      }
+
+      // Build the "mixRatio" object
+      final mixRatio = {
+        "cement": int.tryParse(cementController.text) ?? 0,
+        "sand": int.tryParse(sandController.text) ?? 0,
+        "crush": int.tryParse(crushController.text) ?? 0,
       };
 
-      AppUtils.logger("📦 POST DATA: $body");
+      // Combine all
+      final body = {
+        "dimensions": dimensions,
+        "columns": columns,
+        "mixRatio": mixRatio,
+      };
+
+      log("📦 POST DATA: $body");
 
       final res = await _repo.calculateOverheadWaterTankFormwork(body: body);
       tankResult.value = OverheadWaterTankFormworkModel.fromJson(res);
     } catch (e) {
-      AppUtils.logger("❌ Overhead Tank Error: $e");
+      log("❌ Overhead Tank Error: $e");
       Get.snackbar("Error", e.toString());
     } finally {
       isLoading.value = false;
@@ -88,6 +128,11 @@ class OverheadWaterTankFormworkController extends GetxController {
     cementController.dispose();
     sandController.dispose();
     crushController.dispose();
+    for (var col in columnList) {
+      for (var c in col.values) {
+        c.dispose();
+      }
+    }
     super.onClose();
   }
 }
