@@ -26,6 +26,10 @@
 	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+    <string>We need access to save your PDF files.</string>
+    <key>NSDocumentsFolderUsageDescription</key>
+    <string>We need access to save your PDF files.</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>

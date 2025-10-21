@@ -5,5 +5,6 @@ class AppAssets{
   static const premiumBackground  = "assets/images/premium_bg.png";
   static const priceBg  = "assets/images/price_bg.png";
   static const wallBlock  = "assets/images/wall_block.webp";
+  static const wallRoofPlaster  = "assets/images/wall_roof_plaster.webp";
 
 }

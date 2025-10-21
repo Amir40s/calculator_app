@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smart_construction_calculator/config/enum/style_type.dart';
 import 'package:smart_construction_calculator/config/res/app_color.dart';
@@ -8,7 +9,9 @@ import 'package:smart_construction_calculator/core/component/app_text_widget.dar
 import 'package:smart_construction_calculator/core/component/cost_estimation_widget.dart';
 import 'package:smart_construction_calculator/core/component/custom_ui_widget.dart';
 import 'package:smart_construction_calculator/core/controller/calculators/cost_estimation/finishing_cost_controller.dart';
+import 'package:smart_construction_calculator/core/controller/loader_controller.dart';
 
+import '../../../../config/utility/pdf_helper.dart';
 import '../../../../core/component/app_button_widget.dart';
 import '../../../../core/component/app_text_field.dart';
 import '../../../../core/component/dropdown_widget.dart';
@@ -84,11 +87,121 @@ class CostEstimationScreen extends StatelessWidget {
                 height: 5.h,
               ),
               SizedBox(
+                height: 1.h,
+              ),
+              AppButtonWidget(
+                text: "Download PDF",
+                onPressed: () async {
+                  final grey = controller.greyData.value;
+                  final finish = controller.finishingCostData.value;
+
+                  if (grey == null || finish == null) {
+                    Get.snackbar("Error", "Please calculate first before downloading PDF.");
+                    return;
+                  }
+
+                  final greyMaterialRows = [
+                    ['Excavation', grey.excavationCost.toStringAsFixed(0)],
+                    ['Cement', grey.cementCost.toStringAsFixed(0)],
+                    ['Sand', grey.sandCost.toStringAsFixed(0)],
+                    ['Aggregate', grey.aggregateCost.toStringAsFixed(0)],
+                    ['Water', grey.waterCost.toStringAsFixed(0)],
+                    ['Steel', grey.steelCost.toStringAsFixed(0)],
+                    ['Block', grey.blockCost.toStringAsFixed(0)],
+                    ['Back Fill Material', grey.backFillMaterialCost.toStringAsFixed(0)],
+                    ['Door Frame', grey.doorFrameCost.toStringAsFixed(0)],
+                    ['Electrical Conduiting', grey.electricalConduitingCost.toStringAsFixed(0)],
+                    ['Sewage', grey.sewageCost.toStringAsFixed(0)],
+                    ['Miscellaneous', grey.miscellaneousCost.toStringAsFixed(0)],
+                    ['Labor', grey.laborCost.toStringAsFixed(0)],
+                    ['Project Management', grey.projectManagementCost.toStringAsFixed(0)],
+                  ];
+
+                  final greyMaterialTable = {
+                    'title': 'Grey Structure - Material Cost Breakdown',
+                    'headers': ['Material / Service', 'Cost (PKR)'],
+                    'rows': greyMaterialRows,
+                  };
+
+                  final greyMonthlyRows = grey.monthlyDistribution.map((month) {
+                    final period = month.period.toString();
+                    final percent = month.percentage.toStringAsFixed(0);
+                    final amount = month.amount.toStringAsFixed(0);
+                    return ["$period ($percent%)", amount];
+                  }).toList();
+
+                  final greyMonthlyTable = {
+                    'title': 'Grey Structure - Monthly Expense',
+                    'headers': ['Period', 'Amount (PKR)'],
+                    'rows': greyMonthlyRows,
+                  };
+
+                  final finishBreakdownRows = finish.groups.expand((group) {
+                    final rows = group.rows.map((row) {
+                      return [group.name, row.name, row.amount.toStringAsFixed(0)];
+                    }).toList();
+                    return rows;
+                  }).toList();
+
+                  final finishBreakdownTable = {
+                    'title': 'Finishing Cost Breakdown',
+                    'headers': ['Category', 'Item', 'Amount (PKR)'],
+                    'rows': finishBreakdownRows,
+                  };
+
+                  final finishMonthlyRows = finish.monthly.asMap().entries.map((entry) {
+                    final index = entry.key + 1;
+                    final amount = entry.value.toStringAsFixed(0);
+                    return ['Month $index', amount];
+                  }).toList();
+
+                  final finishMonthlyTable = {
+                    'title': 'Finishing - Monthly Expense',
+                    'headers': ['Month', 'Amount (PKR)'],
+                    'rows': finishMonthlyRows,
+                  };
+
+                  final double greyTotal = grey.totalCost;
+                  final double finishTotal = finish.total;
+                  final double combinedTotal = greyTotal + finishTotal;
+
+                  final summaryTable = {
+                    'title': 'Total Summary',
+                    'headers': ['Description', 'Value (PKR)'],
+                    'rows': [
+                      ['Grey Structure Total', greyTotal.toStringAsFixed(0)],
+                      ['Finishing Total', finishTotal.toStringAsFixed(0)],
+                      ['Combined Total', combinedTotal.toStringAsFixed(0)],
+                    ],
+                  };
+                  await PdfHelper.generateAndOpenPdf(
+                    context: context,
+                    title: 'Project Cost Estimation',
+                    inputData: {
+                      'Area': '${grey.builtupArea.toStringAsFixed(0)} sqft',
+                      'Finishing Material Quality': controller.selectedQuality.toString(),
+                      'Total Rate per Sq Ft:': (controller.builtupArea.value + grey.totalCost).toStringAsFixed(0),
+                    },
+                    tables: [
+                      greyMaterialTable,
+                      greyMonthlyTable,
+                      finishBreakdownTable,
+                      finishMonthlyTable,
+                      summaryTable,
+                    ],
+                    fileName: '${itemName}_report.pdf',
+                  );
+                },
+
+                width: 100.w,
+                height: 5.h,
+              ),
+              SizedBox(
                 height: 2.h,
               ),
               Obx(() {
                 if (controller.isLoading.value) {
-                  return const Center(child: CircularProgressIndicator());
+                  return  Center(child: Loader());
                 }
 
                 if (!controller.isFinished.value) {
@@ -101,9 +214,8 @@ class CostEstimationScreen extends StatelessWidget {
                 if (grey == null || finish == null) {
                   return const Center(child: Text('Please calculate again.'));
                 }
-// ✅ Calculate total dynamically from both lists
                 final double greyMonthsTotal = grey.monthlyDistribution
-                    .skip(1) // skip index 0
+                    .skip(1)
                     .fold(0.0, (sum, month) => sum + month.amount);
 
                 final double finishMonthsTotal = finish.monthly

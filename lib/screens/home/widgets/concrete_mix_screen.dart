@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smart_construction_calculator/core/controller/calculators/conversion/concrete_mix_controller.dart';
+import '../../../config/utility/pdf_helper.dart';
 import 'base_conversion_screen.dart';
 
 class ConcreteMixConversionScreen extends StatelessWidget {
@@ -23,6 +24,31 @@ class ConcreteMixConversionScreen extends StatelessWidget {
       onValueChanged: controller.setValue,
       onUnitChanged:  controller.setUnit,
       onConvert: controller.convert,
+      onDownload: () async {
+        if (controller.data.value == null) {
+          Get.snackbar("Error", "Please convert first before downloading PDF.");
+          return;
+        }
+
+        final conversions = controller.data.value!.conversions;
+        final List<List<String>> rows = conversions.entries
+            .map((e) => [e.key.toString(), (e.value as num).toStringAsFixed(0)])
+            .toList();
+
+
+        await PdfHelper.generateAndOpenPdf(
+          context: context,
+          title: itemName,
+          inputData: {
+            'Mix Ratio': " (${controller.selectedUnit.value}) Volume ${controller.inputValue.value}"
+          },
+          headers: ['Unit', 'Value'],
+          rows: rows,
+          fileName: '$itemName.pdf',
+        );
+      },
+
+
     );
   }
 }

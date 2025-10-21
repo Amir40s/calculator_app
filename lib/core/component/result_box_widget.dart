@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smart_construction_calculator/core/component/app_text_widget.dart';
+import 'package:smart_construction_calculator/core/controller/loader_controller.dart';
 import '../../../../config/res/app_color.dart';
 import '../../../../core/controller/calculators/cost_estimation/finishing_cost_controller.dart';
 import '../../config/enum/style_type.dart';
@@ -15,10 +16,9 @@ class CostBreakdown extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       if (controller.isLoading.value) {
-        return Center(child: CircularProgressIndicator());
+        return Center(child: Loader());
       } else {
         final result = controller.finishingCostData.value;
-        // Check if the result is null or if the required data is empty
         if (result == null || result.groups.isEmpty) {
           return Center(
               child: Text(
@@ -28,12 +28,17 @@ class CostBreakdown extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Static Header for "Cost Breakdown"
             Container(
               width: 100.w,
               color: AppColors.whiteColor,
               child: Column(
+                spacing: 1.h,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  AppTextWidget(text: "Estimated Rate per Square Foot",styleType: StyleType.heading,),
+                  Center(child: AppTextWidget(text: "PKR ${result.perSqFt.toStringAsFixed(0)} / ft²",styleType: StyleType.dialogHeading,color: AppColors.blueColor,)),
+                  SizedBox(height: 2.h,),
+
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -51,7 +56,7 @@ class CostBreakdown extends StatelessWidget {
                                 children: [
                                   AppTextWidget(
                                       text: group.name,
-                                      styleType: StyleType.subHeading),
+                                      styleType: StyleType.dialogHeading),
 
                                   ...group.rows.map((row) {
                                     return ResultBoxTile(
@@ -74,7 +79,7 @@ class CostBreakdown extends StatelessWidget {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: 2.h), // Space between groups
+                                  SizedBox(height: 2.h),
                                 ],
                               ),
                             );

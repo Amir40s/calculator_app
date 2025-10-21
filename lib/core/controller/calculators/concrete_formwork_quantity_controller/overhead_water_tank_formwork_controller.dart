@@ -1,10 +1,8 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smart_construction_calculator/config/repository/calculator_repository.dart';
 import 'package:smart_construction_calculator/config/utility/app_utils.dart';
-
 import '../../../../config/model/concrete_form_quantity/oberheadWaterTankFormworkModel.dart';
 
 class OverheadWaterTankFormworkController extends GetxController {
@@ -28,6 +26,7 @@ class OverheadWaterTankFormworkController extends GetxController {
   final columnHeightController = TextEditingController();
   RxList<Map<String, TextEditingController>> columnList =
       <Map<String, TextEditingController>>[].obs;
+
   // 🔹 Material Ratios
   final cementController = TextEditingController();
   final sandController = TextEditingController();
@@ -39,9 +38,11 @@ class OverheadWaterTankFormworkController extends GetxController {
   // 🔹 Results
   var tankResult = Rxn<OverheadWaterTankFormworkModel>();
   var isLoading = false.obs;
+
   @override
   void onInit() {
     super.onInit();
+    // initialize 4 dynamic columns
     for (int i = 0; i < 4; i++) {
       columnList.add({
         'length': TextEditingController(),
@@ -50,50 +51,94 @@ class OverheadWaterTankFormworkController extends GetxController {
       });
     }
   }
+
+  // 🔹 Validate feet-inch input
+  bool isValidFeetInchFormat(String input) {
+    input = input.trim();
+    if (input.isEmpty) return false;
+    if (!input.contains("'") || !input.contains('"')) return false;
+    try {
+      final parts = input.split("'");
+      if (parts.length != 2) return false;
+      final feetPart = parts[0].trim();
+      final inchPart = parts[1].replaceAll('"', '').trim();
+      final feet = int.tryParse(feetPart);
+      final inches = double.tryParse(inchPart);
+      if (feet == null || inches == null) return false;
+      if (feet < 0 || inches < 0 || inches >= 12) return false;
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+
+  // 🔹 Validate all required dimension fields before API call
+  bool _validateAllInputs(Map<String, String> dimensions, List<Map<String, String>> columns) {
+    for (var entry in dimensions.entries) {
+      if (entry.value.isNotEmpty && !isValidFeetInchFormat(entry.value)) {
+        Get.snackbar("Invalid Input", "Invalid ${entry.key} format. Use format like 4'6\" or 4'.");
+        return false;
+      }
+    }
+    for (int i = 0; i < columns.length; i++) {
+      final col = columns[i];
+      for (var entry in col.entries) {
+        if (entry.value.isNotEmpty && !isValidFeetInchFormat(entry.value)) {
+          Get.snackbar("Invalid Column", "Invalid ${entry.key} in column ${i + 1}. Use format like 2'6\".");
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
   // 🔹 Calculation Function
   Future<void> calculate() async {
     try {
       isLoading.value = true;
 
       final dimensions = {
-        "length": lengthInternalController.text,
-        "width": widthInternalController.text,
-        "height": heightInternalController.text,
-        "wallThickness": wallThicknessController.text,
-        "bottomThickness": bottomThicknessController.text,
-        "roofThickness": roofThicknessController.text,
-        "manholeLength": manholeLengthController.text,
-        "manholeWidth": manholeWidthController.text,
+        "length": lengthInternalController.text.trim(),
+        "width": widthInternalController.text.trim(),
+        "height": heightInternalController.text.trim(),
+        "wallThickness": wallThicknessController.text.trim(),
+        "bottomThickness": bottomThicknessController.text.trim(),
+        "roofThickness": roofThicknessController.text.trim(),
+        "manholeLength": manholeLengthController.text.trim(),
+        "manholeWidth": manholeWidthController.text.trim(),
       };
-      List<Map<String, dynamic>> columns = [];
 
-      // Build the "columns" list
+      List<Map<String, String>> columns = [];
+
       if (pickupColumnType.value == "Same Size") {
         final singleCol = {
-          "length": columnLengthController.text,
-          "width": columnWidthController.text,
-          "height": columnHeightController.text,
+          "length": columnLengthController.text.trim(),
+          "width": columnWidthController.text.trim(),
+          "height": columnHeightController.text.trim(),
         };
         columns = List.generate(4, (_) => singleCol);
       } else {
-        // “Different” → 4 unique columns
         columns = columnList.map((col) {
           return {
-            "length": col['length']?.text ?? "",
-            "width": col['width']?.text ?? "",
-            "height": col['height']?.text ?? "",
+            "length": col['length']?.text.trim() ?? "",
+            "width": col['width']?.text.trim() ?? "",
+            "height": col['height']?.text.trim() ?? "",
           };
         }).toList();
       }
 
-      // Build the "mixRatio" object
+      if (!_validateAllInputs(dimensions, columns)) {
+        isLoading.value = false;
+        return;
+      }
+
       final mixRatio = {
         "cement": int.tryParse(cementController.text) ?? 0,
         "sand": int.tryParse(sandController.text) ?? 0,
         "crush": int.tryParse(crushController.text) ?? 0,
       };
 
-      // Combine all
       final body = {
         "dimensions": dimensions,
         "columns": columns,

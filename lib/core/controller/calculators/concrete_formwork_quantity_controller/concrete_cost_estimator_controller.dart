@@ -114,7 +114,6 @@ class ConcreteCostEstimatorController extends GetxController {
     };
   }
 
-  /// Perform API calculation
   Future<void> calculate() async {
     final mixRatio = mixRatioController.text.trim();
 
@@ -144,7 +143,6 @@ class ConcreteCostEstimatorController extends GetxController {
     }
   }
 
-  /// Dispose controllers properly
   @override
   void onClose() {
     for (final controller in [

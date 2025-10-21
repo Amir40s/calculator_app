@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:smart_construction_calculator/config/model/concrete_form_quantity/substructure_column_formwork_model.dart';
 import '../../../../config/repository/calculator_repository.dart';
 
-class SubStructureColumnController extends GetxController {
+class SuperstructureColumnController extends GetxController {
   RxList<Map<String, TextEditingController>> columns =
       <Map<String, TextEditingController>>[].obs;
   var isLoading = false.obs;
@@ -43,7 +43,7 @@ class SubStructureColumnController extends GetxController {
       "crush": TextEditingController(),
     });
 
-    selectedTypes.add('Square'.obs);
+    selectedTypes.add('Square'.obs); // each column gets its own type tracker
   }
 
   /// Handle type change dynamically for each column

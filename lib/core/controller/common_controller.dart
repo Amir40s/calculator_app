@@ -1,7 +1,11 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:get/get.dart';
 
 import '../../config/model/faq_model.dart';
 import '../../config/model/history_model.dart';
+import '../../config/repository/calculator_repository.dart';
 import '../services/analytics_services.dart';
 
 class CommonController extends GetxController {

@@ -7,55 +7,105 @@ import '../../../../config/model/cost_estimation_calcutor/grey_structure_model.d
 import '../../../../config/repository/calculator_repository.dart';
 import '../../base_calculator_controller.dart';
 
-class WallBlockMasonryController extends BaseCalculatorController<WallBlockModel> {
+class WallBlockMasonryController
+    extends BaseCalculatorController<WallBlockModel> {
   final _repo = CalculatorRepository();
 
   final RxBool isLoading = false.obs;
+  RxList<WallModel> walls = <WallModel>[WallModel()].obs;
   final Rx<WallBlockModel?> blackMasonry = Rx<WallBlockModel?>(null);
+  void addWall() {
+    walls.add(WallModel());
+  }
 
-  var wallHeight = TextEditingController();
-  var wallLength = TextEditingController();
-  var blockLength = TextEditingController();
-  var blockHeight = TextEditingController();
-  var blockWidth = TextEditingController();
-  var joint = TextEditingController();
-  var mortarRatio = TextEditingController();
-  var waterCementRatio = TextEditingController();
+  void addWindow(int wallIndex) {
+    walls[wallIndex].windows.add(WindowDoorModel());
+  }
+
+  void removeWindow(int wallIndex, int windowIndex) {
+    if (walls[wallIndex].windows.length > 1) {
+      walls[wallIndex].windows.removeAt(windowIndex);
+    }
+  }
+
+  void addDoor(int wallIndex) {
+    walls[wallIndex].doors.add(WindowDoorModel());
+  }
+
+  void removeDoor(int wallIndex, int doorIndex) {
+    if (walls[wallIndex].doors.length > 1) {
+      walls[wallIndex].doors.removeAt(doorIndex);
+    }
+  }
+
+  void removeWall(int index) {
+    if (walls.length > 1) {
+      walls.removeAt(index);
+    } else {
+      Get.snackbar("Warning", "At least one wall is required.");
+    }
+  }
 
   var isExpanded = false.obs;
 
-  // Method to toggle the text state
   void toggleText() {
     isExpanded.value = !isExpanded.value;
   }
-  // Fetch the data and update controller state
+
   Future<void> convert() async {
     setLoading(true);
     try {
-      final response = await _repo.calculateWallBlock(
+      final wallsList = walls.map((wall) {
+        final validWindows = wall.windows
+            .where((w) =>
+        w.width.text.trim().isNotEmpty && w.height.text.trim().isNotEmpty)
+            .map((w) => {
+          "width": w.width.text.trim(),
+          "height": w.height.text.trim(),
+        })
+            .toList();
 
-          wallHeight: wallHeight.text,
-          wallLength: wallLength.text,
-          blockLength: blockLength.text,
-          blockHeight: blockHeight.text,
-          blockWidth: blockWidth.text,
-          joint: joint.text,
-          mortarRatio: mortarRatio.text,
-          waterCementRatio: waterCementRatio.text
-      );
+        // Filter out empty doors
+        final validDoors = wall.doors
+            .where((d) =>
+        d.width.text.trim().isNotEmpty && d.height.text.trim().isNotEmpty)
+            .map((d) => {
+          "width": d.width.text.trim(),
+          "height": d.height.text.trim(),
+        })
+            .toList();
 
-      // Assuming response is a map, parse it to your model
+        // Construct each wall map
+        return {
+          "id": wall.id,
+          "tag": wall.tag.text.trim(),
+          "grid": wall.grid.text.trim(),
+          "wallHeight": wall.wallHeight.text.trim(),
+          "wallLength": wall.wallLength.text.trim(),
+          "blockLength": wall.blockLength.text.trim(),
+          "blockHeight": wall.blockHeight.text.trim(),
+          "blockWidth": wall.blockWidth.text.trim(),
+          "joint": wall.joint.text.trim(),
+          "mortarRatio": wall.mortarRatio.text.trim(),
+          "waterCementRatio": wall.waterCementRatio.text.trim(),
+          "windows": validWindows,
+          "doors": validDoors,
+        };
+      }).toList();
+
+      final body = {"walls": wallsList};
+
+      log("📦 POST BODY: $body");
+
+      final response = await _repo.calculateWallBlock(body: body);
       blackMasonry.value = WallBlockModel.fromJson(response);
 
-      // Optionally log or handle any specific data
-      log("Fetched data: $response");
-
+      log("✅ API Response: $response");
     } catch (e) {
-      log("Error in convert: $e");
+      log("❌ Error in convert: $e");
       Get.snackbar('Error', e.toString());
     } finally {
       setLoading(false);
     }
   }
-
 }

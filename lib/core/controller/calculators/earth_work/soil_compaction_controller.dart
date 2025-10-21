@@ -6,6 +6,7 @@ import 'package:smart_construction_calculator/config/repository/calculator_repos
 class SoilCompactionController extends GetxController {
   final _repo = CalculatorRepository();
 
+  // Loading state
   final RxBool isLoading = false.obs;
 
   // Text Controllers
@@ -34,25 +35,36 @@ class SoilCompactionController extends GetxController {
   final RxDouble looseVolume = 0.0.obs;
   final RxString resultUnit = ''.obs;
 
-  /// 🔹 Generate compaction options dynamically based on material
+  // 🔹 Cache last calculated values to avoid redundant API calls
+  String _lastInputKey = '';
+
+  /// 🔹 Generate compaction factor list (e.g., 1.10 → 1.15 → [1.10, 1.11, 1.12, ...])
   void updateCompactionOptions(String material) {
     final range = materialCompactionRanges[material];
-    if (range != null) {
-      double start = range[0];
-      double end = range[1];
-      double step = (end - start) <= 0.1 ? 0.01 : 0.05;
-
-      final values = <String>[];
-      for (double i = start; i <= end + 0.0001; i += step) {
-        values.add(i.toStringAsFixed(2));
-      }
-      compactionOptions.assignAll(values);
-    } else {
+    if (range == null) {
       compactionOptions.clear();
+      selectedCompaction.value = '';
+      return;
     }
+
+    final start = range[0];
+    final end = range[1];
+    final step = (end - start) <= 0.1 ? 0.01 : 0.05;
+
+    final values = <String>[];
+    for (double i = start; i <= end + 0.0001; i += step) {
+      values.add(i.toStringAsFixed(2));
+    }
+
+    compactionOptions.assignAll(values);
+
+    // 🔹 Automatically select the average value for convenience
+    final avg = ((start + end) / 2).toStringAsFixed(2);
+    selectedCompaction.value = avg;
+    log("🔸 Updated compaction options for $material: $values | Default: $avg");
   }
 
-  /// 🔹 Perform the soil compaction calculation
+  /// 🔹 Perform soil compaction calculation via API
   Future<void> calculate() async {
     if (lengthController.text.isEmpty ||
         widthController.text.isEmpty ||
@@ -63,18 +75,26 @@ class SoilCompactionController extends GetxController {
       return;
     }
 
+    final length = double.tryParse(lengthController.text) ?? 0;
+    final width = double.tryParse(widthController.text) ?? 0;
+    final depth = double.tryParse(depthController.text) ?? 0;
+    final compactionFactor = double.tryParse(selectedCompaction.value) ?? 0;
+
+    if (length <= 0 || width <= 0 || depth <= 0 || compactionFactor <= 0) {
+      Get.snackbar('Error', 'Invalid numeric values');
+      return;
+    }
+
+    // 🔹 Create a unique key for caching (optional)
+    final currentKey =
+        '$length-$width-$depth-${selectedMaterial.value}-${selectedCompaction.value}-${selectedUnit.value}';
+    if (currentKey == _lastInputKey) {
+      log("🟡 Skipping API call (same input as last time)");
+      return;
+    }
+
     try {
       isLoading.value = true;
-
-      double length = double.tryParse(lengthController.text) ?? 0;
-      double width = double.tryParse(widthController.text) ?? 0;
-      double depth = double.tryParse(depthController.text) ?? 0;
-      double compactionFactor = double.tryParse(selectedCompaction.value) ?? 0;
-
-      if (length <= 0 || width <= 0 || depth <= 0 || compactionFactor <= 0) {
-        Get.snackbar('Error', 'Invalid numeric values');
-        return;
-      }
 
       final response = await _repo.calculateSoilCompaction(
         length: length.toString(),
@@ -84,19 +104,23 @@ class SoilCompactionController extends GetxController {
         compactionFactor: compactionFactor.toString(),
         unit: selectedUnit.value,
       );
-      if (response['success'] == true) {
+
+      if (response['success'] == true && response['results'] != null) {
         final results = response['results'];
 
-        // ✅ Update observables properly
-        compactedVolume.value = results['compactedVolume'] ?? 0.0;
-        looseVolume.value = results['looseVolume'] ?? 0.0;
-        resultUnit.value = results['unit'] ?? '';
+        compactedVolume.value = (results['compactedVolume'] ?? 0.0).toDouble();
+        looseVolume.value = (results['looseVolume'] ?? 0.0).toDouble();
+        resultUnit.value = results['unit'] ?? selectedUnit.value;
 
-        print('✅ Updated compactedVolume: ${compactedVolume.value}');
-        print('✅ Updated looseVolume: ${looseVolume.value}');
+        _lastInputKey = currentKey;
+
+        log("✅ Updated compactedVolume: ${compactedVolume.value}");
+        log("✅ Updated looseVolume: ${looseVolume.value}");
+      } else {
+        Get.snackbar('Error', 'Invalid response from server.');
       }
-    } catch (e) {
-      log("❌ Error: $e");
+    } catch (e, st) {
+      log("❌ Error in calculate(): $e\n$st");
       Get.snackbar('Error', 'Something went wrong during calculation');
     } finally {
       isLoading.value = false;

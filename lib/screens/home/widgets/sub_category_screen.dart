@@ -17,6 +17,7 @@ import '../../../config/routes/routes_name.dart';
 import 'concrete_formwork_quality/over_head_watertank_formwork.dart';
 import 'concrete_formwork_quality/ringwall_formwork_concrete.dart';
 import 'concrete_formwork_quality/substructure_column_formwork.dart';
+import 'concrete_formwork_quality/superstructure_column_formwork.dart';
 import 'concrete_formwork_quality/underground_water_tank.dart';
 import 'concrete_formwork_quality/concrete_cost_estimator.dart';
 import 'concrete_formwork_quality/l_shaped_stair.dart';
@@ -25,6 +26,7 @@ import 'concrete_formwork_quality/plinth_beam_lean.dart';
 import 'concrete_formwork_quality/plot_clean_screen.dart';
 import 'concrete_formwork_quality/slab_concrete.dart';
 import 'concrete_formwork_quality/u_shaped_stair.dart';
+import 'block_masonry_plaster/wall_roof_plaster.dart';
 import 'door_n_windows_calculator/door_beeding.dart';
 import 'door_n_windows_calculator/door_boq_screen.dart';
 import 'door_n_windows_calculator/door_shutter_wood_screen.dart';
@@ -37,6 +39,7 @@ import 'block_masonry_plaster/wall_block_masonry_plaster_screen.dart';
 import 'cost_estimation/finishing_cost_screen.dart';
 import 'cost_estimation/grey_structure_screen.dart';
 import 'earth_work_calculator/back_fill_calculator.dart';
+import 'earth_work_calculator/stone_soiling_calculation.dart';
 import 'finshing_interior_estimator/paint_quantity_calculator.dart';
 
 class SubCategoryScreen extends StatelessWidget {
@@ -103,7 +106,7 @@ case SubCategoryNames.excavationCalculator:
 case SubCategoryNames.backfillCalculator:
         return BackFillCalculatorScreen(itemName: itemName);
 case SubCategoryNames.stoneSoilingCalculator:
-        // return BackFillCalculatorScreen(itemName: itemName);
+        return StoneSoilingCalculatorScreen(itemName: itemName);
 case SubCategoryNames.soilCompactionCalculator:
         return SoilCompactionScreen(itemName: itemName);
 case SubCategoryNames.liftPumpCalculator:
@@ -144,6 +147,10 @@ case SubCategoryNames.overheadWaterTankFormworkConcrete:
         return OverheadWaterTankFormworkScreen(itemName: itemName);
 case SubCategoryNames.substructureColumnFormworkConcrete:
         return SubstructureColumnFormwork(itemName: itemName);
+case SubCategoryNames.superStructureColumnFormworkConcrete:
+        return SuperstructureColumnFormworkScreen(itemName: itemName);
+case SubCategoryNames.wallPlaster:
+        return WallRoofPlasterScreen(itemName: itemName);
 
       default:
         return Center(

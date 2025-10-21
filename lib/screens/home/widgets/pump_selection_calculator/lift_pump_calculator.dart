@@ -29,7 +29,6 @@ class LiftPumpCalculatorScreen extends StatelessWidget {
           children: [
             AppTextWidget(text: "Pump Inputs", styleType: StyleType.heading),
 
-            /// ====== Suction Section ======
             AppTextWidget(
                 text: "Suction (UGT → Pump)",
                 styleType: StyleType.dialogHeading),

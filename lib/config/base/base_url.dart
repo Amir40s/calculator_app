@@ -11,6 +11,7 @@ class BaseUrl{
 
   static const baseUrl = "https://construction-api-nine.vercel.app/api/calculators";
   static const allCalculators = "https://construction-admin-api.vercel.app/calculators";
+  static const companyData = "https://construction-admin-api.vercel.app/company";
 
 
 
@@ -44,6 +45,7 @@ class Endpoint{
   static const  backfill = "${BaseUrl.baseUrl}/backfill/calculate";
   static const  compaction = "${BaseUrl.baseUrl}/compaction/calculate";
   static const  liftPump = "${BaseUrl.baseUrl}/liftpumpv2/calculate";
+  static const  stoneSoiling = "${BaseUrl.baseUrl}/stone-soiling/calculate";
   static const  boosterPump = "${BaseUrl.baseUrl}/pumpv2/calculate";
   static const  plotLeanConcrete = "${BaseUrl.baseUrl}/lean-concrete/calculate";
   static const  concreteCostEstimatorQuantity = "${BaseUrl.baseUrl}/concrete/calculate";

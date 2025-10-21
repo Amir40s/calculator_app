@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
 class WallBlockModel {
   final List<ResultModel> results;
 
@@ -57,4 +60,27 @@ class ResultModel {
       waterLiters: json['waterLiters'].toDouble(),
     );
   }
+}
+class WindowDoorModel {
+  final width = TextEditingController();
+  final height = TextEditingController();
+}
+
+class WallModel {
+  int id = DateTime.now().millisecondsSinceEpoch;
+
+  final tag = TextEditingController();
+  final grid = TextEditingController();
+  final wallHeight = TextEditingController();
+  final wallLength = TextEditingController();
+
+  final blockLength = TextEditingController();
+  final blockHeight = TextEditingController();
+  final blockWidth = TextEditingController();
+  final joint = TextEditingController();
+  final mortarRatio = TextEditingController();
+  final waterCementRatio = TextEditingController();
+
+  RxList<WindowDoorModel> windows = <WindowDoorModel>[WindowDoorModel()].obs;
+  RxList<WindowDoorModel> doors = <WindowDoorModel>[WindowDoorModel()].obs;
 }

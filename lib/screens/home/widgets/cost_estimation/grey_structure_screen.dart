@@ -8,6 +8,8 @@ import 'package:smart_construction_calculator/core/component/app_button_widget.d
 import 'package:smart_construction_calculator/core/component/app_text_field.dart';
 import 'package:smart_construction_calculator/core/component/app_text_widget.dart';
 import 'package:smart_construction_calculator/core/component/cost_estimation_widget.dart';
+import 'package:smart_construction_calculator/core/controller/loader_controller.dart';
+import '../../../../config/utility/pdf_helper.dart';
 import '../../../../core/component/custom_ui_widget.dart';
 import '../../../../core/component/result_box_widget.dart';
 import '../../../../core/component/two_fields_widget.dart';
@@ -60,13 +62,90 @@ class GreyStructureConversionScreen extends StatelessWidget {
                 },
                 width: 100.w,
                 height: 5.h,
+              ),              SizedBox(height: 1.h,),
+              AppButtonWidget(
+                text: "Download PDF",
+                onPressed: () async {
+                  final greyData = controller.greyData.value;
+
+                  if (greyData == null) {
+                    Get.snackbar("Error", "Please calculate first before downloading PDF.");
+                    return;
+                  }
+                  final data = greyData;
+                  final materialRows = [
+                    ['Excavation', data.excavationCost.toStringAsFixed(0)],
+                    ['Cement', data.cementCost.toStringAsFixed(0)],
+                    ['Sand', data.sandCost.toStringAsFixed(0)],
+                    ['Aggregate', data.aggregateCost.toStringAsFixed(0)],
+                    ['Water', data.waterCost.toStringAsFixed(0)],
+                    ['Steel', data.steelCost.toStringAsFixed(0)],
+                    ['Block', data.blockCost.toStringAsFixed(0)],
+                    ['Back Fill Material', data.backFillMaterialCost.toStringAsFixed(0)],
+                    ['Door Frame', data.doorFrameCost.toStringAsFixed(0)],
+                    ['Electrical Conduiting', data.electricalConduitingCost.toStringAsFixed(0)],
+                    ['Sewage', data.sewageCost.toStringAsFixed(0)],
+                    ['Miscellaneous', data.miscellaneousCost.toStringAsFixed(0)],
+                    ['Labor', data.laborCost.toStringAsFixed(0)],
+                    ['Project Management', data.projectManagementCost.toStringAsFixed(0)],
+                  ]
+                      .map((row) => row.map((e) => e.toString() ?? '').toList())
+                      .toList();
+
+
+                  final monthlyRows = data.monthlyDistribution.map((month) {
+                    final period = month.period.toString() ?? '';
+                    final percentage = month.percentage.toStringAsFixed(0) ?? '0';
+                    final amount = month.amount.toStringAsFixed(0) ?? '0';
+                    return ['$period ($percentage%)', amount];
+                  }).toList();
+
+                  final totalRows = [
+                    ['Total Material Cost', data.totalCost.toStringAsFixed(0)],
+                    [
+                      'Grand Total (Including Management)',
+                      (data.totalCost + data.projectManagementCost).toStringAsFixed(0)
+                    ],
+                  ]
+                      .map((row) => row.map((e) => e.toString() ?? '').toList())
+                      .toList();
+
+                  await PdfHelper.generateAndOpenPdf(
+                    context: context,
+                    title: itemName,
+                    inputData: {
+                      'Built-up Area': '${controller.builtupArea.value} sqft',
+                      'Cement Rate': '${controller.cementRate.text} Rs/bag',
+                      'Steel Rate': '${controller.steelRate.text} Rs/kg',
+                    },
+                    tables: [
+                      {
+                        'title': 'MATERIAL COST BREAKDOWN',
+                        'headers': ['Material / Service', 'Cost (Rs)'],
+                        'rows': materialRows,
+                      },
+                      {
+                        'title': 'MONTHLY EXPENSE',
+                        'headers': ['Period', 'Amount (Rs)'],
+                        'rows': monthlyRows,
+                      },
+                      {
+                        'title': 'TOTAL SUMMARY',
+                        'headers': ['Description', 'Value (Rs)'],
+                        'rows': totalRows,
+                      },
+                    ],
+                    fileName: '${itemName}_report.pdf',
+                  );
+                },
+                width: 100.w,
+                height: 5.h,
               ),
               SizedBox(height: 2.h,),
 
-              // 🔹 Result Section
               Obx(() {
                 if (controller.isLoading.value) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(child: Loader());
                 }
 
                 final data = controller.greyData.value;

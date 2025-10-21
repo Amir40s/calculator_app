@@ -9,6 +9,8 @@ import 'package:smart_construction_calculator/core/component/app_text_widget.dar
 import 'package:smart_construction_calculator/core/component/dropdown_widget.dart';
 import 'package:smart_construction_calculator/core/component/formula_widget.dart';
 import 'package:smart_construction_calculator/core/component/two_fields_widget.dart';
+import 'package:smart_construction_calculator/core/controller/loader_controller.dart';
+import '../../../../config/utility/pdf_helper.dart';
 import '../../../../core/component/dynamic_table_widget.dart';
 import '../../../../core/controller/calculators/earth_work/soil_compaction_controller.dart';
 
@@ -107,12 +109,70 @@ class SoilCompactionScreen extends StatelessWidget {
               },
             ),
 
+            SizedBox(height: 1.h),
+      Obx(() {
+        final dataAvailable =  controller.compactedVolume.value.toStringAsFixed(0) != '0.0';
+
+        return AppButtonWidget(
+                  text: 'Download PDF',
+                  width: 100.w,
+                  height: 6.h,
+                  buttonColor: dataAvailable
+                      ? AppColors.blueColor
+                      : AppColors.greyColor.withOpacity(0.5),
+                  onPressed: () async {
+
+                    if(controller.compactedVolume.value == 0 &&
+                        controller.looseVolume.value == 0) {
+                      Get.snackbar(
+                        "Error",
+                        "Please calculate first before downloading PDF.",
+                        backgroundColor: Colors.red.withOpacity(0.8),
+                        colorText: Colors.white,
+                        snackPosition: SnackPosition.BOTTOM,
+                      );
+                      return;
+                    }
+                  final  headers= ["Description", "Value"];
+                   final  rows= [
+                    [
+                    "Compacted Volume",
+                    "${controller.compactedVolume.value.toStringAsFixed(0)} ${controller.resultUnit.value}"
+                    ],
+                    [
+                    "Loose Volume Required",
+                    "${controller.looseVolume.value.toStringAsFixed(0)} ${controller.resultUnit.value}"
+                    ],
+                    ];
+                    await PdfHelper.generateAndOpenPdf(
+                      context: context,
+                      title: itemName,
+                      inputData: {
+                        'Input':
+                        "L = ${controller.lengthController.text.isNotEmpty ? controller.lengthController.text : '0'} ft, "
+                            "W = ${controller.widthController.text.isNotEmpty ? controller.widthController.text : '0'} ft, "
+                            "D = ${controller.depthController.text.isNotEmpty ? controller.depthController.text : '0'} ft, ",
+                        'Material': "${controller.selectedMaterial.isNotEmpty
+                            ? controller.selectedMaterial
+                            : 'N/A'}",
+                        "Unit":
+                        "${controller.selectedUnit.isNotEmpty ? controller.selectedUnit : 'N/A'} ",},
+
+                      headers: headers,
+                      rows: rows,
+                      fileName: '${itemName}_Report.pdf',
+                    );
+                  },
+
+                );
+              }
+            ),
             SizedBox(height: 4.h),
 
             // 🔹 Results Section
             Obx(() {
               if (controller.isLoading.value) {
-                return const Center(child: CircularProgressIndicator());
+                return const Center(child: Loader());
               }
 
               if (controller.compactedVolume.value == 0 &&
@@ -148,8 +208,8 @@ class SoilCompactionScreen extends StatelessWidget {
             SizedBox(height: 3.h),
 
             // 🔹 Formula Section
-            FormulaWidget(text:         "Formula:\n• Compacted Volume = L × W × D\n• Loose Volume = Compacted Volume × Compaction Factor",),
-            FormulaWidget(text:         "Formula:\n• Compacted Volume = L × W × D\n• Loose Volume = Compacted Volume × Compaction Factor",),
+            FormulaWidget(text:
+            "Formula:\n• Compacted Volume = L × W × D\n• Loose Volume = Compacted Volume × Compaction Factor",),
           ],
         ),
       ),

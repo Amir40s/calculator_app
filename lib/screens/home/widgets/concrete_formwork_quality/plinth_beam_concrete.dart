@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import '../../../../config/enum/style_type.dart';
 import '../../../../config/res/app_color.dart';
+import '../../../../config/utility/pdf_helper.dart';
 import '../../../../core/component/app_button_widget.dart';
 import '../../../../core/component/app_text_field.dart';
 import '../../../../core/component/app_text_widget.dart';
@@ -58,12 +59,16 @@ class PlinthBeamConcreteScreen extends StatelessWidget {
                   heading2: "Width (ft'in\")",
                   hint: "e.g., 4'6\"",
                   hint2: "e.g., 8'0\"",
+                  keyboardType: TextInputType.numberWithOptions(),
+                  keyboardType2: TextInputType.numberWithOptions(),
+
                   controller1: controller.beam[i]['length']!,
                   controller2: controller.beam[i]['width']!,
                 ),
                 AppTextField(
                   hintText: "e.g., 8'0\"",
-                  heading: "Height (ft'in\")",
+                  heading: "Height (ft'in\")",                  keyboardType: TextInputType.numberWithOptions(),
+
                   controller: controller.beam[i]['height']!,
                 ),
                 AppTextWidget(
@@ -72,11 +77,14 @@ class PlinthBeamConcreteScreen extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    Expanded(child: AppTextField(hintText: "0", controller: controller.beam[i]['cement']!)),
+                    Expanded(child: AppTextField(hintText: "0",                  keyboardType: TextInputType.numberWithOptions(),
+                        controller: controller.beam[i]['cement']!)),
                     SizedBox(width: 1.w),
-                    Expanded(child: AppTextField(hintText: "0", controller: controller.beam[i]['sand']!)),
+                    Expanded(child: AppTextField(hintText: "0",                   keyboardType: TextInputType.numberWithOptions(),
+                        controller: controller.beam[i]['sand']!)),
                     SizedBox(width: 1.w),
-                    Expanded(child: AppTextField(hintText: "0", controller: controller.beam[i]['crush']!)),
+                    Expanded(child: AppTextField(hintText: "0",                  keyboardType: TextInputType.numberWithOptions(),
+                        controller: controller.beam[i]['crush']!)),
                   ],
                 ),
                 SizedBox(height: 2.h),
@@ -95,6 +103,60 @@ class PlinthBeamConcreteScreen extends StatelessWidget {
                 width: 100.w,
                 height: 5.h,
                 onPressed: controller.calculate,
+              ),
+              SizedBox(height: 1.h),
+
+              AppButtonWidget(
+                text: "Download PDF",
+                width: 100.w,
+                height: 5.h,
+                onPressed: () async {
+                  final res = controller.beamConcreteResult.value;
+                  if (res == null) {
+                    Get.snackbar("Error","Please calculate results first.");
+                    return;
+                  }
+
+                  final beams = res.beams ?? [];
+
+                  await PdfHelper.generateAndOpenPdf(
+                    context: context,
+                    title: itemName,
+                    inputData: {
+                      'Total Volume (ft³)': res.totalVolume.toStringAsFixed(2) ?? '0',
+                      'Total Formwork (ft²)': res.totalFormwork.toStringAsFixed(2) ?? '0',
+                    },
+                    tables: [
+                      for (int i = 0; i < beams.length; i++)
+                        {
+                          'title': "Beam ${i + 1}",
+                          'headers': ['Item', 'Value'],
+                          'rows': [
+                            ['Grid', beams[i].grid ?? 'N/A'],
+                            ['PB Tag', beams[i].tag ?? 'N/A'],
+                            ['Volume (ft³)', beams[i].volFt3.toStringAsFixed(2) ?? '0.00'],
+                            ['Cement Bags', beams[i].cementBags.toStringAsFixed(2) ?? '0.00'],
+                            ['Sand Volume (ft³)', beams[i].sandVolume.toStringAsFixed(2) ?? '0.00'],
+                            ['Crush Volume (ft³)', beams[i].crushVolume.toStringAsFixed(2) ?? '0.00'],
+                            ['Water (L)', beams[i].waterLiter.toStringAsFixed(2) ?? '0.00'],
+                          ],
+                        },
+
+                      {
+                        'title': 'Summary',
+                        'headers': ['Material', 'Quantity'],
+                        'rows': [
+                          ['Cement (bags)', res.cementBags.toStringAsFixed(0) ?? '0.00'],
+                          ['Sand (ft³)', res.sandVolume.toStringAsFixed(0) ?? '0.00'],
+                          ['Crush (ft³)', res.crushVolume.toStringAsFixed(0) ?? '0.00'],
+                          ['Water (liters)', res.waterLiter.toStringAsFixed(0) ?? '0.00'],
+                        ],
+                      },
+                    ],
+                    fileName: '${itemName}_report.pdf',
+                  );
+                },
+
               ),
               SizedBox(height: 2.h),
 

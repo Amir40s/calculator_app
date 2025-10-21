@@ -9,6 +9,10 @@ class CalculatorRepository {
     final url = BaseUrl.allCalculators;
     return await _apiService.getApi(url: url);
   }
+  Future<dynamic> getCompany() async {
+    final url = BaseUrl.companyData;
+    return await _apiService.getApi(url: url);
+  }
 
   // 🔹 Length & Distance Converter
   Future<dynamic> convert({
@@ -85,14 +89,7 @@ class CalculatorRepository {
     return await _apiService.postApi(url: url, data: body);
   }
 
-  Future<dynamic> convertRebar({
-    required double value,
-    required String fromUnit,
-  }) async {
-    final url = Endpoint.rebarConverter;
-    final body = {"value": value, "fromUnit": fromUnit};
-    return await _apiService.postApi(url: url, data: body);
-  }
+
 
   Future<dynamic> convertConcreteMix({
     required double value,
@@ -138,34 +135,15 @@ class CalculatorRepository {
       "quality": quality,
     };
 
-    // Make the POST request and return the response
     return await _apiService.postApi(url: url, data: body);
   }
 
   Future<dynamic> calculateWallBlock({
-    required String wallHeight,
-    required String wallLength,
-    required String blockLength,
-    required String blockHeight,
-    required String blockWidth,
-    required String joint,
-    required String mortarRatio,
-    required String waterCementRatio,
+    required Map<String, dynamic> body,
+
   }) async {
     final url = Endpoint.blockMasonry;
 
-    final body = {
-      "wallHeight": wallHeight,
-      "wallLength": wallLength,
-      "blockLength": blockLength,
-      "blockHeight": blockHeight,
-      "blockWidth": blockWidth,
-      "joint": joint,
-      "mortarRatio": mortarRatio,
-      "waterCementRatio": waterCementRatio
-    };
-
-    // Make the POST request and return the response
     return await _apiService.postApi(url: url, data: body);
   }
 
@@ -179,7 +157,7 @@ class CalculatorRepository {
     required bool showCubicYards,
     required bool useExtensions,
   }) async {
-    final url = Endpoint.backfill;
+    final url = Endpoint.excavation;
 
     final body = {
       "depth": depth,
@@ -236,7 +214,26 @@ class CalculatorRepository {
 
     return await _apiService.postApi(url: url, data: body);
   }
-  Future<dynamic> calculateLiftPump({
+  Future<dynamic> calculateStoneSoiling({
+    required Map<String, dynamic> body,
+  }) async {
+    final url = Endpoint.stoneSoiling;
+
+    return await _apiService.postApi(
+      url: url,
+      data: body,
+    );
+  }
+  Future<dynamic> convertRebar({
+    required Map<String, dynamic> body,
+  }) async {
+    final url = Endpoint.rebarConverter;
+
+    return await _apiService.postApi(
+      url: url,
+      data: body,
+    );
+  } Future<dynamic> calculateLiftPump({
     required Map<String, dynamic> body,
   }) async {
     final url = Endpoint.liftPump;
@@ -414,6 +411,15 @@ class CalculatorRepository {
     required Map<String, dynamic> body,
   }) async {
     final url = Endpoint.substructureColumnFormwork;
+
+    return await _apiService.postApi(
+      url: url,
+      data: body,
+    );
+  }  Future<dynamic> calculateWallPlaster({
+    required Map<String, dynamic> body,
+  }) async {
+    final url = Endpoint.wallRoof;
 
     return await _apiService.postApi(
       url: url,

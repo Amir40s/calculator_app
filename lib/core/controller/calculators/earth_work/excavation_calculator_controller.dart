@@ -81,8 +81,8 @@ class ExcavationCalculatorController extends BaseCalculatorController<Excavation
         lengthExtension: lengthExtensionController.text,
         widthExtension: widthExtensionController.text,
         width: widthController.text,
-        showCubicYards: selectedQuality.value == "yes", // ✅ convert string → bool
-        useExtensions: isChecked.value, // ✅ checkbox → bool
+        showCubicYards: selectedQuality.value == "yes",
+        useExtensions: isChecked.value,
       );
 
       finishingCostData.value = ExcavationModel.fromJson(response);

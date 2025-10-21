@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'app_text_field.dart';
 import 'dropdown_widget.dart';
@@ -28,7 +29,7 @@ class TextFieldWithDropdown extends StatelessWidget {
             controller: controller,
           ),
         ),
-        const SizedBox(width: 12),
+         SizedBox(width: 12.px),
         Expanded(
           flex: 2,
           child: ReusableDropdown(

@@ -34,7 +34,6 @@ class PowerEnergyConversionController extends BaseCalculatorController<PowerEner
         value: double.tryParse(inputValue.value) ?? 0.0,
         fromUnit: selectedUnit.value.toLowerCase(),
       );
-      // Parse JSON into model
       setData(PowerEnergyModel.fromJson(response));
     } catch (e) {
       log("Error in convertLength: $e");

@@ -5,6 +5,7 @@ import 'package:smart_construction_calculator/core/component/two_fields_widget.d
 import '../../../../config/enum/style_type.dart';
 import '../../../../config/res/app_color.dart';
 import '../../../../config/utility/app_utils.dart';
+import '../../../../config/utility/pdf_helper.dart';
 import '../../../../core/component/app_button_widget.dart';
 import '../../../../core/component/app_text_field.dart';
 import '../../../../core/component/app_text_widget.dart';
@@ -45,10 +46,14 @@ class UndergroundWaterTankScreen extends StatelessWidget {
                   heading2: "Height (Internal)",
                   hint: "e.g., 0'1",
                   hint2: "e.g., 1'4",
+                  keyboardType: TextInputType.numberWithOptions(),
+                  keyboardType2: TextInputType.numberWithOptions(),
                   controller1: controller.widthInternalController,
                   controller2: controller.heightInternalController),
               TwoFieldsWidget(
                   heading1: "Wall Thickness",
+                  keyboardType: TextInputType.numberWithOptions(),
+                  keyboardType2: TextInputType.numberWithOptions(),
                   heading2: "Bottom Thickness", hint: "e.g., 0'1",
                   hint2: "e.g., 1'4",
 
@@ -56,6 +61,8 @@ class UndergroundWaterTankScreen extends StatelessWidget {
                   controller2: controller.bottomThicknessController),
               TwoFieldsWidget(
                   heading1: "Roof Thickness",
+                  keyboardType: TextInputType.numberWithOptions(),
+                  keyboardType2: TextInputType.numberWithOptions(),
                   heading2: "Manhole Width", hint: "e.g., 0'1",
                   hint2: "e.g., 1'4",
                   controller1: controller.roofThicknessController,
@@ -63,6 +70,7 @@ class UndergroundWaterTankScreen extends StatelessWidget {
               AppTextField(
                 hintText: "e.g., 4'0",
                 heading: "Manhole Length",
+                keyboardType: TextInputType.numberWithOptions(),
                 controller: controller.manholeLengthController,
               ),
               Row(
@@ -70,7 +78,8 @@ class UndergroundWaterTankScreen extends StatelessWidget {
                   Expanded(
                     child: AppTextField(
                       hintText: "0",
-                      heading: "Cement",
+                      heading: "Cement",                keyboardType: TextInputType.numberWithOptions(),
+
                       controller: controller.cementController,
                     ),
                   ),
@@ -78,7 +87,8 @@ class UndergroundWaterTankScreen extends StatelessWidget {
                   Expanded(
                     child: AppTextField(
                       hintText: "0",
-                      heading: "Sand",
+                      heading: "Sand",                keyboardType: TextInputType.numberWithOptions(),
+
                       controller: controller.sandController,
                     ),
                   ),
@@ -86,7 +96,8 @@ class UndergroundWaterTankScreen extends StatelessWidget {
                   Expanded(
                     child: AppTextField(
                       hintText: "0",
-                      heading: "Crush",
+                      heading: "Crush",                keyboardType: TextInputType.numberWithOptions(),
+
                       controller: controller.crushController,
                     ),
                   ),
@@ -98,6 +109,50 @@ class UndergroundWaterTankScreen extends StatelessWidget {
                 width: 100.w,
                 height: 5.h,
                 onPressed: controller.calculate,
+              ),SizedBox(height: 1.h),
+              AppButtonWidget(
+                text: "Download PDF",
+                width: 100.w,
+                height: 5.h,
+                onPressed: () async {
+                  final res = controller.result.value;
+                  if (res == null) {
+                    Get.snackbar("Error", "Please calculate results first.");
+                    return;
+                  }
+
+                  await PdfHelper.generateAndOpenPdf(
+                    context: context,
+                    title: itemName,
+                    inputData: {
+                      'Total Volume (ft³)': res.totalFt3.toStringAsFixed(2),
+                    },
+                    tables: [
+                      {
+                        'title': 'Component Volumes',
+                        'headers': ['Component', 'Volume (ft³)'],
+                        'rows': [
+                          ['Pickup Columns', res.pickupVolume.toStringAsFixed(2)],
+                          ['Tank Walls', res.wallVolume.toStringAsFixed(2)],
+                          ['Tank Bottom', res.bottomVolume.toStringAsFixed(2)],
+                          ['Tank Roof (Net)', res.roofVolume.toStringAsFixed(2)],
+                        ],
+                      },
+                      {
+                        'title': 'Summary',
+                        'headers': ['Item', 'Value'],
+                        'rows': [
+                          ['Total Volume (ft³)', res.totalFt3.toStringAsFixed(0)],
+                          ['Cement (bags)', res.cementBags.toStringAsFixed(0)],
+                          ['Sand (ft³)', res.sandVolume.toStringAsFixed(0)],
+                          ['Crush (ft³)', res.crushVolume.toStringAsFixed(0)],
+                          ['Water (liters)', res.waterLiters.toStringAsFixed(0)],
+                        ],
+                      },
+                    ],
+                    fileName: '${itemName}_report.pdf',
+                  );
+                },
               ),
               SizedBox(height: 2.h),
           Obx(() {

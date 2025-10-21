@@ -9,6 +9,7 @@ import 'package:smart_construction_calculator/core/component/app_text_field.dart
 import 'package:smart_construction_calculator/core/component/app_text_widget.dart';
 import 'package:smart_construction_calculator/core/component/dynamic_table_widget.dart';
 import 'package:smart_construction_calculator/core/component/two_fields_widget.dart';
+import '../../../../config/utility/pdf_helper.dart';
 import '../../../../core/controller/calculators/concrete_formwork_quantity_controller/concrete_cost_estimator_controller.dart';
 
 class ConcreteCostEstimatorScreen extends StatelessWidget {
@@ -30,12 +31,17 @@ class ConcreteCostEstimatorScreen extends StatelessWidget {
               TwoFieldsWidget(
                   heading1: "Currency Symbol",
                   heading2: "Concrete Volume (ft³)",
+                  hint: "PKR",
+                  hint2: "100",
+                  keyboardType2: TextInputType.numberWithOptions(),
                   controller1: controller.currencySymbolController,
                   controller2: controller.concreteVolumeController),
               TwoFieldsWidget(
                   heading1: "Mix Ratio (C:S:A)",
-                  hint: "e.g., 0:0:100",
+                  hint: "e.g., 0:0:1",
                   heading2: "Cement Rate / bag",
+                  keyboardType2: TextInputType.numberWithOptions(),
+                  keyboardType: TextInputType.numberWithOptions(),
                   controller1: controller.mixRatioController,
                   controller2: controller.cementRateController),
               TwoFieldsWidget(
@@ -43,7 +49,7 @@ class ConcreteCostEstimatorScreen extends StatelessWidget {
                   heading2: "Water / ft³ (optional)",
                   controller1: controller.sandRateController,
                   controller2: controller.waterRateController),
-              AppTextField(hintText: 'hintText',heading: "Aggregate Rate / ft³ (optional)",),
+              AppTextField(hintText: '0.30',heading: "Aggregate Rate / ft³ (optional)",),
               TwoFieldsWidget(
                   heading1: "Admixture / ft³ (optional)",
                   heading2: "Labor / ft³ (optional)",
@@ -83,23 +89,30 @@ class ConcreteCostEstimatorScreen extends StatelessWidget {
                     TwoFieldsWidget(
                       heading1: "Dry Volume Factor",
                       heading2: "Wastage %",
+                      hint: "1.54",
+                      keyboardType: TextInputType.numberWithOptions(),
+                      keyboardType2: TextInputType.numberWithOptions(),
                       controller1: controller.dryVolumeFactorController,
                       controller2: controller.wastageController,
                     ),
                     AppTextField(
-                        hintText: '0',
+                        hintText: '3',                      keyboardType: TextInputType.numberWithOptions(),
+
                         heading: "Cement Bag Size (kg)",
                         controller: controller.cementBagSizeController),
                     AppTextField(
-                        hintText: '0',
+                        hintText: '5',                      keyboardType: TextInputType.numberWithOptions(),
+
                         heading: "Cement Density (kg/m³)",
                         controller: controller.cementDensityController),
                     AppTextField(
-                        hintText: '0',
+                        hintText: '0',                      keyboardType: TextInputType.numberWithOptions(),
+
                         heading: "Sand Density (kg/m³)",
                         controller: controller.sandDensityController),
                     AppTextField(
-                        hintText: '0',
+                        hintText: '0',                      keyboardType: TextInputType.numberWithOptions(),
+
                         heading: "Aggregate Density (kg/m³)",
                         controller: controller.aggregateDensityController),
                     SizedBox(height: 1.h),
@@ -107,11 +120,84 @@ class ConcreteCostEstimatorScreen extends StatelessWidget {
                 )
                     : const SizedBox.shrink(),
               )),
-              SizedBox(height: 2.h,),
+              SizedBox(height: 1.h,),
               AppButtonWidget(text: "Calculate",width: 100.w,height: 5.h,onPressed: (){
                 controller.calculate();
               }),
-              SizedBox(height: 1.h,),
+              SizedBox(
+                height: 1.h,
+              ),
+              AppButtonWidget(
+                text: "Download PDF",
+                width: 100.w,
+                height: 5.h,
+                onPressed: () async {
+                  final res = controller.concreteCostResult.value;
+                  if (res == null) {
+                    Get.snackbar("Error", "Please calculate first before downloading PDF.");
+                    return;
+                  }
+
+                  await PdfHelper.generateAndOpenPdf(
+                    context: context,
+                    title: itemName,
+                    inputData: {
+                      'Concrete Volume': "${controller.concreteVolumeController.text} ft³",
+                      'Mix Ratio': controller.mixRatioController.text,
+                    },
+                    tables: [
+                      // ✅ Summary Table
+                      {
+                        'title': 'Summary',
+                        'headers': ['Description', 'Value'],
+                        'rows': [
+                          ["Total Cost", "PKR ${res.totalCost.toStringAsFixed(0)}"],
+                          ["Wet Volume", "${res.wetVolume} ${AppUtils().formatUnit("ft³")}"],
+                          [
+                            "Dry Volume (+Wastage)",
+                            "${res.dryVolumeWithWastage.toStringAsFixed(0)} ${AppUtils().formatUnit("ft³")}"
+                          ],
+
+                        ],
+                      },
+
+                      // ✅ Material Quantities Table
+                      {
+                        'title': 'Material Quantities',
+                        'headers': ['Material', 'Quantity'],
+                        'rows': res.materialQuantities.map((m) {
+                          String formattedVolume;
+                          if (m.material.toLowerCase().contains('cement')) {
+                            formattedVolume = "${m.volume.toStringAsFixed(0)} bags";
+                          } else if (m.material.toLowerCase().contains('sand') ||
+                              m.material.toLowerCase().contains('aggregate')) {
+                            formattedVolume =
+                            "${AppUtils().toRoundedDouble(m.volume).toStringAsFixed(0)} ${AppUtils().formatUnit("ft³")}";
+                          } else {
+                            formattedVolume =
+                            "${AppUtils().toRoundedDouble(m.volume)} ${AppUtils().formatUnit("ft³")}";
+                          }
+                          return [m.material, formattedVolume];
+                        }).toList(),
+                      },
+
+                      // ✅ Cost Breakdown Table
+                      {
+                        'title': 'Cost Breakdown',
+                        'headers': ['Item', 'Cost (PKR)'],
+                        'rows': res.costBreakdown.map((m) {
+                          return [
+                            m.item,
+                            "PKR ${m.cost.toStringAsFixed(1)} (${m.percentage.toStringAsFixed(1)}%)",
+                          ];
+                        }).toList(),
+                      },
+                    ],
+                    fileName: '${itemName}_report.pdf',
+                  );
+                },
+              ),
+              SizedBox(height: 3.h,),
               Obx(() {
                 if (controller.isLoading.value) {
                   return const Center(child: CircularProgressIndicator());

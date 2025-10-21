@@ -18,7 +18,6 @@ class CalculatorController extends BaseCalculatorController<List<CalculatorModel
           .toList();
 
       setData(calculators);
-      log("Fetched ${calculators.length} calculators");
     } catch (e) {
       log("Error fetching calculators: $e");
       Get.snackbar('Error', e.toString());

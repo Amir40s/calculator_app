@@ -10,6 +10,7 @@ import 'package:smart_construction_calculator/core/component/two_fields_widget.d
 import 'package:smart_construction_calculator/core/component/app_button_widget.dart';
 import 'package:smart_construction_calculator/core/controller/loader_controller.dart';
 import '../../../../config/enum/style_type.dart';
+import '../../../../config/utility/pdf_helper.dart';
 import '../../../../core/controller/calculators/concrete_formwork_quantity_controller/l_shaped_stair_controller.dart';
 
 class LShapedStairScreen extends StatelessWidget {
@@ -38,17 +39,20 @@ class LShapedStairScreen extends StatelessWidget {
             AppTextField(
               hintText: "0",
               heading: "Total Number of Risers",
+              keyboardType: TextInputType.numberWithOptions(),
               controller: controller.totalRisersController,
             ),
             TwoFieldsWidget(
               heading1: "Riser Height (ft)",
-              heading2: "Tread Length (ft)",
+              heading2: "Tread Length (ft)",              keyboardType: TextInputType.numberWithOptions(),
+
               controller1: controller.riserHeightController,
               controller2: controller.treadLengthController,
             ),
             TwoFieldsWidget(
               heading1: "Stair Width (ft)",
-              heading2: "Winder Steps",
+              heading2: "Winder Steps",              keyboardType: TextInputType.numberWithOptions(),
+
               controller1: controller.stairWidthController,
               controller2: controller.winderStepsController,
             ),
@@ -61,17 +65,20 @@ class LShapedStairScreen extends StatelessWidget {
               controlAffinity: ListTileControlAffinity.leading,
             )),
             AppTextField(
-              hintText: "0",
+              hintText: "0",              keyboardType: TextInputType.numberWithOptions(),
+
               heading: "Waist Slab Thickness (ft)",
               controller: controller.waistSlabThicknessController,
             ),
             AppTextField(
-              hintText: "0",
+              hintText: "0",              keyboardType: TextInputType.numberWithOptions(),
+
               heading: "Landing Slab Length (ft)",
               controller: controller.landingSlabLengthController,
             ),
             AppTextField(
-              hintText: "0",
+              hintText: "0",              keyboardType: TextInputType.numberWithOptions(),
+
               heading: "Landing Slab Thickness (ft)",
               controller: controller.landingSlabThicknessController,
             ),
@@ -81,7 +88,8 @@ class LShapedStairScreen extends StatelessWidget {
                 Expanded(
                   child: AppTextField(
                     hintText: "0",
-                    heading: "Cement",
+                    heading: "Cement",              keyboardType: TextInputType.numberWithOptions(),
+
                     controller: controller.cementController,
                   ),
                 ),
@@ -89,7 +97,8 @@ class LShapedStairScreen extends StatelessWidget {
                 Expanded(
                   child: AppTextField(
                     hintText: "0",
-                    heading: "Sand",
+                    heading: "Sand",              keyboardType: TextInputType.numberWithOptions(),
+
                     controller: controller.sandController,
                   ),
                 ),
@@ -97,7 +106,8 @@ class LShapedStairScreen extends StatelessWidget {
                 Expanded(
                   child: AppTextField(
                     hintText: "0",
-                    heading: "Crush",
+                    heading: "Crush",              keyboardType: TextInputType.numberWithOptions(),
+
                     controller: controller.crushController,
                   ),
                 ),
@@ -109,6 +119,52 @@ class LShapedStairScreen extends StatelessWidget {
               width: 100.w,
               height: 5.h,
               onPressed: controller.calculate,
+            ), SizedBox(height: 1.h),
+            AppButtonWidget(
+              text: "Download PDF",
+              width: 100.w,
+              height: 5.h,
+              onPressed: () async {
+                if (controller.totalConcreteVolume.value == null) {
+                  Get.snackbar("Error","Please calculate results first.");
+                  return;
+                }
+
+                final res = controller.totalConcreteVolume.value!;
+
+                await PdfHelper.generateAndOpenPdf(
+                  context: context,
+                  title: itemName,
+                  inputData: {
+                    'Mode': "L-Shape Winder Stair",
+                  },
+                  tables: [
+                    {
+                      'title': "Component Volumes",
+                      'headers': ["Component", "Volume (ft³)"],
+                      'rows': [
+                        ["Waist Slab", res.waistVolume.toStringAsFixed(2)],
+                        ["Steps", res.stepVolume.toStringAsFixed(2)],
+                        ["Winder Steps", res.winderVolume.toStringAsFixed(2)],
+                        ["Landing Slab", res.landingVolume.toStringAsFixed(2)],
+                      ],
+                    },
+                    {
+                      'title': "Summary",
+                      'headers': ["Item", "Value"],
+                      'rows': [
+                        ["Total Volume (ft³)", AppUtils().toRoundedDouble(res.totalFt3).toStringAsFixed(0)],
+                        ["Cement (bags)", AppUtils().toRoundedDouble(res.cementBags).toStringAsFixed(0)],
+                        ["Sand (ft³)", AppUtils().toRoundedDouble(res.sandVolume).toStringAsFixed(0)],
+                        ["Crush (ft³)", AppUtils().toRoundedDouble(res.crushVolume).toStringAsFixed(0)],
+                        ["Water (liters)", AppUtils().toRoundedDouble(res.waterLiters).toStringAsFixed(0)],
+                      ],
+                    },
+                  ],
+                  fileName: '${itemName}_report.pdf',
+                );
+              },
+
             ),
             SizedBox(height: 2.h),
             Obx(() {

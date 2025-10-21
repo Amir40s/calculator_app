@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:smart_construction_calculator/core/component/dropdown_widget.dart';
 import '../../../../config/enum/style_type.dart';
 import '../../../../config/res/app_color.dart';
 import '../../../../config/utility/pdf_helper.dart';
 import '../../../../core/component/app_button_widget.dart';
 import '../../../../core/component/app_text_field.dart';
 import '../../../../core/component/app_text_widget.dart';
+import '../../../../core/component/dropdown_widget.dart';
 import '../../../../core/component/dynamic_table_widget.dart';
 import '../../../../core/component/two_fields_widget.dart';
-import '../../../../core/controller/calculators/concrete_formwork_quantity_controller/substructure_column_formwork_controller.dart';
+import '../../../../core/controller/calculators/concrete_formwork_quantity_controller/superstructure_column_controller.dart';
 import '../../../../core/controller/loader_controller.dart';
 
-class SubstructureColumnFormwork extends StatelessWidget {
+class SuperstructureColumnFormworkScreen extends StatelessWidget {
   final String itemName;
-  SubstructureColumnFormwork({super.key, required this.itemName});
+  SuperstructureColumnFormworkScreen({super.key, required this.itemName});
 
-  final controller = Get.put(SubStructureColumnController());
+  final controller = Get.put(SuperstructureColumnController());
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +64,7 @@ class SubstructureColumnFormwork extends StatelessWidget {
                 ),
                 TwoFieldsWidget(
                   heading1: "Thickness (ft'in\")",
-                  heading2: "Height (ft'in\")",
+                  heading2: "Length (ft'in\")",
                   hint: "e.g., 4'6\"",
                   hint2: "e.g., 8'0\"",
                   keyboardType: TextInputType.numberWithOptions(),
@@ -86,7 +87,8 @@ class SubstructureColumnFormwork extends StatelessWidget {
                   SizedBox(height: 1.h),
                   TwoFieldsWidget(
                     heading1: "Base Width (ft'in\")",
-                    heading2: "Base Thickness (ft'in\")",   hint: "e.g., 4'6\"",
+                    heading2: "Base Thickness (ft'in\")",
+                    hint: "e.g., 4'6\"",
                     hint2: "e.g., 8'0\"",
                     keyboardType: TextInputType.numberWithOptions(),
                     keyboardType2: TextInputType.numberWithOptions(),

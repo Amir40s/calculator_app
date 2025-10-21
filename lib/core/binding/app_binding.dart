@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:smart_construction_calculator/core/controller/category_calulator_controller.dart';
+import 'package:smart_construction_calculator/core/controller/company_controller.dart';
 import 'package:smart_construction_calculator/core/controller/loader_controller.dart';
 import 'package:smart_construction_calculator/core/controller/otp_controller.dart';
 import 'package:smart_construction_calculator/core/controller/user_controller.dart';
@@ -16,6 +17,7 @@ class AppBinding extends Bindings {
     Get.put(OTPController());
     Get.put(UserController());
     Get.lazyPut<ThemeController>(() => ThemeController());
+    Get.lazyPut<CompanyController>(() => CompanyController());
     Get.lazyPut<NavController>(() => NavController());
     Get.lazyPut<CommonController>(() => CommonController(),);
     Get.lazyPut<CategoryCalculatorController>(

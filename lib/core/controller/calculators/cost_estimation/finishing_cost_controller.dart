@@ -16,7 +16,8 @@ class FinishingCostController extends BaseCalculatorController<FinalCostModel> {
   final RxString selectedQuality = 'normal'.obs;
   final RxString inputValue = ''.obs;
 
-  final RxList<String> availableQuality = RxList<String>(["normal", "superior"]);
+  final RxList<String> availableQuality = RxList<String>(
+      ["normal", "superior"]);
 
   void onUnitChanged(String value) {
     selectedQuality.value = value;
@@ -38,16 +39,19 @@ class FinishingCostController extends BaseCalculatorController<FinalCostModel> {
 
       // Optionally log or handle any specific data
       log("Fetched data: $response");
-
     } catch (e) {
       log("Error in convert: $e");
       Get.snackbar('Error', e.toString());
     } finally {
       setLoading(false);
       isFinished.value = true;
-
     }
   }
 
   void setValue(String value) => inputValue.value = value;
+//create a reset function button
+  void reset() {
+    inputValue.value = '';
+    finishingCostData.value = null;
+  }
 }

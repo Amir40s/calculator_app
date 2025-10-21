@@ -5,6 +5,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smart_construction_calculator/config/res/app_color.dart';
 import 'package:smart_construction_calculator/core/component/two_fields_widget.dart';
 import '../../../../config/enum/style_type.dart';
+import '../../../../config/utility/pdf_helper.dart';
 import '../../../../core/component/app_button_widget.dart';
 import '../../../../core/component/app_text_field.dart';
 import '../../../../core/component/app_text_widget.dart';
@@ -37,6 +38,8 @@ class RingwallFormworkConcreteScreen extends StatelessWidget {
                   heading2: "Width of Plot",
                   hint: "e.g., 30'6\"",
                   hint2: "e.g., 30'6\"",
+                  keyboardType: TextInputType.numberWithOptions(),
+                  keyboardType2: TextInputType.numberWithOptions(),
                   controller1: controller.lengthOfPlotController,
                   controller2: controller.widthOfPlotController),
               TwoFieldsWidget(
@@ -44,6 +47,8 @@ class RingwallFormworkConcreteScreen extends StatelessWidget {
                   heading2: "Thickness of Foundation",
                   hint: "e.g., 2'1\"",
                   hint2: "e.g., 2'6\"",
+                  keyboardType: TextInputType.numberWithOptions(),
+                  keyboardType2: TextInputType.numberWithOptions(),
                   controller1: controller.widthOfFoundationController,
                   controller2: controller.thicknessOfFoundationController),
               TwoFieldsWidget(
@@ -51,6 +56,8 @@ class RingwallFormworkConcreteScreen extends StatelessWidget {
                   heading2: "Height of Ring Wall",
                   hint: "e.g., 0'2\"",
                   hint2: "e.g., 0'3\"",
+                  keyboardType: TextInputType.numberWithOptions(),
+                  keyboardType2: TextInputType.numberWithOptions(),
                   controller1: controller.thicknessOfRingWallController,
                   controller2: controller.heightOfRingWallController),
               Row(
@@ -58,7 +65,8 @@ class RingwallFormworkConcreteScreen extends StatelessWidget {
                   Expanded(
                     child: AppTextField(
                       hintText: "0",
-                      heading: "Cement",
+                      heading: "Cement",                  keyboardType: TextInputType.numberWithOptions(),
+
                       controller: controller.cementController,
                     ),
                   ),
@@ -66,7 +74,8 @@ class RingwallFormworkConcreteScreen extends StatelessWidget {
                   Expanded(
                     child: AppTextField(
                       hintText: "0",
-                      heading: "Sand",
+                      heading: "Sand",                  keyboardType: TextInputType.numberWithOptions(),
+
                       controller: controller.sandController,
                     ),
                   ),
@@ -74,7 +83,8 @@ class RingwallFormworkConcreteScreen extends StatelessWidget {
                   Expanded(
                     child: AppTextField(
                       hintText: "0",
-                      heading: "Crush",
+                      heading: "Crush",                  keyboardType: TextInputType.numberWithOptions(),
+
                       controller: controller.crushController,
                     ),
                   ),
@@ -86,6 +96,55 @@ class RingwallFormworkConcreteScreen extends StatelessWidget {
                 width: 100.w,
                 height: 5.h,
                 onPressed: controller.calculate,
+              ),SizedBox(height: 1.h),
+              AppButtonWidget(
+                text: "Download PDF",
+                width: 100.w,
+                height: 5.h,
+                onPressed: () async {
+                  final res = controller.ringwallResult.value;
+                  if (res == null) {
+                    Get.snackbar("Error", "Please calculate results first.");
+                    return;
+                  }
+
+                  final data = res.results;
+                  if (data == null) {
+                    Get.snackbar("Error", "No result data found.");
+                    return;
+                  }
+
+                  await PdfHelper.generateAndOpenPdf(
+                    context: context,
+                    title: itemName,
+                    inputData: {},
+                    tables: [
+                      {
+                        'title': 'Concrete & Formwork Details',
+                        'headers': ['Description', 'Quantity'],
+                        'rows': [
+                          ["Concrete Volume (Foundation) (ft³)", data.volumeFoundation?.toStringAsFixed(2) ?? '0'],
+                          ["Concrete Volume (Ring Wall) (ft³)", data.volumeRingWall?.toStringAsFixed(2) ?? '0'],
+                          ["Total Concrete Volume (ft³)", data.totalVolume?.toStringAsFixed(2) ?? '0'],
+                          ["Formwork Area (Foundation) (ft²)", data.formworkFoundation?.toStringAsFixed(2) ?? '0'],
+                          ["Formwork Area (Ring Wall) (ft²)", data.formworkRingWall?.toStringAsFixed(2) ?? '0'],
+                          ["Total Formwork Area (ft²)", data.totalFormwork?.toStringAsFixed(2) ?? '0'],
+                        ],
+                      },
+                      {
+                        'title': 'Material Summary',
+                        'headers': ['Material', 'Quantity'],
+                        'rows': [
+                          ["Cement (bags)", data.cementBags?.toStringAsFixed(2) ?? '0'],
+                          ["Sand Volume (ft³)", data.sandVolume?.toStringAsFixed(2) ?? '0'],
+                          ["Crush Volume (ft³)", data.crushVolume?.toStringAsFixed(2) ?? '0'],
+                          ["Water Required (liters)", data.waterRequired?.toStringAsFixed(2) ?? '0'],
+                        ],
+                      },
+                    ],
+                    fileName: '${itemName}_report.pdf',
+                  );
+                },
               ),
               SizedBox(height: 2.h),
               Obx(
