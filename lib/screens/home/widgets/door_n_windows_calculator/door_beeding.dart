@@ -7,7 +7,9 @@ import 'package:smart_construction_calculator/core/component/app_text_field.dart
 import 'package:smart_construction_calculator/core/component/app_text_widget.dart';
 import 'package:smart_construction_calculator/core/component/dropdown_widget.dart';
 import 'package:smart_construction_calculator/core/component/dynamic_table_widget.dart';
+import 'package:smart_construction_calculator/core/controller/loader_controller.dart';
 import '../../../../config/model/door_windows_model/door_shutter_model.dart';
+import '../../../../config/utility/pdf_helper.dart';
 import '../../../../core/component/app_button_widget.dart';
 import '../../../../core/component/textFieldWithDropdown.dart';
 import '../../../../core/controller/calculators/door_windows/door_beeding_controller.dart';
@@ -123,17 +125,107 @@ class DoorBeadingScreen extends StatelessWidget {
                 height: 5.h,
                 onPressed: controller.calculateBeading,
               ),
+              SizedBox(height: 1.h),
+              AppButtonWidget(
+                text: "Download PDF",
+                width: 100.w,
+                height: 5.h,
+                onPressed: () async {
+                  final model = controller.result.value;
+
+                  if (model == null) {
+                    Get.snackbar("Error", "Please calculate valid results first.");
+                    return;
+                  }
+
+                  final doors = controller.doors;
+                  final pricePerFt3 = AppUtils().toRoundedDouble(
+                    double.tryParse(controller.priceController.text) ?? 0,
+                  );
+
+                  final totalVolume = AppUtils().toRoundedDouble(model.totals.totalFt3);
+                  final totalCost = AppUtils().toRoundedDouble(totalVolume * pricePerFt3);
+
+                  await PdfHelper.generateAndOpenPdf(
+                    context: Get.context!,
+                    title: "DOOR BEADING WOOD ESTIMATION",
+                    inputData: {
+                      "Price per ft³ (Rs)": controller.priceController.text,
+                    },
+                    tables: [
+                      for (int i = 0; i < model.results.length; i++)
+                        {
+                          'title': "Door ${i + 1} Details",
+                          'headers': ["Property", "Value"],
+                          'rows': [
+                            [
+                              "Length",
+                              "${controller.doors[i].lengthController.text} ${controller.doors[i].selectedLengthUnit.value}"
+                            ],
+                            ["Unit", "${controller.doors[i].selectedLengthUnit}"],
+                            [
+                              "Width",
+                              "${controller.doors[i].widthController.text} ${controller.doors[i].selectedWidthUnit.value}"
+                            ],["Unit", "${controller.doors[i].selectedBeadingWidthUnit}"],
+                            [
+                              "Beading Width",
+                              "${controller.doors[i].beadingWidthController.text} ${controller.doors[i].selectedBeadingWidthUnit.value}"
+                            ],["Unit", "${controller.doors[i].selectedBeadingWidthUnit}"],
+                            [
+                              "Beading Thickness",
+                              "${controller.doors[i].beadingThicknessController.text} ${controller.doors[i].selectedBeadingThicknessUnit.value}"
+                            ],["Unit", "${controller.doors[i].selectedBeadingThicknessUnit}"],
+                            ["Qty", controller.doors[i].quantityController.text.toString()],
+                            [
+                              "Total (ft³)",
+                              AppUtils()
+                                  .toRoundedDouble(model.results[i].totalFt3)
+                                  .toStringAsFixed(2)
+                            ],
+                            [
+                              "Cost (Rs)",
+                              (AppUtils().toRoundedDouble(model.results[i].totalFt3) *
+                                  double.parse(controller.priceController.text))
+                                  .toStringAsFixed(2)
+                            ],
+                          ],
+                        },
+                      {
+                        'title': "Summary",
+                        'headers': ["Item", "Value"],
+                        'rows': [
+                          [
+                            "Total Volume (ft³)",
+                            AppUtils()
+                                .toRoundedDouble(model.totals.totalFt3)
+                                .toStringAsFixed(2)
+                          ],
+                          [
+                            "Total Cost (Rs)",
+                            (AppUtils().toRoundedDouble(model.totals.totalFt3) *
+                                double.parse(controller.priceController.text))
+                                .toStringAsFixed(2)
+                          ],
+                        ],
+                      },
+                    ],
+
+
+                    fileName: "door_beading_wood_report.pdf",
+                  );
+                },
+              ),
+
               SizedBox(height: 2.h),
               Obx(() {
                 final model = controller.result.value;
 
                 if (controller.isLoading.value) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(child: Loader());
                 }
 
-                // ✅ No result yet
                 if (controller.result.value == null) {
-                  return const Center(child: Text("No results yet"));
+                  return  Center(child: AppTextWidget(text: "No results yet"));
                 }
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

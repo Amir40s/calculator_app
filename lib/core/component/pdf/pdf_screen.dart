@@ -47,57 +47,64 @@ class _PdfViewScreenState extends State<PdfViewScreen> {
     _pdfController.dispose();
     super.dispose();
   }
-
   Future<void> _downloadFile(
       BuildContext context, String fileName, Uint8List pdfBytes) async {
     try {
-      Directory? targetDir;
+      // 1️⃣ Get a safe, valid app directory
+      final dir = await getExternalStorageDirectory();
+      if (dir == null) throw Exception("No storage directory found");
 
-      if (Platform.isAndroid) {
-        if (await Permission.manageExternalStorage.isDenied) {
-          await Permission.manageExternalStorage.request();
-        }
-
-        if (await Permission.manageExternalStorage.isGranted) {
-          final downloadsPath =
-              await ExternalPath.getExternalStoragePublicDirectory(
-            ExternalPath.DIRECTORY_DOWNLOAD,
-          );
-          targetDir = Directory(downloadsPath);
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-                content: Text('⚠️ Permission denied to access storage.')),
-          );
-          return;
-        }
-      } else if (Platform.isIOS) {
-        targetDir = await getApplicationDocumentsDirectory();
+      // 2️⃣ Create a subfolder if you like (e.g., “PDFs”)
+      final saveDir = Directory("${dir.path}/PDFs");
+      if (!await saveDir.exists()) {
+        await saveDir.create(recursive: true);
       }
 
-      if (targetDir == null) throw Exception('Storage directory not found.');
-      if (!await targetDir.exists()) await targetDir.create(recursive: true);
-
-      final filePath = '${targetDir.path}/$fileName';
+      // 3️⃣ Define the complete file path
+      final filePath = "${saveDir.path}/$fileName";
       final file = File(filePath);
 
+      // 4️⃣ Write the bytes to file
       await file.writeAsBytes(pdfBytes, flush: true);
 
+      // 5️⃣ Show snackbar with OPEN button
       if (context.mounted) {
         Get.snackbar(
-          "PDF Saved",
-          "PDF saved in Downloads folder",
-          onTap: (snack) {
-            OpenFilex.open(filePath);
-          },
+          "✅ PDF Saved",
+          "File saved to: ${saveDir.path}",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green.shade600,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 6),
+          mainButton: TextButton(
+            onPressed: () async {
+              Get.closeAllSnackbars();
+              await OpenFilex.open(file.path);
+            },
+            child: const Text(
+              "OPEN",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
         );
       }
     } catch (e) {
       if (context.mounted) {
-        Get.snackbar('❌ Failed to save file:', e.toString());
+        Get.snackbar(
+          "❌ Failed to save file",
+          e.toString(),
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white,
+        );
       }
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {

@@ -10,6 +10,8 @@ import 'package:smart_construction_calculator/core/component/dynamic_table_widge
 import 'package:smart_construction_calculator/core/component/formula_widget.dart';
 import 'package:smart_construction_calculator/core/component/two_fields_widget.dart';
 import 'package:smart_construction_calculator/core/controller/loader_controller.dart';
+import '../../../../config/utility/app_utils.dart';
+import '../../../../config/utility/pdf_helper.dart';
 import '../../../../core/component/textFieldWithDropdown.dart';
 import '../../../../core/controller/calculators/finishin_interior_estimator/paint_quantity_controller.dart';
 
@@ -169,7 +171,59 @@ class PaintQuantityCalculatorScreen extends StatelessWidget {
                     height: 5.h,
                     onPressed: () {
                       controller.convert();
-                    }),
+                    }),    AppButtonWidget(
+                    text: 'Download PDF',
+                    width: 100.w,
+                    height: 5.h,
+                  onPressed: () async {
+                    final result = controller.result.value;
+                    if (result == null) {
+                      Get.snackbar("Error", "Please calculate results first.");
+                      return;
+                    }
+
+                    final summary = result.summary;
+                    final walls = result.walls ?? [];
+
+                    await PdfHelper.generateAndOpenPdf(
+                      context: context,
+                      title: itemName,
+                      inputData: {'Mode': "Paint Quantity Estimator"},
+                      tables: [
+                        {
+                          'title': "Summary",
+                          'headers': ["Description", "Value"],
+                          'rows': [
+                            ["Total Primer (L)", AppUtils().toRoundedDouble(summary!.primer!).toStringAsFixed(2)],
+                            ["Total Putty (Kg)", AppUtils().toRoundedDouble(summary.putty!).toStringAsFixed(2)],
+                            ["Total SPD (L)", AppUtils().toRoundedDouble(summary.spd!).toStringAsFixed(2)],
+                          ],
+                        },
+                        ...walls.asMap().entries.map((entry) {
+                          final index = entry.key;
+                          final wall = entry.value;
+                          return {
+                            'title': "Wall ${index + 1} Details",
+                            'headers': ["Description", "Value"],
+                            'rows': [
+                              ["Type", wall.wallType ?? '-'],
+                              ["Length (ft)", wall.wallLength?.toStringAsFixed(2) ?? '-'],
+                              ["Height (ft)", wall.wallHeight?.toStringAsFixed(2) ?? '-'],
+                              ["Window Area (ft²)", wall.windowArea?.toStringAsFixed(2) ?? '-'],
+                              ["Door Area (ft²)", wall.doorArea?.toStringAsFixed(2) ?? '-'],
+                              ["Net Area (ft²)", wall.areaFt?.toStringAsFixed(2) ?? '-'],
+                              ["Net Area (m²)", wall.areaM2?.toStringAsFixed(2) ?? '-'],
+                              ["Primer (L)", wall.primerQty?.toStringAsFixed(2) ?? '-'],
+                              ["Putty (Kg)", wall.puttyQty?.toStringAsFixed(2) ?? '-'],
+                              ["Paint Type", wall.paintType ?? '-'],
+                              ["Paint (L)", wall.paintQty?.toStringAsFixed(2) ?? '-'],
+                            ],
+                          };
+                        }),
+                      ],
+                      fileName: '${itemName}_paint_report.pdf',
+                    );
+                  },),
                 SizedBox(
                   height: 2.h,
                 ),

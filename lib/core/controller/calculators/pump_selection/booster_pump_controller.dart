@@ -8,19 +8,16 @@ import 'package:smart_construction_calculator/config/repository/calculator_repos
 class BoosterPumpController extends GetxController {
   final CalculatorRepository _repo = CalculatorRepository();
 
-  // ====================== LEVELS ======================
-  final staticSuctionHeadController = TextEditingController(); // h_suction_ft
+   final staticSuctionHeadController = TextEditingController(); // h_suction_ft
   final dischargeElevationController = TextEditingController(); // h_dis_ft
 
-  // ====================== DEMAND ======================
-  final bathroomsController = TextEditingController(); // bathrooms
+   final bathroomsController = TextEditingController(); // bathrooms
   final kitchensController = TextEditingController(); // kitchens
   final washingMachinesController = TextEditingController(); // washing_machines
   final autoEstimateController = TextEditingController(); // target refill or design flow
   final manualPeakDrawController = TextEditingController(); // q_peak_manual
 
-  // ====================== DISCHARGE PIPING ======================
-  final straightPipeLController = TextEditingController(); // L_dis_ft
+   final straightPipeLController = TextEditingController(); // L_dis_ft
   final straightPipeDiameterController = TextEditingController(); // D_dis_in
 
   var selectedDesignStrategy = ''.obs; // mat_dis
@@ -50,25 +47,20 @@ class BoosterPumpController extends GetxController {
     return '1.25';
   }
   String _extractEntryExitValue(String text) {
-    // Will return only 'yes' or 'no'
     return text.startsWith('yes') ? 'yes' : 'no';
   }
-  // ====================== MINOR LOSSES ======================
   final elbowsController = TextEditingController(); // elbows_dis
   final valvesController = TextEditingController(); // valves_dis
   final teesController = TextEditingController(); // tees_dis
 
-  // ====================== EFFICIENCIES ======================
   final desiredPressureController = TextEditingController(); // desired_pressure
   final pumpHydraulicEfficiencyController = TextEditingController(); // pump_efficiency
   final motorEfficiencyController = TextEditingController(); // motor_efficiency
   final waterTemperatureController = TextEditingController(); // water_temp
 
-  // ====================== RESULT ======================
   var isLoading = false.obs;
   var result = Rxn<BoosterPumpModel>();
 
-  // ====================== HELPERS ======================
   String _extractMaterialName(String label) {
     if (label.contains('uPVC/cPVC')) return 'uPVC/cPVC';
     if (label.contains('PPR')) return 'PPR';
@@ -76,7 +68,6 @@ class BoosterPumpController extends GetxController {
     return label;
   }
 
-  // ====================== API CALL ======================
   Future<void> calculatePump() async {
     try {
       isLoading.value = true;
@@ -116,8 +107,7 @@ class BoosterPumpController extends GetxController {
     }
   }
 
-  // ====================== CLEAR ======================
-  void clearAll() {
+   void clearAll() {
     staticSuctionHeadController.clear();
     dischargeElevationController.clear();
     bathroomsController.clear();

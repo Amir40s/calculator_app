@@ -10,7 +10,9 @@ import 'package:smart_construction_calculator/core/component/dropdown_widget.dar
 import 'package:smart_construction_calculator/core/component/dynamic_table_widget.dart';
 import 'package:smart_construction_calculator/core/component/two_fields_widget.dart';
 import 'package:smart_construction_calculator/core/controller/calculators/door_windows/door_shutter_wood_controller.dart';
+import 'package:smart_construction_calculator/core/controller/loader_controller.dart';
 import '../../../../config/model/door_windows_model/door_shutter_model.dart';
+import '../../../../config/utility/pdf_helper.dart';
 import '../../../../core/component/app_button_widget.dart';
 
 class DoorShutterWoodScreen extends StatelessWidget {
@@ -182,18 +184,70 @@ class DoorShutterWoodScreen extends StatelessWidget {
                 width: 100.w,
                 height: 5.h,
                 onPressed: controller.calculateVolume,
+              ),              SizedBox(height: 1.h),
+
+              AppButtonWidget(
+                text: "Download PDF",
+                width: 100.w,
+                height: 5.h,
+                onPressed: () async {
+                  final model = controller.result.value;
+
+                  final doors = controller.doors;
+                  final price = double.tryParse(controller.priceController.text) ?? 0.0;
+
+                  if (model == null) {
+                    Get.snackbar("Error", "Please calculate valid results first.");
+                    return;
+                  }
+                  final totalVolume = AppUtils().toRoundedDouble(model.totals.totalFt3);
+                  final totalCost = AppUtils().toRoundedDouble(totalVolume * price);
+
+                  await PdfHelper.generateAndOpenPdf(
+                    context: Get.context!,
+                    title: "DOOR VOLUME ESTIMATION",
+                    inputData: {
+                      "Price per ft³:": controller.priceController.text,
+
+                    },
+                    tables: [
+                      {
+                        'title': "Door Details",
+                        'headers': ["Door #", "Total (ft³)", "Cost (Rs)"],
+                        'rows': [
+                          for (int i = 0; i < doors.length; i++)
+                            [
+                              (i + 1).toString(),
+                              "${AppUtils().toRoundedDouble(model.results[i].totalFt3).toStringAsFixed(0)}",
+                              ((AppUtils().toRoundedDouble(model.results[i].totalFt3) *
+                                  AppUtils().toRoundedDouble(double.parse(
+                                      controller.priceController.text)))
+                                  .toStringAsFixed(0))                            ],
+                        ],
+                      },
+                      {
+                        'title': "Summary",
+                        'headers': ["Item", "Value"],
+                        'rows': [
+                          ["Total Volume (ft³)", totalVolume.toStringAsFixed(0)],
+                          ["Total Cost (Rs)", totalCost.toStringAsFixed(0)],
+                        ],
+                      },
+                    ],
+                    fileName: "wood_volume_report.pdf",
+                  );
+                },),
+              SizedBox(
+                height: 2.h,
               ),
-              SizedBox(height: 2.h),
               Obx(() {
                 final model = controller.result.value;
 
                 if (controller.isLoading.value) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(child: Loader());
                 }
-
-                // ✅ No result yet
                 if (controller.result.value == null) {
-                  return const Center(child: Text("No results yet"));
+                  return  Center(child: AppTextWidget( text: "No results yet. Enter door details and click Calculate."));
                 }
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -243,11 +297,11 @@ class DoorShutterWoodScreen extends StatelessWidget {
                       rows: model != null
                           ? [
                               [
-                                model.totals.totalFt3.toStringAsFixed(0),
-                                (model.totals.totalFt3 *
-                                        double.parse(
-                                            controller.priceController.text))
-                                    .toStringAsFixed(0),
+                                "${AppUtils().toRoundedDouble(model.totals.totalFt3).toStringAsFixed(0)}",
+                                ((AppUtils().toRoundedDouble(model.totals.totalFt3) *
+                                    AppUtils().toRoundedDouble(double.parse(
+                                        controller.priceController.text)))
+                                    .toStringAsFixed(0))
                               ]
                             ]
                           : [],

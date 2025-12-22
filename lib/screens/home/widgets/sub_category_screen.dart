@@ -14,6 +14,7 @@ import 'package:smart_construction_calculator/screens/home/widgets/reber_convers
 import 'package:smart_construction_calculator/screens/home/widgets/temperature_conversion.dart';
 import 'package:smart_construction_calculator/screens/home/widgets/volume_conversion_screen.dart';
 import '../../../config/routes/routes_name.dart';
+import 'concrete_formwork_quality/foundation_formwork_concrete.dart';
 import 'concrete_formwork_quality/over_head_watertank_formwork.dart';
 import 'concrete_formwork_quality/ringwall_formwork_concrete.dart';
 import 'concrete_formwork_quality/substructure_column_formwork.dart';
@@ -149,6 +150,8 @@ case SubCategoryNames.substructureColumnFormworkConcrete:
         return SubstructureColumnFormwork(itemName: itemName);
 case SubCategoryNames.superStructureColumnFormworkConcrete:
         return SuperstructureColumnFormworkScreen(itemName: itemName);
+case SubCategoryNames.foundationFormworkConcrete:
+        return FoundationFormworkConcreteScreen(itemName: itemName);
 case SubCategoryNames.wallPlaster:
         return WallRoofPlasterScreen(itemName: itemName);
 

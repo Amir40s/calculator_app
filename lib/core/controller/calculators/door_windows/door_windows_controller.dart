@@ -19,7 +19,7 @@ class DoorWindowsController extends GetxController {
   String _mapUnitToApiFormat(String displayValue) {
     if (displayValue.contains("Inches")) return "in";
     if (displayValue.contains("Feet")) return "ft";
-    return displayValue; // fallback
+    return displayValue;
   }
 
 

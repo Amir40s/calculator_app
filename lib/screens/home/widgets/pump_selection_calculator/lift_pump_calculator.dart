@@ -8,6 +8,8 @@ import 'package:smart_construction_calculator/core/component/app_text_widget.dar
 import 'package:smart_construction_calculator/core/component/formula_widget.dart';
 import 'package:smart_construction_calculator/core/component/result_box_widget.dart';
 import 'package:smart_construction_calculator/core/component/two_fields_widget.dart';
+import 'package:smart_construction_calculator/core/controller/loader_controller.dart';
+import '../../../../config/utility/pdf_helper.dart';
 import '../../../../core/component/dropdown_widget.dart';
 import '../../../../core/component/dynamic_table_widget.dart';
 import '../../../../core/controller/calculators/pump_selection/lift_pump_controller.dart';
@@ -125,7 +127,6 @@ class LiftPumpCalculatorScreen extends StatelessWidget {
               controller: controller.internalWaterHeightController,
             ),
 
-            /// ====== Demand / Fill Objective ======
             AppTextWidget(
                 text: "Demand / Fill Objective",
                 styleType: StyleType.dialogHeading),
@@ -190,12 +191,94 @@ class LiftPumpCalculatorScreen extends StatelessWidget {
                 controller.calculateLiftPump();
               },
             ),
+            SizedBox(height: 1.h),
+            AppButtonWidget(
+              text: "Download PDF",
+              width: 100.w,
+              height: 5.h,
+              onPressed: () async {
+                final results = controller.result.value;
+                final result = results?.results;
+
+                if (result == null) {
+                  Get.snackbar(
+                    "No Data",
+                    "Please calculate results before downloading the PDF.",
+                  );
+                  return;
+                }
+
+                await PdfHelper.generateAndOpenPdf(
+                  context: context,
+                  title: "Lift Pump Calculation Report",
+                  inputData: {
+                    "Suction Material": "${controller.selectedSuctionMaterial.value}",
+                    "Discharge Material": "${controller.selectedDischargeMaterial.value}",
+                    "Tank Shape": "${controller.selectedTankShape.value}",
+                  },
+                  tables: [
+                    {
+                      'title': "Tank Volume & Drain Time",
+                      'headers': ["Parameter", "Value"],
+                      'rows': [
+                        ["Tank Volume (L)", "${result.tankVolumeDrainTime.tankVolumeL.toStringAsFixed(0)}"],
+                        ["Peak Draw Estimate (L/min)", "${result.tankVolumeDrainTime.peakDrawEstimateLMin.toStringAsFixed(0)}"],
+                        ["Manual Peak Override (L/min)", "${result.tankVolumeDrainTime.manualPeakOverrideLMin}"],
+                        ["Drain Time @ Peak (min)", "${result.tankVolumeDrainTime.drainTimeAtPeakMin.toStringAsFixed(0)}"],
+                      ],
+                    },
+                    {
+                      'title': "Design Flow",
+                      'headers': ["Parameter", "Value"],
+                      'rows': [
+                        ["Strategy", "${result.designFlow.strategy}"],
+                        ["Refill-Only Rate (L/min)", "${result.designFlow.refillOnlyRateLMin.toStringAsFixed(0)}"],
+                        ["Chosen Design Flow (L/min)", "${result.designFlow.chosenDesignFlowLMin.toString()}"],
+                      ],
+                    },
+                    {
+                      'title': "Heads Summary",
+                      'headers': ["Component", "Value (m)"],
+                      'rows': [
+                        ["Static Suction Head", "${result.heads.staticSuctionHeadM.toStringAsFixed(2)}"],
+                        ["Suction Friction", "${result.heads.suctionFrictionM.toStringAsFixed(2)}"],
+                        ["Suction Minor Loss", "${result.heads.suctionMinorLossM.toStringAsFixed(2)}"],
+                        ["Discharge Elevation", "${result.heads.dischargeElevationM.toStringAsFixed(2)}"],
+                        ["Discharge Friction", "${result.heads.dischargeFrictionM.toStringAsFixed(2)}"],
+                        ["Discharge Minor Loss", "${result.heads.dischargeMinorLossM.toStringAsFixed(2)}"],
+                        ["Total Dynamic Head", "${result.heads.totalDynamicHeadM.toStringAsFixed(2)}"],
+                      ],
+                    },
+                    {
+                      'title': "Power Summary",
+                      'headers': ["Parameter", "Value"],
+                      'rows': [
+                        ["Hydraulic Power (kW)", "${result.power.hydraulicPowerKW.toStringAsFixed(2)}"],
+                        ["Motor Input Power (HP)", "${result.power.motorInputPowerHP.toStringAsFixed(2)}"],
+                        ["Final Power (HP)", "${result.power.finalPowerHP.toStringAsFixed(2)}"],
+                      ],
+                    },
+                    {
+                      'title': "Velocities",
+                      'headers': ["Component", "Value (m/s)"],
+                      'rows': [
+                        ["Suction Velocity", "${result.velocities.suctionVelocityMS.toStringAsFixed(2)}"],
+                        ["Discharge Velocity", "${result.velocities.dischargeVelocityMS.toStringAsFixed(2)}"],
+                      ],
+                    },
+                  ],
+                  fileName: "lift_pump_report.pdf",
+                );
+              },
+            ),
+
+
             SizedBox(
               height: 2.h,
             ),
             Obx(() {
               if (controller.isLoading.value) {
-                return Center(child: CircularProgressIndicator());
+                return Center(child: Loader());
               } else {
                 final results = controller.result.value;
                 final result = results?.results;
@@ -218,7 +301,7 @@ class LiftPumpCalculatorScreen extends StatelessWidget {
                       styleType: StyleType.dialogHeading,
                     ),
                     DynamicTable(
-                      headers: ["Description", "Value"],
+                      headers: ["Parameter", "Value"],
                       rows: [
                         [
                           "Tank Volume (L):",
@@ -244,7 +327,7 @@ class LiftPumpCalculatorScreen extends StatelessWidget {
                     ),
 
                     DynamicTable(
-                      headers: ["Description", "Value"],
+                      headers: ["Parameter", "Value"],
                       rows: [
                         ["Strategy:", (result.designFlow.strategy)],
                         [
@@ -264,7 +347,7 @@ class LiftPumpCalculatorScreen extends StatelessWidget {
                     ),
 
                     DynamicTable(
-                      headers: ["Description", "Value"],
+                      headers: ["Parameter", "Value"],
                       rows: [
                         [
                           "Static Suction Head (m):",
@@ -303,7 +386,7 @@ class LiftPumpCalculatorScreen extends StatelessWidget {
                     ),
 
                     DynamicTable(
-                      headers: ["Description", "Value"],
+                      headers: ["Parameter", "Value"],
                       rows: [
                         [
                           "Suction Velocity (m/s):",
@@ -322,7 +405,7 @@ class LiftPumpCalculatorScreen extends StatelessWidget {
                     ),
 
                     DynamicTable(
-                      headers: ["Description", "Value"],
+                      headers: ["Parameter", "Value"],
                       rows: [
                         [
                           "Hydraulic Power (kW):",

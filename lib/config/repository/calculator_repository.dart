@@ -233,7 +233,8 @@ class CalculatorRepository {
       url: url,
       data: body,
     );
-  } Future<dynamic> calculateLiftPump({
+  }
+  Future<dynamic> calculateLiftPump({
     required Map<String, dynamic> body,
   }) async {
     final url = Endpoint.liftPump;

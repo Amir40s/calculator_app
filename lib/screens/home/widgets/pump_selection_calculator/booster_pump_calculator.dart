@@ -8,6 +8,8 @@ import 'package:smart_construction_calculator/core/component/app_text_widget.dar
 import 'package:smart_construction_calculator/core/component/formula_widget.dart';
 import 'package:smart_construction_calculator/core/component/two_fields_widget.dart';
 import 'package:smart_construction_calculator/core/controller/calculators/pump_selection/booster_pump_controller.dart';
+import 'package:smart_construction_calculator/core/controller/loader_controller.dart';
+import '../../../../config/utility/pdf_helper.dart';
 import '../../../../core/component/dropdown_widget.dart';
 import '../../../../core/component/dynamic_table_widget.dart';
 import '../../../../core/controller/calculators/pump_selection/lift_pump_controller.dart';
@@ -31,7 +33,6 @@ class BoosterPumpCalculatorScreen extends StatelessWidget {
           children: [
             AppTextWidget(text: "Pump Inputs", styleType: StyleType.heading),
 
-            /// ====== Suction Section ======
             AppTextWidget(
                 text: "Levels (Relative Distances)",
                 styleType: StyleType.dialogHeading),
@@ -46,7 +47,6 @@ class BoosterPumpCalculatorScreen extends StatelessWidget {
               controller: controller.dischargeElevationController,
             ),
 
-            /// ====== Discharge Section ======
             AppTextWidget(text: "Demand", styleType: StyleType.dialogHeading),
             TwoFieldsWidget(
               heading1: "Bathrooms",
@@ -66,7 +66,6 @@ class BoosterPumpCalculatorScreen extends StatelessWidget {
               controller: controller.manualPeakDrawController,
             ),
 
-            /// ====== Tank Geometry ======
             AppTextWidget(
                 text: "Discharge Piping", styleType: StyleType.dialogHeading),
 
@@ -86,7 +85,6 @@ class BoosterPumpCalculatorScreen extends StatelessWidget {
               },
             ),
 
-            /// ====== Demand / Fill Objective ======
             AppTextWidget(
                 text: "Minor Losses", styleType: StyleType.dialogHeading),
             TwoFieldsWidget(
@@ -106,7 +104,6 @@ class BoosterPumpCalculatorScreen extends StatelessWidget {
               },
             ),
 
-            /// ====== Efficiencies ======
             AppTextWidget(
                 text: "Targets & Efficiencies",
                 styleType: StyleType.dialogHeading),
@@ -151,18 +148,78 @@ class BoosterPumpCalculatorScreen extends StatelessWidget {
               },
             ),
             SizedBox(
+              height: 1.h,
+            ),
+            AppButtonWidget(
+              text: "Download PDF",
+              width: 100.w,
+              height: 5.h,
+              onPressed: () async {
+                final results = controller.result.value;
+                final result = results?.results;
+                final hydro = result?.hydraulics;
+                final power = result?.power;
+
+                if (result == null) {
+                  Get.snackbar("No results yet","Enter pump parameters and click Calculate.");
+                  return;
+                }
+
+                await PdfHelper.generateAndOpenPdf(
+                  context: context,
+                  title: "Booster Pump Calculation Report",
+                  inputData: {
+                    "Pipe Material": "${controller.selectedDesignStrategy.value}",
+                    "Safety Factor": "${controller.selectedSafetyFactor.value}",
+                    "Entry/Exit Loss": "${controller.selectedEntryExitLoss.value}",
+                  },
+                  tables: [
+                    {
+                      'title': "Hydraulics Summary",
+                      'headers': ["Parameter", "Value"],
+                      'rows': [
+                        ["Design Flow (L/min)", "${hydro?.designFlowLMin.toStringAsFixed(0)}"],
+                        ["Velocity (m/s)", "${hydro?.velocityMS.toStringAsFixed(2)} (${hydro?.velocityStatus})"],
+                        ["Reynolds Number", "${hydro?.reynoldsNumber.toStringAsFixed(0)}"],
+                        ["Friction Factor (f)", "${hydro?.frictionFactorF.toStringAsFixed(2)}"],
+                        ["Static Suction Head (m)", "${hydro?.staticSuctionHeadM.toStringAsFixed(2)}"],
+                        ["Discharge Elevation (m)", "${hydro?.dischargeElevationM.toStringAsFixed(2)}"],
+                        ["Major Loss (m)", "${hydro?.majorLossFrictionM.toStringAsFixed(2)}"],
+                        ["Minor Loss (m)", "${hydro?.minorLossFittingsM.toStringAsFixed(2)}"],
+                        ["Desired Pressure Head (m)", "${hydro?.desiredPressureHeadM.toStringAsFixed(2)}"],
+                        ["Total Head (TDH) (m)", "${hydro?.totalHeadTDHM.toStringAsFixed(2)}"],
+                      ],
+                    },
+                    {
+                      'title': "Power Summary",
+                      'headers': ["Parameter", "Value"],
+                      'rows': [
+                        ["Hydraulic Power (kW)", "${power?.hydraulicPowerKW.toStringAsFixed(2)}"],
+                        ["Motor Input Power (kW)", "${power?.motorInputPowerKW.toStringAsFixed(2)} (${power?.motorInputPowerHP.toStringAsFixed(2)} HP)"],
+                        ["With Safety Factor ×1.25", "${power?.finalPowerHP.toStringAsFixed(2)} HP"],
+                        ["Suggested Motor Size (HP)", "${power?.suggestedMotorSizeHP.toStringAsFixed(2)} HP"],
+                      ],
+                    },
+                  ],
+                  fileName: "booster_pump_report.pdf",
+                );
+              },
+            ),
+
+
+            SizedBox(
               height: 2.h,
             ),
             Obx(() {
               if (controller.isLoading.value) {
-                return Center(child: CircularProgressIndicator());
+                return Center(child: Loader());
               } else {
                 final results = controller.result.value;
                 final result = results?.results;
                 final hydro = result?.hydraulics;
                 if (result == null) {
                   return Center(
-                      child: Text(
+                      child: AppTextWidget(text:
                     "No data available",
                   ));
                 }

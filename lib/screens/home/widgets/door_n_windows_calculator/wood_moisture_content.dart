@@ -6,6 +6,7 @@ import 'package:smart_construction_calculator/core/component/dynamic_table_widge
 import 'package:smart_construction_calculator/core/component/formula_widget.dart';
 import 'package:smart_construction_calculator/core/controller/loader_controller.dart';
 import '../../../../config/enum/style_type.dart';
+import '../../../../config/utility/pdf_helper.dart';
 import '../../../../core/component/app_button_widget.dart';
 import '../../../../core/component/app_text_widget.dart';
 import '../../../../core/controller/calculators/door_windows/wood_moisture_content_controller.dart';
@@ -43,6 +44,44 @@ class WoodMoistureContentScreen extends StatelessWidget {
                     onPressed: () {
                     controller.convert();
                     },),
+                SizedBox(height: 1.h,),
+                AppButtonWidget(
+                  text: "Download PDF",
+                  width: 100.w,
+                  height: 5.h,
+                  onPressed: () async {
+                    final result = controller.result.value;
+
+                    await PdfHelper.generateAndOpenPdf(
+                      context: context,
+                      title: "Wood Moisture Content Report",
+                      inputData: {
+                        "Wet Weight (g)": controller.wetWeightController.text,
+                        "Dry Weight (g)": controller.dryWeightController.text,
+                      },
+                      tables: [
+                        {
+                          'title': "Moisture Test Result",
+                          'headers': [
+                            "Wood#",
+                            "Wet Weight (g)",
+                            "Dry Weight (g)",
+                            "Moisture Content (%)"
+                          ],
+                          'rows': [
+                            [
+                              "1",
+                              controller.wetWeightController.text,
+                              controller.dryWeightController.text,
+                              "$result %",
+                            ]
+                          ],
+                        },
+                      ],
+                      fileName: "wood_moisture_content.pdf",
+                    );
+                  },
+                ),
                 SizedBox(height: 2.h,),
                 Column(
                   spacing: 2.h,
