@@ -18,6 +18,7 @@ class CustomBottomNavBar extends StatelessWidget {
       return SafeArea(
         bottom: true,
         child: CurvedNavigationBar(
+
           index: controller.currentIndex.value,
           height: 7.h,
           color: AppColors.blueColor,
@@ -48,7 +49,7 @@ class CustomBottomNavBar extends StatelessWidget {
         child: SvgPicture.asset(
           icon,
           height: isActive ? 22 : 26,
-          color: isActive ? Colors.black : Colors.white,
+          color: isActive ? Colors.white : AppColors.whiteColor,
         ),
       ),
     );

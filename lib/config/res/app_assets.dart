@@ -1,5 +1,5 @@
 class AppAssets{
-  static const logo  = "assets/images/logo.webp";
+  static const logo  = "assets/images/logo1.webp";
   static const splash  = "assets/images/splash.webp";
   static const priceBackground  = "assets/images/price_background.png";
   static const premiumBackground  = "assets/images/premium_bg.png";

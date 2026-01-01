@@ -7,7 +7,12 @@ import '../base_calculator_controller.dart';
 class CalculatorController extends BaseCalculatorController<List<CalculatorModel>> {
   final _repo = CalculatorRepository();
   /// Fetch all calculators
-  Future<void> fetchCalculators() async {
+  Future<void> fetchCalculators({bool forceRefresh = false}) async {
+    final existing = data.value;
+    if (!forceRefresh && existing != null && existing.isNotEmpty) {
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -16,6 +21,7 @@ class CalculatorController extends BaseCalculatorController<List<CalculatorModel
       final calculators = (response as List)
           .map((item) => CalculatorModel.fromMap(item))
           .toList();
+      log("total calculators are  ${calculators}");
 
       setData(calculators);
     } catch (e) {

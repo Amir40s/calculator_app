@@ -86,12 +86,12 @@ class FoundationFormworkConcreteScreen extends StatelessWidget {
                   TwoFieldsWidget(
                     heading1: "AddOn Length (ft'in\")",
                     heading2: "AddOn Width (ft'in\")",
-                    hint: "e.g., 4'6\"",
+                    hint: "e.g.u, 4'6\"",
                     hint2: "e.g., 8'0\"",
                     keyboardType: TextInputType.numberWithOptions(),
                     keyboardType2: TextInputType.numberWithOptions(),
-                    controller1: controller.foundations[i]['addOnLength']!,
-                    controller2: controller.foundations[i]['addOnWidth']!,
+                    controller1: controller.foundations[i]['addOnLength'] ?? TextEditingController(),
+                    controller2: controller.foundations[i]['addOnWidth'] ?? TextEditingController(),
                   ),
 
                 ],

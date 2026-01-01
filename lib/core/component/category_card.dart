@@ -1,44 +1,104 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:smart_construction_calculator/core/component/smooth_container_widget.dart';
 
+import '../../config/enum/style_type.dart';
+import '../../config/res/app_assets.dart';
+import '../../config/res/app_color.dart';
 import 'app_text_widget.dart';
 
-/// Category Card
-class CategoryCard extends StatelessWidget {
+class HomeCalculatorCard extends StatelessWidget {
   final String title;
-  final Color? color;
-  final Widget  icon;
+  final String subtitle;
+  final Color tint;
   final VoidCallback onTap;
-  const CategoryCard({
-    super.key,
+
+  const HomeCalculatorCard({
     required this.title,
-     this.color,
-    required this.icon,
-      required this.onTap,
+    required this.subtitle,
+    required this.tint,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
+      borderRadius: BorderRadius.circular(16),
       onTap: onTap,
-      child: SmoothContainerWidget(
-        width: 30.w,
-        margin:  EdgeInsets.only(right: 3.w),
-        color: color,
-        borderRadius: BorderRadius.circular(12),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            icon,
-            SizedBox(height: 1.h,),
-            Flexible(child: AppTextWidget(text: title,overflow: TextOverflow.ellipsis,maxLine: 2,textAlign: TextAlign.center,)),
-          ],
-        ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final imageHeight = constraints.maxHeight * 0.4;
+          final contentHeight = constraints.maxHeight * 0.6;
+
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Colors.black.withOpacity(0.06)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: imageHeight,
+                  width: double.infinity,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Image.asset(
+                        AppAssets.splash,
+                        fit: BoxFit.cover,
+                      ),
+                      Container(color: tint.withOpacity(0.35)),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      top: 0.5.h,
+                      left: 2.w,
+                      right: 2.w,
+                      bottom: 41,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Flexible(
+                          child: AppTextWidget(
+                            text: title,
+                            styleType: StyleType.subHeading,
+                            maxLine: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        SizedBox(height: 3.px),
+                        Flexible(
+                          child: AppTextWidget(
+                            text: subtitle,
+                            styleType: StyleType.subTitle,
+                            color: AppColors.greyColor,
+                            maxLine: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
-
 }

@@ -24,13 +24,14 @@ class CategoryDetailScreen extends StatelessWidget {
     print("Category Passed: $category");
     final subCategories = SubCategoryData.subCategories[category] ?? [];
     return Scaffold(
-      body: Column(
-        children: [
-          AppBarWidget(text: title,  showDivider: true),
-          Expanded(
-            child: ListView.builder(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            AppBarWidget(text: title,  showDivider: true),
+            ListView.builder(
               padding: EdgeInsets.only(left: 5.w,right: 5.w,bottom: 2.h),
               shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
               itemCount: subCategories.length,
               itemBuilder: (context, index) {
                 final item = subCategories[index];
@@ -45,7 +46,7 @@ class CategoryDetailScreen extends StatelessWidget {
                     margin: EdgeInsets.symmetric(vertical: 1.h),
                     alignment: Alignment.centerLeft,
                     decoration: BoxDecoration(
-                      color: AppColors.premiumColor.withOpacity(0.7),
+                      gradient: AppColors.gradient,
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
@@ -68,6 +69,7 @@ class CategoryDetailScreen extends StatelessWidget {
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
                                 maxLine: 1,
+                                color: AppColors.whiteColor,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
@@ -81,8 +83,8 @@ class CategoryDetailScreen extends StatelessWidget {
                 );
               },
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

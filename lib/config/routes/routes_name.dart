@@ -64,6 +64,15 @@ class SubCategoryNames{
   static const String aluminiumBoqGenerator = 'Aluminium Window BOQ Generator';
 // 🔹 finishing-and-interior-estimator
   static const String paintQuantity = 'Paint Quantity Calculator';
+  static const String woodenSolidDoorPolishMaterial = 'Wooden Solid Door Polish Material Estimation';
+  static const String kitchenLayoutBOQCost = 'Kitchen Layout + BOQ & Cost Estimator';
+  static const String modularKitchen = 'Modular Kitchen Estimator';
+  static const String wardRobeMaterialEstimation = 'Ward Robe Material Estimation Calculator';
+  static const String falseCeilingCost = 'False Ceiling Cost Calculator';
+  static const String spiralMsStairMaterial = 'Spiral MS Stair Material Calculator';
+  static const String multiBathVanityEstimator = 'Multi-Bathroom Vanity Estimator';
+  static const String wardrobeMaterialCostEstimator = 'Wardrobe Material & Cost Estimator';
+
 
 
 // 🔹 Concrete & Formwork Quantity Calculator
@@ -80,8 +89,9 @@ class SubCategoryNames{
   static const String substructureColumnFormworkConcrete = 'Substructure Column Formwork & Concrete Calculator';
   static const String superStructureColumnFormworkConcrete = 'SuperStructure Column Formwork & Concrete Calculator';
   static const String foundationFormworkConcrete = 'Foundation Formwork & Concrete Calculator';
-  static const String substructureBeamFormworkConcrete = 'Substructure Beam Formwork & Concrete Calculator';
+  static const String superstructureBeamFormworkConcrete = 'Superstructure Beam Formwork & Concrete Calculator';
   static const String concreteCuringWater = 'Concrete Curing Water Estimation Calculator';
+  static const String stairConcreteEstimator = 'Stair Concrete Estimator';
 
 
 }

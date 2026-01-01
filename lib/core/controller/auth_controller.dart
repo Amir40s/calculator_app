@@ -7,6 +7,7 @@ import 'package:smart_construction_calculator/config/model/user_model.dart';
 import 'package:smart_construction_calculator/config/res/app_constants.dart';
 import 'package:smart_construction_calculator/config/routes/routes_name.dart';
 import 'package:smart_construction_calculator/config/utility/app_utils.dart';
+import 'package:smart_construction_calculator/core/controller/calculators/all_calculators.dart';
 import 'package:smart_construction_calculator/core/controller/otp_controller.dart';
 import 'package:smart_construction_calculator/core/repository/auth_repository.dart';
 
@@ -52,6 +53,11 @@ class AuthController extends GetxController {
       },
       (user) async {
         await userC.loadCurrentUser();
+        // Fetch calculators once after login for this app session (acts like in-memory provider).
+        final calcC = Get.isRegistered<CalculatorController>()
+            ? Get.find<CalculatorController>()
+            : Get.put(CalculatorController(), permanent: true);
+        calcC.fetchCalculators();
         AppUtils.showToast(text: 'Login Successful', bgColor: Colors.green);
         Get.offAllNamed(RoutesName.mainScreen);
       },
@@ -172,6 +178,12 @@ response.fold(
       bgColor: Colors.green,
     );
 
+    // User is now authenticated; fetch calculators once for this app session.
+    final calcC = Get.isRegistered<CalculatorController>()
+        ? Get.find<CalculatorController>()
+        : Get.put(CalculatorController(), permanent: true);
+    calcC.fetchCalculators();
+
     Get.offAllNamed(RoutesName.mainScreen);
   } catch (e, st) {
     print('🔥 ERROR while saving user: $e\n$st');
@@ -208,6 +220,11 @@ response.fold(
     response.fold(
       (error) => AppUtils.showToast(text: error.message, bgColor: Colors.red),
       (user) async {
+        // Fetch calculators once after login for this app session (acts like in-memory provider).
+        final calcC = Get.isRegistered<CalculatorController>()
+            ? Get.find<CalculatorController>()
+            : Get.put(CalculatorController(), permanent: true);
+        calcC.fetchCalculators();
         AppUtils.showToast(text: 'Login Successful', bgColor: Colors.green);
         Get.offAllNamed(RoutesName.mainScreen);
       },

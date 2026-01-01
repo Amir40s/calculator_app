@@ -20,13 +20,13 @@ class LogoTextWidget extends StatelessWidget {
             height: 80,
               fit: BoxFit.cover
           ),
-          const SizedBox(height: 12.0),
-          AppTextWidget(
-            text: 'UHCONST',
-            styleType: StyleType.premiumSize,
-            lineHeight: 2.0,
-            color: color,
-          ),
+          // const SizedBox(height: 12.0),
+          // AppTextWidget(
+          //   text: 'UHCONST',
+          //   styleType: StyleType.premiumSize,
+          //   lineHeight: 2.0,
+          //   color: color,
+          // ),
         ],
       ),
     );

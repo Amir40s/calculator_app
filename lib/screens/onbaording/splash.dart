@@ -9,6 +9,7 @@ import 'package:smart_construction_calculator/config/res/app_color.dart';
 import 'package:smart_construction_calculator/config/routes/routes_name.dart';
 import 'package:smart_construction_calculator/config/utility/pref_service.dart';
 import 'package:smart_construction_calculator/core/component/logo_text_widget.dart';
+import 'package:smart_construction_calculator/core/controller/calculators/all_calculators.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -37,6 +38,12 @@ class _SplashScreenState extends State<SplashScreen> {
       Get.offAllNamed(RoutesName.onboarding);
     } else {
       if (uid != null) {
+        // User is already logged in: fetch calculators once on Splash for this app session.
+        final calcC = Get.isRegistered<CalculatorController>()
+            ? Get.find<CalculatorController>()
+            : Get.put(CalculatorController(), permanent: true);
+        // Don't await; let it load in background while we navigate.
+        calcC.fetchCalculators();
         Get.offAllNamed(RoutesName.mainScreen);
       } else {
         Get.offAllNamed(RoutesName.onboarding);

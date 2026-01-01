@@ -81,6 +81,7 @@ class SignUpScreen extends StatelessWidget {
                           validator: Validators.required,
                         ),
                       ),
+                      SizedBox(width: 2.w,),
                       Expanded(
                         child: AppTextField(
                           heading: "Last Name",

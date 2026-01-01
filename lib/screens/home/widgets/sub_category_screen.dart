@@ -14,10 +14,13 @@ import 'package:smart_construction_calculator/screens/home/widgets/reber_convers
 import 'package:smart_construction_calculator/screens/home/widgets/temperature_conversion.dart';
 import 'package:smart_construction_calculator/screens/home/widgets/volume_conversion_screen.dart';
 import '../../../config/routes/routes_name.dart';
+import 'concrete_formwork_quality/curing_water_estimator_calculator.dart';
 import 'concrete_formwork_quality/foundation_formwork_concrete.dart';
 import 'concrete_formwork_quality/over_head_watertank_formwork.dart';
 import 'concrete_formwork_quality/ringwall_formwork_concrete.dart';
+import 'concrete_formwork_quality/stair_concrete_calculator.dart';
 import 'concrete_formwork_quality/substructure_column_formwork.dart';
+import 'concrete_formwork_quality/superStructure_beam_formwork_concrete_calculator.dart';
 import 'concrete_formwork_quality/superstructure_column_formwork.dart';
 import 'concrete_formwork_quality/underground_water_tank.dart';
 import 'concrete_formwork_quality/concrete_cost_estimator.dart';
@@ -42,6 +45,7 @@ import 'cost_estimation/grey_structure_screen.dart';
 import 'earth_work_calculator/back_fill_calculator.dart';
 import 'earth_work_calculator/stone_soiling_calculation.dart';
 import 'finshing_interior_estimator/paint_quantity_calculator.dart';
+import 'finshing_interior_estimator/spiral_ms_stair_material_calculator.dart';
 
 class SubCategoryScreen extends StatelessWidget {
   final String itemName;
@@ -51,7 +55,7 @@ class SubCategoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("Category Passed: $itemName");
-    /// 🔹 Decide which conversion screen to show
+
     final Widget child = _getScreenForItem(itemName);
 
     return Scaffold(
@@ -82,79 +86,105 @@ class SubCategoryScreen extends StatelessWidget {
         return AreaConversionScreen(itemName: itemName);
       case SubCategoryNames.temperature:
         return TemperatureConversionScreen(itemName: itemName);
-case SubCategoryNames.force:
+      case SubCategoryNames.force:
         return ForceConversionScreen(itemName: itemName);
-case SubCategoryNames.angle:
+      case SubCategoryNames.angle:
         return AngleConversionScreen(itemName: itemName);
-case SubCategoryNames.density:
+      case SubCategoryNames.density:
         return DensityConversionScreen(itemName: itemName);
-case SubCategoryNames.rebarSteel:
+      case SubCategoryNames.rebarSteel:
         return RebarConversionScreen(itemName: itemName);
-case SubCategoryNames.concreteMixVolume:
+      case SubCategoryNames.concreteMixVolume:
         return ConcreteMixConversionScreen(itemName: itemName);
-case SubCategoryNames.powerEnergy:
+      case SubCategoryNames.powerEnergy:
         return PowerEnergyConversionScreen(itemName: itemName);
-case SubCategoryNames.greyStructure:
+      case SubCategoryNames.greyStructure:
         return GreyStructureConversionScreen(itemName: itemName);
-case SubCategoryNames.finishingCost:
+      case SubCategoryNames.finishingCost:
         return FinishingCostScreen(itemName: itemName);
-case SubCategoryNames.blockMasonry:
+      case SubCategoryNames.blockMasonry:
         return BlockMasonryPlasterScreen(itemName: itemName);
-case SubCategoryNames.projectCost:
+      case SubCategoryNames.projectCost:
         return CostEstimationScreen(itemName: itemName);
-case SubCategoryNames.excavationCalculator:
+      case SubCategoryNames.excavationCalculator:
         return ExcavationCalculatorScreen(itemName: itemName);
-case SubCategoryNames.backfillCalculator:
+      case SubCategoryNames.backfillCalculator:
         return BackFillCalculatorScreen(itemName: itemName);
-case SubCategoryNames.stoneSoilingCalculator:
+      case SubCategoryNames.stoneSoilingCalculator:
         return StoneSoilingCalculatorScreen(itemName: itemName);
-case SubCategoryNames.soilCompactionCalculator:
+      case SubCategoryNames.soilCompactionCalculator:
         return SoilCompactionScreen(itemName: itemName);
-case SubCategoryNames.liftPumpCalculator:
+      case SubCategoryNames.liftPumpCalculator:
         return LiftPumpCalculatorScreen(itemName: itemName);
-        case SubCategoryNames.boosterPumpCalculator:
+      case SubCategoryNames.boosterPumpCalculator:
         return BoosterPumpCalculatorScreen(itemName: itemName);
-case SubCategoryNames.woodDoorEstimate:
+      case SubCategoryNames.woodDoorEstimate:
         return WoodDoorEstimateScreen(itemName: itemName);
-case SubCategoryNames.doorShutterEstimate:
+      case SubCategoryNames.doorShutterEstimate:
         return DoorShutterWoodScreen(itemName: itemName);
-case SubCategoryNames.doorBeadingEstimate:
+      case SubCategoryNames.doorBeadingEstimate:
         return DoorBeadingScreen(itemName: itemName);
-case SubCategoryNames.doorBOQEstimate:
+      case SubCategoryNames.doorBOQEstimate:
         return DoorBoqScreen(itemName: itemName);
-case SubCategoryNames.woodMoistureEstimate:
+      case SubCategoryNames.woodMoistureEstimate:
         return WoodMoistureContentScreen(itemName: itemName);
-case SubCategoryNames.paintQuantity:
-        return PaintQuantityCalculatorScreen(itemName: itemName);
-case SubCategoryNames.plotClean:
-        return PlotCleanScreen(itemName: itemName);
-case SubCategoryNames.concreteCost:
-        return ConcreteCostEstimatorScreen(itemName: itemName);
-case SubCategoryNames.slabConcrete:
-        return SlabConcreteScreen(itemName: itemName);
-case SubCategoryNames.lShapedStairConcreteVolume:
-        return LShapedStairScreen(itemName: itemName);
-case SubCategoryNames.uShapedStairConcreteVolume:
-        return UShapedStairScreen(itemName: itemName);
-case SubCategoryNames.plinthBeamLeanConcrete:
-        return PlinthBeamLeanScreen(itemName: itemName);
-case SubCategoryNames.plinthBeamConcrete:
-        return PlinthBeamConcreteScreen(itemName: itemName);
-case SubCategoryNames.undergroundWaterTankConcrete:
-        return UndergroundWaterTankScreen(itemName: itemName);
-case SubCategoryNames.ringwallFormworkConcrete:
-        return RingwallFormworkConcreteScreen(itemName: itemName);
-case SubCategoryNames.overheadWaterTankFormworkConcrete:
-        return OverheadWaterTankFormworkScreen(itemName: itemName);
-case SubCategoryNames.substructureColumnFormworkConcrete:
-        return SubstructureColumnFormwork(itemName: itemName);
-case SubCategoryNames.superStructureColumnFormworkConcrete:
-        return SuperstructureColumnFormworkScreen(itemName: itemName);
-case SubCategoryNames.foundationFormworkConcrete:
-        return FoundationFormworkConcreteScreen(itemName: itemName);
-case SubCategoryNames.wallPlaster:
-        return WallRoofPlasterScreen(itemName: itemName);
 
+      case SubCategoryNames.plotClean:
+        return PlotCleanScreen(itemName: itemName);
+      case SubCategoryNames.concreteCost:
+        return ConcreteCostEstimatorScreen(itemName: itemName);
+      case SubCategoryNames.slabConcrete:
+        return SlabConcreteScreen(itemName: itemName);
+      case SubCategoryNames.lShapedStairConcreteVolume:
+        return LShapedStairScreen(itemName: itemName);
+      case SubCategoryNames.uShapedStairConcreteVolume:
+        return UShapedStairScreen(itemName: itemName);
+      case SubCategoryNames.plinthBeamLeanConcrete:
+        return PlinthBeamLeanScreen(itemName: itemName);
+      case SubCategoryNames.plinthBeamConcrete:
+        return PlinthBeamConcreteScreen(itemName: itemName);
+      case SubCategoryNames.undergroundWaterTankConcrete:
+        return UndergroundWaterTankScreen(itemName: itemName);
+      case SubCategoryNames.ringwallFormworkConcrete:
+        return RingwallFormworkConcreteScreen(itemName: itemName);
+      case SubCategoryNames.overheadWaterTankFormworkConcrete:
+        return OverheadWaterTankFormworkScreen(itemName: itemName);
+      case SubCategoryNames.substructureColumnFormworkConcrete:
+        return SubstructureColumnFormwork(itemName: itemName);
+      case SubCategoryNames.superStructureColumnFormworkConcrete:
+        return SuperstructureColumnFormworkScreen(itemName: itemName);
+      case SubCategoryNames.foundationFormworkConcrete:
+        return FoundationFormworkConcreteScreen(itemName: itemName);
+      case SubCategoryNames.superstructureBeamFormworkConcrete:
+        return SuperstructureBeamFormworkConcreteCalculator(itemName: itemName);
+      case SubCategoryNames.concreteCuringWater:
+        return CuringWaterEstimatorCalculatorScreen(itemName: itemName);
+      case SubCategoryNames.stairConcreteEstimator:
+        return StairConcreteCalculator(itemName: itemName);
+        //finishing and interior estimating
+      case SubCategoryNames.paintQuantity:
+        return PaintQuantityCalculatorScreen(itemName: itemName);
+      case SubCategoryNames.modularKitchen:
+        return PaintQuantityCalculatorScreen(itemName: itemName);
+      case SubCategoryNames.wardrobeMaterialCostEstimator:
+        return PaintQuantityCalculatorScreen(itemName: itemName);
+      case SubCategoryNames.falseCeilingCost:
+        return PaintQuantityCalculatorScreen(itemName: itemName);
+      case SubCategoryNames.woodenSolidDoorPolishMaterial:
+        return PaintQuantityCalculatorScreen(itemName: itemName);
+
+      case SubCategoryNames.spiralMsStairMaterial:
+        return SpiralMsStairMaterialCalculator(itemName: itemName);
+
+      case SubCategoryNames.multiBathVanityEstimator:
+        return PaintQuantityCalculatorScreen(itemName: itemName);
+
+      case SubCategoryNames.wardRobeMaterialEstimation:
+        return PaintQuantityCalculatorScreen(itemName: itemName);
+
+
+      case SubCategoryNames.wallPlaster:
+        return WallRoofPlasterScreen(itemName: itemName);
       default:
         return Center(
           child: Text(

@@ -176,7 +176,7 @@ class _AppTextFieldState extends State<AppTextField> {
                 borderSide: BorderSide(color: widget.borderColor, width: 1.5),
               ),
               filled: true,
-              fillColor: widget.fillColor ?? AppColors.baseColor,
+              fillColor: widget.fillColor ?? AppColors.lightGrey.withOpacity(0.8),
             ),
           ),
         ),

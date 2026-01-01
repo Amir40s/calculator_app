@@ -417,10 +417,31 @@ class CalculatorRepository {
       url: url,
       data: body,
     );
-  }  Future<dynamic> calculateWallPlaster({
+  }Future<dynamic> calculateCuringWaterFormwork({
+    required Map<String, dynamic> body,
+  }) async {
+    final url = Endpoint.curingWater;
+
+    return await _apiService.postApi(
+      url: url,
+      data: body,
+    );
+  }
+  Future<dynamic> calculateWallPlaster({
     required Map<String, dynamic> body,
   }) async {
     final url = Endpoint.wallRoof;
+
+    return await _apiService.postApi(
+      url: url,
+      data: body,
+    );
+  }
+
+ Future<dynamic> calculateStairConcrete({
+    required Map<String, dynamic> body,
+  }) async {
+    final url = Endpoint.stairConcrete;
 
     return await _apiService.postApi(
       url: url,

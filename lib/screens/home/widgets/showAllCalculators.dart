@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:smart_construction_calculator/config/enum/style_type.dart';
+import 'package:smart_construction_calculator/config/model/conversion_calculator/all_calculator_model.dart';
+import 'package:smart_construction_calculator/config/res/app_assets.dart';
 import 'package:smart_construction_calculator/config/res/app_color.dart';
+import 'package:smart_construction_calculator/config/utility/app_utils.dart';
+import 'package:smart_construction_calculator/core/component/app_text_widget.dart';
 import 'package:smart_construction_calculator/core/component/appbar_widget.dart';
 import 'package:smart_construction_calculator/core/controller/calculators/all_calculators.dart';
-import '../../../config/model/conversion_calculator/all_calculator_model.dart';
-import '../../../core/controller/calculators/conversion/conversion_controller.dart';
+import '../category_details/category_detail_screen.dart';
 
 class ShowAllCalculatorsScreen extends StatelessWidget {
   final List<CalculatorModel> calculators;
@@ -18,44 +22,52 @@ class ShowAllCalculatorsScreen extends StatelessWidget {
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
-
           children: [
-            AppBarWidget(text: 'All Calculators'),
-            Column(
-              children: [
-                Obx(() {
-                  if (controller.isLoading()) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-
-                  final calculators = controller.data.value ?? [];
-
-                  return Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: GridView.builder(
-                      shrinkWrap: true,
-                      itemCount: calculators.length,
-                      physics: NeverScrollableScrollPhysics(),
-                      gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2, // 2-column grid
-                        crossAxisSpacing: 2.w,
-                        mainAxisSpacing: 1.h,
-                        childAspectRatio: 0.9,
-                      ),
-                      itemBuilder: (context, index) {
-                        final calc = calculators[index];
-                        return CalculatorGridCard(
-                          calc: calc,
-                          onTap: () {
-                            Get.toNamed(calc.routeKey);
-                          },
+            const AppBarWidget(text: 'All Calculators'),
+            Obx(() {
+              if (controller.isLoading.value &&
+                  (controller.data.value == null ||
+                      controller.data.value!.isEmpty)) {
+                return const Center(child: CircularProgressIndicator());
+              }
+            
+              final allCalculators = controller.data.value ?? [];
+            
+              if (allCalculators.isEmpty) {
+                return Center(
+                  child: AppTextWidget(
+                    text: "No calculators found",
+                    styleType: StyleType.subTitle,
+                    color: AppColors.greyColor,
+                  ),
+                );
+              }
+            
+              return Padding(
+                padding:  EdgeInsets.symmetric(horizontal: 2.w,vertical: 1.h),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  padding: EdgeInsets.zero,
+                  itemCount: allCalculators.length,
+                  itemBuilder: (context, index) {
+                    final calc = allCalculators[index];
+                    return _CalculatorCard(
+                      title: calc.title,
+                      subtitle: "Explore",
+                      tint: AppUtils().randomColor(),
+                      onTap: () {
+                        Get.to(
+                          CategoryDetailScreen(
+                            title: calc.title,
+                            category: calc.routeKey,
+                          ),
                         );
                       },
-                    ),
-                  );
-                }),
-              ],
-            ),
+                    );
+                  },
+                ),
+              );
+            }),
           ],
         ),
       ),
@@ -63,65 +75,76 @@ class ShowAllCalculatorsScreen extends StatelessWidget {
   }
 }
 
+class _CalculatorCard extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final Color tint;
+  final VoidCallback onTap;
 
-class CalculatorGridCard extends StatelessWidget {
-  final CalculatorModel calc;
-  final VoidCallback? onTap;
-
-  const CalculatorGridCard({
-    super.key,
-    required this.calc,
-    this.onTap,
+  const _CalculatorCard({
+    required this.title,
+    required this.subtitle,
+    required this.tint,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(16),
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: AppColors.baseColor,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: AppColors.baseColor.withOpacity(0.3),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 6,
-              offset: const Offset(2, 3),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // 🔹 Icon
-            Container(
-              height: 55,
-              width: 55,
+    return Padding(
+      padding:  EdgeInsets.symmetric(vertical: 0.5.h,horizontal: 1.w),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(8),
+        onTap: onTap,
+        child:Container(
               decoration: BoxDecoration(
-                color: AppColors.blueColor.withOpacity(0.4),
-                borderRadius: BorderRadius.circular(14),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.black.withOpacity(0.06)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
-              child: Center(child: calc.iconWidget),
-            ),
-            const SizedBox(height: 10),
-
-            // 🔹 Title
-            Text(
-              calc.title,
-              textAlign: TextAlign.center,
-
-            ),
-
-            const SizedBox(height: 4),
-
-          ],
-        ),
+              clipBehavior: Clip.antiAlias,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 1.h, horizontal: 2.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        AppTextWidget(
+                          text: title,
+                          styleType: StyleType.subHeading,
+                          maxLine: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        SizedBox(height: 3.px),
+                        AppTextWidget(
+                          text: subtitle,
+                          styleType: StyleType.subTitle,
+                          color: AppColors.themeColor,
+                          maxLine: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding:  EdgeInsets.only(right: 3.w),
+                    child: Icon(Icons.arrow_forward_ios_sharp,size: 16.px,color: AppColors.themeColor,),
+                  )
+                ],
+              ),
+            )
       ),
     );
+    }
+  
   }
-}

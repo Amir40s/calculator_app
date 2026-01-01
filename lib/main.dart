@@ -28,8 +28,6 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           key: navigatorKey,
           title: 'UHCONST',
-          // theme: AppTheme.lightTheme,
-          // darkTheme: AppTheme.darkTheme,
           initialRoute: RoutesName.splash,
           initialBinding: AppBinding(),
           theme: ThemeData(

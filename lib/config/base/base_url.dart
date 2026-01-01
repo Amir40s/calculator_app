@@ -58,6 +58,8 @@ class Endpoint{
   static const  ringWallFormwork = "${BaseUrl.baseUrl}/retaining-wall/calculate";
   static const  overheadWaterTank = "${BaseUrl.baseUrl}/Underground-tank/calculate";
   static const  substructureColumnFormwork = "${BaseUrl.baseUrl}/rcc-column/calculate";
+  static const  curingWater = "${BaseUrl.baseUrl}/curing-water/calculate";
+  static const  stairConcrete = "${BaseUrl.baseUrl}/stair-concrete/calculate";
 }
 
 

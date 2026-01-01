@@ -49,6 +49,13 @@ class SubCategoryData {
     ],
     'finishing-and-interior-estimator': [
       CategoryItemModel(name: SubCategoryNames.paintQuantity),
+      CategoryItemModel(name: SubCategoryNames.modularKitchen),
+      CategoryItemModel(name: SubCategoryNames.wardRobeMaterialEstimation),
+      CategoryItemModel(name: SubCategoryNames.falseCeilingCost),
+      CategoryItemModel(name: SubCategoryNames.woodenSolidDoorPolishMaterial),
+      CategoryItemModel(name: SubCategoryNames.spiralMsStairMaterial),
+      CategoryItemModel(name: SubCategoryNames.multiBathVanityEstimator),
+      CategoryItemModel(name: SubCategoryNames.wardrobeMaterialCostEstimator),
 
     ],
     'concrete-formwork-quantity-calculator': [
@@ -65,8 +72,9 @@ class SubCategoryData {
       CategoryItemModel(name: SubCategoryNames.substructureColumnFormworkConcrete),
       CategoryItemModel(name: SubCategoryNames.superStructureColumnFormworkConcrete),
       CategoryItemModel(name: SubCategoryNames.foundationFormworkConcrete),
-      CategoryItemModel(name: SubCategoryNames.substructureBeamFormworkConcrete),
+      CategoryItemModel(name: SubCategoryNames.superstructureBeamFormworkConcrete),
       CategoryItemModel(name: SubCategoryNames.concreteCuringWater),
+      CategoryItemModel(name: SubCategoryNames.stairConcreteEstimator),
 
     ],
   };
