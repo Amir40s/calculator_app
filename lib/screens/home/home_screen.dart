@@ -371,6 +371,7 @@ class HomeScreen extends StatelessWidget {
                   ['concrete', 'formwork'],
                   ['finishing'],
                   ['door', 'window'],
+                  ['land scaping',],
                 ]) {
                   final c = _findCalcByKeywords(calculators, keys);
                   if (c != null) shown.add(c.routeKey);
@@ -661,11 +662,11 @@ class _PopularPickCard extends StatelessWidget {
   IconData _getIconForPick(String title) {
     final lowerTitle = title.toLowerCase();
     if (lowerTitle.contains('block') || lowerTitle.contains('plaster')) {
-      return LucideIcons.box;
+      return LucideIcons.hammer;
     } else if (lowerTitle.contains('concrete') || lowerTitle.contains('formwork')) {
       return LucideIcons.building2;
     } else if (lowerTitle.contains('finishing') || lowerTitle.contains('interior')) {
-      return LucideIcons.palette;
+      return LucideIcons.paintBucket;
     } else if (lowerTitle.contains('door') || lowerTitle.contains('window')) {
       return LucideIcons.doorOpen;
     }
@@ -677,7 +678,7 @@ class _PopularPickCard extends StatelessWidget {
     if (lowerTitle.contains('block') || lowerTitle.contains('plaster')) {
       return AppAssets.wallBlock;
     } else if (lowerTitle.contains('concrete') || lowerTitle.contains('formwork')) {
-      return AppAssets.concreteFormworkCategory;
+      return AppAssets.categoryConcrete;
     } else if (lowerTitle.contains('finishing') || lowerTitle.contains('interior')) {
       return AppAssets.finishingInteriorCategory;
     } else if (lowerTitle.contains('door') || lowerTitle.contains('window')) {

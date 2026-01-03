@@ -42,7 +42,22 @@ class CalculatorHelpers {
     } else if (title.contains('conversion') || routeKey.contains('conversion')) {
       return LucideIcons.refreshCw;
     } else if (title.contains('marble & granite') || routeKey.contains('conversion')) {
-      return LucideIcons.inspectionPanel;
+      return LucideIcons.inspectionPanel;}
+    else if (title.contains('earth work') || routeKey.contains('earth')) {
+      return LucideIcons.inspectionPanel; }
+
+    else if (title.contains('driveway & pathway') || routeKey.contains('driveway & pathway')) {
+      return LucideIcons.car;
+    }
+
+    else if (title.contains('flooring & grouting') || routeKey.contains('flooring & grouting')) {
+      return LucideIcons.layers; }
+
+    else if (title.contains('electrical wiring') || routeKey.contains('electrical wiring')) {
+      return LucideIcons.zap;}
+
+    else if (title.contains('finishing & interior') || routeKey.contains('interior')) {
+      return LucideIcons.paintBucket;
     } else {
       return LucideIcons.calculator;
     }
@@ -85,6 +100,20 @@ class CalculatorHelpers {
       return AppAssets.waterpump;
     } else if (title.contains('conversion') || routeKey.contains('conversion')) {
       return AppAssets.categoryConversion;
+  } else if (title.contains('marble & granite') || routeKey.contains('conversion')) {
+      return AppAssets.marbleGen;
+    }
+    else if (title.contains('earth work') || routeKey.contains('earth')) {
+      return AppAssets.earthworkGen;}
+    else if (title.contains('driveway & pathway') || routeKey.contains('driveway & pathway')) {
+      return AppAssets.drivewayGen;
+    }
+    else if (title.contains('flooring & grouting') || routeKey.contains('flooring & grouting')) {
+      return AppAssets.tileBondInstallation; }
+    else if (title.contains('electrical wiring') || routeKey.contains('electrical wiring')) {
+      return AppAssets.mep; }
+    else if (title.contains('finishing & interior') || routeKey.contains('interior')) {
+      return AppAssets.finishingInteriorCategory;
     } else {
       return AppAssets.splash;
     }
@@ -127,6 +156,19 @@ class CalculatorHelpers {
       return const Color(0xFF2196F3);
     } else if (title.contains('conversion') || routeKey.contains('conversion')) {
       return const Color(0xFF9E9E9E);
+  } else if (title.contains('marble & granite') || routeKey.contains('conversion')) {
+      return const Color(0xFF64748B);
+    }
+    else if (title.contains('driveway & pathway') || routeKey.contains('driveway & pathway')) {
+      return const Color(0xFF6B7280);}
+    else if (title.contains('earth work') || routeKey.contains('earth')) {
+      return const Color(0xFFD97706);}
+    else if (title.contains('flooring & grouting') || routeKey.contains('flooring & grouting')) {
+      return const Color(0xFF6366F1);}
+    else if (title.contains('electrical wiring') || routeKey.contains('electrical wiring')) {
+      return const Color(0xFFEAB308);}
+    else if (title.contains('finishing & interior') || routeKey.contains('interior')) {
+      return const Color(0xFFA855F7);
     } else {
       final colors = [
         const Color(0xFFE91E63),
