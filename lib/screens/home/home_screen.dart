@@ -253,7 +253,7 @@ class HomeScreen extends StatelessWidget {
                   _HomePick(
                     title: 'Block & Plaster',
                     subtitle: 'Blockwork and plaster material estimates',
-                    tint: const Color(0xFFFF9800),
+                    tint: const Color(0xFF60A5FA),
                     keywords: const ['block'],
                   ),
                   _HomePick(
