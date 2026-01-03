@@ -10,8 +10,8 @@ import '../routes/routes_name.dart';
 class BaseUrl{
 
   static const baseUrl = "https://construction-api-nine.vercel.app/api/calculators";
-  static const allCalculators = "https://construction-admin-api.vercel.app/calculators";
-  static const companyData = "https://construction-admin-api.vercel.app/company";
+  static const allCalculators = "https://construction-api-nine.vercel.app/calculators";
+  static const companyData = "https://construction-api-nine.vercel.app/company";
 
 
 
@@ -60,6 +60,7 @@ class Endpoint{
   static const  substructureColumnFormwork = "${BaseUrl.baseUrl}/rcc-column/calculate";
   static const  curingWater = "${BaseUrl.baseUrl}/curing-water/calculate";
   static const  stairConcrete = "${BaseUrl.baseUrl}/stair-concrete/calculate";
+  static const  spiralStair = "${BaseUrl.baseUrl}/ms-spiral-stair/calculate";
 }
 
 

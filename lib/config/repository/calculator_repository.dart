@@ -449,5 +449,16 @@ class CalculatorRepository {
     );
   }
 
+  Future<dynamic> calculateSpiralStair({
+    required Map<String, dynamic> body,
+  }) async {
+    final url = Endpoint.spiralStair;
+
+    return await _apiService.postApi(
+      url: url,
+      data: body,
+    );
+  }
+
 
 }

@@ -168,20 +168,12 @@ class SubCategoryScreen extends StatelessWidget {
         return PaintQuantityCalculatorScreen(itemName: itemName);
       case SubCategoryNames.wardrobeMaterialCostEstimator:
         return PaintQuantityCalculatorScreen(itemName: itemName);
-      case SubCategoryNames.falseCeilingCost:
+       case SubCategoryNames.woodenSolidDoorPolishMaterial:
         return PaintQuantityCalculatorScreen(itemName: itemName);
-      case SubCategoryNames.woodenSolidDoorPolishMaterial:
-        return PaintQuantityCalculatorScreen(itemName: itemName);
-
       case SubCategoryNames.spiralMsStairMaterial:
         return SpiralMsStairMaterialCalculator(itemName: itemName);
-
       case SubCategoryNames.multiBathVanityEstimator:
         return PaintQuantityCalculatorScreen(itemName: itemName);
-
-      case SubCategoryNames.wardRobeMaterialEstimation:
-        return PaintQuantityCalculatorScreen(itemName: itemName);
-
 
       case SubCategoryNames.wallPlaster:
         return WallRoofPlasterScreen(itemName: itemName);

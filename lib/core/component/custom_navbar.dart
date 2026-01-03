@@ -21,7 +21,7 @@ class CustomBottomNavBar extends StatelessWidget {
 
           index: controller.currentIndex.value,
           height: 7.h,
-          color: AppColors.blueColor,
+          color: AppColors.whiteColor,
           buttonBackgroundColor: AppColors.themeColor,
           backgroundColor: Colors.transparent,
           animationCurve: Curves.easeInOut,
@@ -49,7 +49,7 @@ class CustomBottomNavBar extends StatelessWidget {
         child: SvgPicture.asset(
           icon,
           height: isActive ? 22 : 26,
-          color: isActive ? Colors.white : AppColors.whiteColor,
+          color: isActive ? Colors.white : AppColors.greyColor,
         ),
       ),
     );

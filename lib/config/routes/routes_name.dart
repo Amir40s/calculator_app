@@ -65,10 +65,7 @@ class SubCategoryNames{
 // 🔹 finishing-and-interior-estimator
   static const String paintQuantity = 'Paint Quantity Calculator';
   static const String woodenSolidDoorPolishMaterial = 'Wooden Solid Door Polish Material Estimation';
-  static const String kitchenLayoutBOQCost = 'Kitchen Layout + BOQ & Cost Estimator';
   static const String modularKitchen = 'Modular Kitchen Estimator';
-  static const String wardRobeMaterialEstimation = 'Ward Robe Material Estimation Calculator';
-  static const String falseCeilingCost = 'False Ceiling Cost Calculator';
   static const String spiralMsStairMaterial = 'Spiral MS Stair Material Calculator';
   static const String multiBathVanityEstimator = 'Multi-Bathroom Vanity Estimator';
   static const String wardrobeMaterialCostEstimator = 'Wardrobe Material & Cost Estimator';

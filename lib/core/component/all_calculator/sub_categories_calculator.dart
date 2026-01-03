@@ -50,8 +50,6 @@ class SubCategoryData {
     'finishing-and-interior-estimator': [
       CategoryItemModel(name: SubCategoryNames.paintQuantity),
       CategoryItemModel(name: SubCategoryNames.modularKitchen),
-      CategoryItemModel(name: SubCategoryNames.wardRobeMaterialEstimation),
-      CategoryItemModel(name: SubCategoryNames.falseCeilingCost),
       CategoryItemModel(name: SubCategoryNames.woodenSolidDoorPolishMaterial),
       CategoryItemModel(name: SubCategoryNames.spiralMsStairMaterial),
       CategoryItemModel(name: SubCategoryNames.multiBathVanityEstimator),
